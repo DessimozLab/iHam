@@ -119,3 +119,6 @@ input[type=number]::-webkit-outer-spin-button {
 .menu_hog_li {
   padding: 4px 8px !important;
   text-align: center; }
+
+#tnt_tooltip_node_over_tooltip {
+  pointer-events: none; }

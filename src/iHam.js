@@ -45,6 +45,8 @@ function iHam() {
     post_init: () => {
     },
 
+    frozen_node: null,
+
     //
     label_height: 20,
 
@@ -86,8 +88,6 @@ function iHam() {
     config.tree_obj = JSON.parse('{"name":"Eukaryota","children":[{"name":"Plasmodium falciparum (isolate 3D7)"},{"name":"Ascomycota","children":[{"name":"Schizosaccharomyces pombe (strain 972 / ATCC 24843)"},{"name":"Saccharomyces cerevisiae (strain ATCC 204508 / S288c)"}]}]}');
 
     const maxs = get_maxs(config.data_per_species);
-    console.log('maxs...');
-    console.log(maxs);
 
     const gene_color = gene => {
       return (config.query_gene && gene.id === config.query_gene.id ? "#27ae60" : "#95a5a6");
@@ -145,6 +145,9 @@ function iHam() {
     }
 
     function update_nodes(node) {
+      if (config.frozen_node) {
+        return;
+      }
       current_opened_taxa_name = node.node_name();
       board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
       // TODO: At this point we need to call a method to display the current level in the Helader (outside the widget)
@@ -199,21 +202,34 @@ function iHam() {
         })
       )
       .on("click", function (node) {
-        // tree_node_tooltip.display.call(this, node);
+        tree_node_tooltip.display.call(this, node, {
+            on_collapse: () => {
+              node.toggle();
+              iHamVis.update()
+            },
+            on_freeze: () => {
+              if (config.frozen_node) {
+                config.frozen_node = null;
+              } else {
+                config.frozen_node = node.id();
+              }
+            },
+          },
+          config.frozen_node
+        );
       })
       .on("mouseover", function (node) {
         update_nodes.call(this, node);
-        // mouse_over_node.display.call(this, node)
+        mouse_over_node.display.call(this, node)
       })
       .on("mouseout", function () {
-        // mouse_over_node.close();
+        mouse_over_node.close();
       })
       .node_display(node_display)
       .branch_color("black");
 
     current_opened_taxa_name = tree.root().node_name();
     current_hog_state.reset_on(tree, config.data_per_species, current_opened_taxa_name, column_coverage_threshold);
-
 
     // Board:
     board = tnt.board()
@@ -244,7 +260,6 @@ function iHam() {
 
                 return genes2Xcoords;
               }
-
             }
 
             if (config.data_per_species[sp] === undefined) {

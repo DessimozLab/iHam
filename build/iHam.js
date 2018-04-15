@@ -489,6 +489,61 @@
 	  };
 	}
 
+	var _mouse_over_node;
+
+	var mouse_over_node = {
+	  display: function display(node) {
+	    var obj = {
+	      // header: "Mouse over tooltip",
+	      body: node.node_name()
+	    };
+	    _mouse_over_node = tooltip.plain().id('node_over_tooltip').width(140).show_closer(false).call(this, obj);
+	  },
+	  close: function close() {
+	    _mouse_over_node.close();
+	  }
+	};
+
+	var _tree_node_tooltip;
+
+	var tree_node_tooltip = {
+	  display: function display(node, actions, frozen) {
+	    // actions: (on collapse / expand) and (on freeze)
+	    var obj = {};
+	    obj.header = node.node_name();
+	    obj.rows = []; // collapse / uncollapse if internal node
+
+	    if (!node.is_leaf()) {
+	      obj.rows.push({
+	        value: node.is_collapsed() ? "Expand node" : "Collapse node",
+	        link: function link(n) {
+	          tree_node_tooltip.close(); // n.toggle();
+
+	          actions.on_collapse();
+	        },
+	        obj: node
+	      });
+	    } // There are 3 freezing possibilites:
+	    // "Freeze tree at this node",
+	    // "Unfreeze the tree",
+	    // "Re-freeze tree at this node"
+
+
+	    obj.rows.push({
+	      value: frozen === node.id() ? 'Unfreeze the tree' : 'Freeze at this node',
+	      link: function link(n) {
+	        tree_node_tooltip.close();
+	        actions.on_freeze();
+	      },
+	      obj: node
+	    });
+	    _tree_node_tooltip = tooltip.table().width(250).id(1).call(this, obj);
+	  },
+	  close: function close() {
+	    _tree_node_tooltip.close();
+	  }
+	};
+
 	/* global d3 */
 
 	function iHam() {
@@ -521,6 +576,7 @@
 	    // text div id
 	    current_level_id: 'current_level_text',
 	    post_init: function post_init() {},
+	    frozen_node: null,
 	    //
 	    label_height: 20,
 	    // TODO: definition?
@@ -555,8 +611,6 @@
 	    config.data_per_species = JSON.parse('{"Plasmodium falciparum (isolate 3D7)":{"Plasmodium falciparum (isolate 3D7)":[[11605],[11731]],"Eukaryota":[[11605,11731]]},"Schizosaccharomyces pombe (strain 972 / ATCC 24843)":{"Schizosaccharomyces pombe (strain 972 / ATCC 24843)":[[11028]],"Ascomycota":[[11028]],"Eukaryota":[[11028]]},"Saccharomyces cerevisiae (strain ATCC 204508 / S288c)":{"Saccharomyces cerevisiae (strain ATCC 204508 / S288c)":[[12],[5839]],"Ascomycota":[[12,5839]],"Eukaryota":[[12,5839]]}}');
 	    config.tree_obj = JSON.parse('{"name":"Eukaryota","children":[{"name":"Plasmodium falciparum (isolate 3D7)"},{"name":"Ascomycota","children":[{"name":"Schizosaccharomyces pombe (strain 972 / ATCC 24843)"},{"name":"Saccharomyces cerevisiae (strain ATCC 204508 / S288c)"}]}]}');
 	    var maxs = get_maxs(config.data_per_species);
-	    console.log('maxs...');
-	    console.log(maxs);
 
 	    var gene_color = function gene_color(gene) {
 	      return config.query_gene && gene.id === config.query_gene.id ? "#27ae60" : "#95a5a6";
@@ -601,6 +655,10 @@
 	    }
 
 	    function update_nodes(node) {
+	      if (config.frozen_node) {
+	        return;
+	      }
+
 	      current_opened_taxa_name = node.node_name();
 	      board.width(compute_size_annotations(maxs, tot_width, node.node_name())); // TODO: At this point we need to call a method to display the current level in the Helader (outside the widget)
 
@@ -647,10 +705,25 @@
 	      }
 
 	      return "normal";
-	    })).on("click", function (node) {// tree_node_tooltip.display.call(this, node);
+	    })).on("click", function (node) {
+	      tree_node_tooltip.display.call(this, node, {
+	        on_collapse: function on_collapse() {
+	          node.toggle();
+	          iHamVis.update();
+	        },
+	        on_freeze: function on_freeze() {
+	          if (config.frozen_node) {
+	            config.frozen_node = null;
+	          } else {
+	            config.frozen_node = node.id();
+	          }
+	        }
+	      }, config.frozen_node);
 	    }).on("mouseover", function (node) {
-	      update_nodes.call(this, node); // mouse_over_node.display.call(this, node)
-	    }).on("mouseout", function () {// mouse_over_node.close();
+	      update_nodes.call(this, node);
+	      mouse_over_node.display.call(this, node);
+	    }).on("mouseout", function () {
+	      mouse_over_node.close();
 	    }).node_display(node_display).branch_color("black");
 	    current_opened_taxa_name = tree.root().node_name();
 	    current_hog_state.reset_on(tree, config.data_per_species, current_opened_taxa_name, column_coverage_threshold); // Board:
