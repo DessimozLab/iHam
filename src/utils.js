@@ -10,7 +10,6 @@ export function compute_size_annotations(maxs, tot_width, taxa_name) {
   }
 
   return max_number_square;
-
 }
 
 // get maximum number of genes per hog accross species

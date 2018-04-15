@@ -24,7 +24,7 @@ export default function Hog_state() {
 
         if (slice && slice.length > 0) {
           that.number_species += 1;
-          that.add_genes(slice)
+          that.add_genes(slice);
         }
       }
     }
@@ -56,16 +56,17 @@ export default function Hog_state() {
   };
 
   this.add_genes = function (array_hogs_with_genes) {
-
     if (that.hogs === undefined) {
       that.hogs = [];
       for (var i = 0; i < array_hogs_with_genes.length; i++) {
         var h = {
           genes: [],
-          name: 'hog_' + i,
+          name: `hog_${i}`,
           number_species: 0,
           max_in_hog: 0,
-          coverage: 0
+          coverage: 0,
+          hog_pos: i,
+          total_hogs: array_hogs_with_genes.length
         };
 
         that.hogs.push(h);

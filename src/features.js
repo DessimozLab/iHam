@@ -123,3 +123,55 @@ export function hog_gene_feature(color) {
 
   return feature;
 }
+
+export const hog_group = tnt.board.track.feature()
+  .index(d => {
+    return d.name;
+  })
+  .create(function (new_group, x_scale) {
+    // const track = this;
+    const dom1 = x_scale.domain()[1];
+
+    const g = new_group
+      .append('g')
+      .attr('transform', (g) => {
+        const hog_space = x_scale(dom1 / (g.total_hogs + 1));
+        const posx = (hog_space * g.hog_pos) + (hog_space / 2);
+        return `translate(${posx}, 0)`;
+      })
+      .attr('class', d => d.name);
+
+    g
+      .append('circle')
+      .attr('cx', 0)
+      .attr('cy', -6)
+      .attr('r', 2)
+      .attr('fill', 'black');
+    g
+      .append('circle')
+      .attr('cx', 0)
+      .attr('cy', -12)
+      .attr('r', 2)
+      .attr('fill', 'black');
+    g
+      .append('circle')
+      .attr('cx', 0)
+      .attr('cy', -18)
+      .attr('r', 2)
+      .attr('fill', 'black');
+  })
+  .distribute(function (elems, x_scale) {
+    const track = this;
+    const dom1 = x_scale.domain()[1];
+
+    elems.select('g')
+      .transition()
+      .attr('transform', function(g) {
+        const hog_space = x_scale(dom1 / (g.total_hogs + 1));
+        const posx = (hog_space * g.hog_pos) + (hog_space / 2);
+        return `translate(${posx}, 0)`;
+      })
+  })
+  .on('click', function (g) {
+    console.log(g);
+  });

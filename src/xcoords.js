@@ -2,7 +2,8 @@ export default function genes_2_xcoords(arr, maxs, current_hog_state) {
   if (arr === undefined) {
     return {
       genes: [],
-      hogs: []
+      hogs: [],
+      hog_groups: []
     };
   }
   const genes = [];
@@ -10,8 +11,6 @@ export default function genes_2_xcoords(arr, maxs, current_hog_state) {
   let total_pos = 0;
   arr.forEach((hog_genes, hog) => {
     // TODO: Put this back
-    console.log('removed hogs...');
-    console.log(current_hog_state.removed_hogs);
     if (current_hog_state.removed_hogs.indexOf(hog) === -1) {
       const hog_gene_names = [];
       hog_genes.sort();
@@ -39,5 +38,6 @@ export default function genes_2_xcoords(arr, maxs, current_hog_state) {
   return {
     genes: genes,
     hogs: hogs_boundaries.slice(0, -1),
+    hog_groups: current_hog_state.hogs
   };
 }

@@ -339,6 +339,31 @@
 	  });
 	  return feature;
 	}
+	var hog_group = tnt.board.track.feature().index(function (d) {
+	  return d.name;
+	}).create(function (new_group, x_scale) {
+	  // const track = this;
+	  var dom1 = x_scale.domain()[1];
+	  var g = new_group.append('g').attr('transform', function (g) {
+	    var hog_space = x_scale(dom1 / (g.total_hogs + 1));
+	    var posx = hog_space * g.hog_pos + hog_space / 2;
+	    return "translate(".concat(posx, ", 0)");
+	  }).attr('class', function (d) {
+	    return d.name;
+	  });
+	  g.append('circle').attr('cx', 0).attr('cy', -6).attr('r', 2).attr('fill', 'black');
+	  g.append('circle').attr('cx', 0).attr('cy', -12).attr('r', 2).attr('fill', 'black');
+	  g.append('circle').attr('cx', 0).attr('cy', -18).attr('r', 2).attr('fill', 'black');
+	}).distribute(function (elems, x_scale) {
+	  var dom1 = x_scale.domain()[1];
+	  elems.select('g').transition().attr('transform', function (g) {
+	    var hog_space = x_scale(dom1 / (g.total_hogs + 1));
+	    var posx = hog_space * g.hog_pos + hog_space / 2;
+	    return "translate(".concat(posx, ", 0)");
+	  });
+	}).on('click', function (g) {
+	  console.log(g);
+	});
 
 	function Hog_state() {
 	  var that = this;
@@ -396,10 +421,12 @@
 	      for (var i = 0; i < array_hogs_with_genes.length; i++) {
 	        var h = {
 	          genes: [],
-	          name: 'hog_' + i,
+	          name: "hog_".concat(i),
 	          number_species: 0,
 	          max_in_hog: 0,
-	          coverage: 0
+	          coverage: 0,
+	          hog_pos: i,
+	          total_hogs: array_hogs_with_genes.length
 	        };
 	        that.hogs.push(h);
 	      }
@@ -422,7 +449,8 @@
 	  if (arr === undefined) {
 	    return {
 	      genes: [],
-	      hogs: []
+	      hogs: [],
+	      hog_groups: []
 	    };
 	  }
 
@@ -431,9 +459,6 @@
 	  var total_pos = 0;
 	  arr.forEach(function (hog_genes, hog) {
 	    // TODO: Put this back
-	    console.log('removed hogs...');
-	    console.log(current_hog_state.removed_hogs);
-
 	    if (current_hog_state.removed_hogs.indexOf(hog) === -1) {
 	      var hog_gene_names = [];
 	      hog_genes.sort();
@@ -459,7 +484,8 @@
 	  });
 	  return {
 	    genes: genes,
-	    hogs: hogs_boundaries.slice(0, -1)
+	    hogs: hogs_boundaries.slice(0, -1),
+	    hog_groups: current_hog_state.hogs
 	  };
 	}
 
@@ -537,8 +563,7 @@
 	    }; // todo -30 should be define by margin variables
 
 
-	    var tot_width = parseInt(d3.select(div).style('width')) - 30;
-	    console.log("tot_width... ".concat(tot_width)); // Node display
+	    var tot_width = parseInt(d3.select(div).style('width')) - 30; // Node display
 
 	    var collapsed_node = tnt.tree.node_display.triangle().fill("grey").size(4);
 	    var leaf_node = tnt.tree.node_display.circle().fill("#2c3e50").size(4);
@@ -556,12 +581,33 @@
 	      }
 	    });
 
+	    function update_board() {
+	      // update the board
+	      board.update(); // and remove all headers not belonging to top level
+
+	      var tracks = board.tracks();
+	      var found_first = false;
+	      tracks.forEach(function (track) {
+	        var header = track.g.select('.tnt_elem_hog_groups').node();
+
+	        if (header && found_first) {
+	          track.g.selectAll('.tnt_elem_hog_groups').remove();
+	        }
+
+	        if (header) {
+	          found_first = true;
+	        }
+	      });
+	    }
+
 	    function update_nodes(node) {
 	      current_opened_taxa_name = node.node_name();
 	      board.width(compute_size_annotations(maxs, tot_width, node.node_name())); // TODO: At this point we need to call a method to display the current level in the Helader (outside the widget)
 
-	      current_hog_state.reset_on(tree, config.data_per_species, current_opened_taxa_name, column_coverage_threshold);
-	      board.update();
+	      current_hog_state.reset_on(tree, config.data_per_species, current_opened_taxa_name, column_coverage_threshold); // board.update();
+
+	      update_board(); // add_hog_header(node, current_hog_state, config);
+	      // add_hog_header(current_opened_taxa_name, current_hog_state, config);
 
 	      state.highlight_condition = function (n) {
 	        return node.id() === n.id();
@@ -609,7 +655,7 @@
 	    current_opened_taxa_name = tree.root().node_name();
 	    current_hog_state.reset_on(tree, config.data_per_species, current_opened_taxa_name, column_coverage_threshold); // Board:
 
-	    board = tnt.board().from(0).zoom_in(1).allow_drag(false).to(5) // .width(500) // TODO: This shouldn't be hardcoded?
+	    board = tnt.board().from(0).zoom_in(1).allow_drag(false).to(2) // .width(500) // TODO: This shouldn't be hardcoded?
 	    .width(compute_size_annotations(maxs, tot_width, current_opened_taxa_name) * (config.label_height + 2)); // .max(5);
 	    // Board's track
 
@@ -630,17 +676,19 @@
 	        if (config.data_per_species[sp] === undefined) {
 	          return {
 	            genes: [],
-	            hogs: []
+	            hogs: [],
+	            hog_groups: []
 	          };
 	        }
 
 	        return genes_2_xcoords(config.data_per_species[sp][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state);
-	      })).display(tnt.board.track.feature.composite().add("genes", hog_gene_feature(gene_color)).add("hogs", hog_feature));
+	      })).display(tnt.board.track.feature.composite().add("genes", hog_gene_feature(gene_color)).add("hogs", hog_feature).add('hog_groups', hog_group));
 	    }; // iHam setup
 
 
 	    var iHamVis = tnt().tree(tree).board(board).track(track);
 	    iHamVis(div);
+	    update_board();
 	  };
 
 	  var api = tnt_api(theme).getset(config);

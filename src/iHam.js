@@ -3,7 +3,7 @@
 import apijs from 'tnt.api';
 // import parsers from 'iham-parsers';
 import {compute_size_annotations, get_maxs} from './utils.js';
-import {hog_feature, hog_gene_feature} from './features';
+import {hog_feature, hog_gene_feature, hog_group} from './features';
 import hog_state from './hog_state';
 import genes_2_xcoords from './xcoords';
 import './scss/iHam.scss';
@@ -95,7 +95,6 @@ function iHam() {
 
     // todo -30 should be define by margin variables
     const tot_width = parseInt(d3.select(div).style('width')) - 30;
-    console.log(`tot_width... ${tot_width}`);
 
     // Node display
     const collapsed_node = tnt.tree.node_display.triangle()
@@ -127,12 +126,33 @@ function iHam() {
         }
       });
 
+    function update_board() {
+      // update the board
+      board.update();
+
+      // and remove all headers not belonging to top level
+      const tracks = board.tracks();
+      let found_first = false;
+      tracks.forEach(track => {
+        const header = track.g.select('.tnt_elem_hog_groups').node();
+        if (header && found_first) {
+          track.g.selectAll('.tnt_elem_hog_groups').remove();
+        }
+        if (header) {
+          found_first = true;
+        }
+      })
+    }
+
     function update_nodes(node) {
       current_opened_taxa_name = node.node_name();
       board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
       // TODO: At this point we need to call a method to display the current level in the Helader (outside the widget)
       current_hog_state.reset_on(tree, config.data_per_species, current_opened_taxa_name, column_coverage_threshold);
-      board.update();
+      // board.update();
+      update_board();
+      // add_hog_header(node, current_hog_state, config);
+      // add_hog_header(current_opened_taxa_name, current_hog_state, config);
 
       state.highlight_condition = n => node.id() === n.id();
       tree.update_nodes();
@@ -200,7 +220,7 @@ function iHam() {
       .from(0)
       .zoom_in(1)
       .allow_drag(false)
-      .to(5)
+      .to(2)
       // .width(500) // TODO: This shouldn't be hardcoded?
       .width(compute_size_annotations(maxs, tot_width, current_opened_taxa_name) * (config.label_height + 2));
     // .max(5);
@@ -215,7 +235,7 @@ function iHam() {
         .data(tnt.board.track.data.sync()
           .retriever(() => {
             // in case the branch is collapsed we still draw empty hogs columns
-            if (leaf.is_collapsed()){
+            if (leaf.is_collapsed()) {
               const random_collapse_leaf_name = leaf.get_all_leaves(true)[0].node_name();
 
               if (config.data_per_species[random_collapse_leaf_name] !== undefined) {
@@ -230,7 +250,8 @@ function iHam() {
             if (config.data_per_species[sp] === undefined) {
               return {
                 genes: [],
-                hogs: []
+                hogs: [],
+                hog_groups: []
               };
             }
             return genes_2_xcoords(config.data_per_species[sp][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state);
@@ -239,6 +260,7 @@ function iHam() {
         .display(tnt.board.track.feature.composite()
           .add("genes", hog_gene_feature(gene_color))
           .add("hogs", hog_feature)
+          .add('hog_groups', hog_group)
         )
     };
 
@@ -249,6 +271,7 @@ function iHam() {
       .track(track);
 
     iHamVis(div);
+    update_board();
   };
 
   const api = apijs(theme)
