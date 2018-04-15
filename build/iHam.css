@@ -1,0 +1,121 @@
+.axis path, .axis line {
+  fill: none;
+  stroke: black;
+  shape-rendering: crispEdges; }
+
+.axis text {
+  font-family: sans-serif;
+  font-size: 11px; }
+
+.tnt_framed {
+  border: none;
+  border-radius: 0px !important; }
+
+.tnt_tooltip_active {
+  opacity: 0.98 !important; }
+
+.tnt_tooltip {
+  border: none !important;
+  z-index: 1000000 !important; }
+
+#hog_vis {
+  display: inline-block;
+  padding: 10px;
+  width: 100%; }
+
+.tnt_groupDiv {
+  display: inline-block; }
+
+div[id^="tnt_tree_container_"] {
+  display: inherit;
+  overflow-x: auto; }
+
+div[id^="tnt_annot_container_"] {
+  display: inherit;
+  overflow-x: auto; }
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 7px; }
+
+::-webkit-scrollbar-thumb {
+  border-radius: 1px;
+  background-color: rgba(0, 0, 0, 0.5); }
+
+#hogvisheader {
+  background: white;
+  z-index: 10000;
+  margin-bottom: 10px;
+  padding-bottom: 4px;
+  border-bottom: 1px #2c3e50 solid; }
+
+#gap_conpenser {
+  margin-bottom: 15px; }
+
+#drag {
+  display: inherit;
+  position: relative;
+  height: 0px;
+  width: 8px;
+  cursor: col-resize;
+  border-left: 3px solid !important; }
+
+/* SETTINGS PART */
+#icon_settings {
+  color: #95a5a6; }
+
+#btn_display_settings {
+  font-size: 12px;
+  font-weight: lighter; }
+
+#scale-settings-div {
+  margin-left: 8px;
+  margin-right: 8px; }
+
+#collapseSettings {
+  margin: 4px;
+  padding: 8px; }
+
+.scale-item {
+  display: inline-block;
+  vertical-align: middle;
+  margin-top: 8px; }
+
+/* HOG HEADER PART */
+.header_div {
+  position: absolute;
+  font-size: 1em; }
+
+.header_menu {
+  position: absolute;
+  font-size: 1em; }
+
+span[id^="head_button_"] {
+  cursor: pointer; }
+
+.fakebutton {
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  display: inline-block; }
+
+.min_column_setting {
+  margin: 0;
+  padding-bottom: 0;
+  padding-top: 0;
+  border: none; }
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  opacity: 1; }
+
+.menu_hog_li {
+  padding: 4px 8px !important;
+  text-align: center; }

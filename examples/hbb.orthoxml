@@ -1,0 +1,1181 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<orthoXML xmlns="http://orthoXML.org/2011/" origin="OMA" originVersion="Mar 2017" version="0.3">
+  <species name="Xiphophorus maculatus" NCBITaxId="8083">
+    <database name="Xiphophorus maculatus from ENSEMBL v69" version="Ensembl 69; Xipmac4.4.2; 4-OCT-2012">
+      <genes>
+        <gene id="7139197" protId="XIPMA07408"/>
+        <gene id="7132286" protId="XIPMA00497"/>
+        <gene id="7139198" protId="XIPMA07409"/>
+        <gene id="7139193" protId="XIPMA07404"/>
+        <gene id="7133764" protId="XIPMA01975"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Procavia capensis" NCBITaxId="9813">
+    <database name="Procavia capensis from ENSEMBL v70" version="Ensembl 70; proCap1; 12-DEC-2012">
+      <genes>
+        <gene id="7289179" protId="PROCA03618"/>
+        <gene id="7286054" protId="PROCA00493"/>
+        <gene id="7289178" protId="PROCA03617"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Mus musculus" NCBITaxId="10090">
+    <database name="Mus musculus from ENSEMBL v86" version="Ensembl 86; GRCm38; 13-SEP-2016">
+      <genes>
+        <gene id="7430770" protId="MOUSE21765"/>
+        <gene id="7430772" protId="MOUSE21767"/>
+        <gene id="7430769" protId="MOUSE21764"/>
+        <gene id="7430773" protId="MOUSE21768"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Sarcophilus harrisii" NCBITaxId="9305">
+    <database name="Sarcophilus harrisii from ENSEMBL" version="Ensembl 64; DEVIL7.0; 3-SEP-2011">
+      <genes>
+        <gene id="8040992" protId="SARHA10910"/>
+        <gene id="8039628" protId="SARHA09546"/>
+        <gene id="8030747" protId="SARHA00665"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Ovis aries" NCBITaxId="9940">
+    <database name="Ovis aries from ENSEMBL v74" version="Ensembl 74; Oar_v3.1; 27-NOV-2013">
+      <genes>
+        <gene id="7860797" protId="SHEEP06374"/>
+        <gene id="7860798" protId="SHEEP06375"/>
+        <gene id="7860799" protId="SHEEP06376"/>
+        <gene id="7860800" protId="SHEEP06377"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Ficedula albicollis" NCBITaxId="59894">
+    <database name="Ficedula albicollis from ENSEMBL v73" version="Ensembl 73; FicAlb_1.4; 23-AUG-2013">
+      <genes>
+        <gene id="8142453" protId="FICAL15044"/>
+        <gene id="8142454" protId="FICAL15045"/>
+        <gene id="8141590" protId="FICAL14181"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Pongo abelii" NCBITaxId="9601">
+    <database name="Pongo abelii from ENSEMBL v70" version="Ensembl 70; PPYG2; 11-DEC-2012">
+      <genes>
+        <gene id="7613304" protId="PONAB01441"/>
+        <gene id="7613305" protId="PONAB01442"/>
+        <gene id="7613303" protId="PONAB01440"/>
+        <gene id="7613301" protId="PONAB01438"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Danio rerio" NCBITaxId="7955">
+    <database name="Danio rerio from ENSEMBL v80" version="Ensembl 80; GRCz10; 15-MAY-2015">
+      <genes>
+        <gene id="7237190" protId="DANRE19216"/>
+        <gene id="7237195" protId="DANRE19221"/>
+        <gene id="7221571" protId="DANRE03597"/>
+        <gene id="7237192" protId="DANRE19218"/>
+        <gene id="7221569" protId="DANRE03595"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Tarsius syrichta" NCBITaxId="9478">
+    <database name="Tarsius syrichta from ENSEMBL v70" version="Ensembl 70; tarSyr1; 12-DEC-2012">
+      <genes>
+        <gene id="7674903" protId="TARSY01905"/>
+        <gene id="7674803" protId="TARSY01805"/>
+        <gene id="7676987" protId="TARSY03989"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Otolemur garnettii" NCBITaxId="30611">
+    <database name="Otolemur garnettii from ENSEMBL v70" version="Ensembl 70; OtoGar3; 11-DEC-2012">
+      <genes>
+        <gene id="7721917" protId="OTOGA19141"/>
+        <gene id="7721919" protId="OTOGA19143"/>
+        <gene id="7721918" protId="OTOGA19142"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Taeniopygia guttata" NCBITaxId="59729">
+    <database name="Taeniopygia guttata from ENSEMBL v70" version="Ensembl 70; taeGut3.2.4; 12-DEC-2012">
+      <genes>
+        <gene id="8147735" protId="TAEGU04943"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Callithrix jacchus" NCBITaxId="9483">
+    <database name="Callithrix jacchus from ENSEMBL v70" version="Ensembl 70; C_jacchus3.2.1; 11-DEC-2012">
+      <genes>
+        <gene id="7652429" protId="CALJA03429"/>
+        <gene id="7652427" protId="CALJA03427"/>
+        <gene id="7652426" protId="CALJA03426"/>
+        <gene id="7652428" protId="CALJA03428"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Nomascus leucogenys" NCBITaxId="61853">
+    <database name="Nomascus leucogenys from ENSEMBL v80" version="Ensembl 80; Nleu1.0; 15-MAY-2015">
+      <genes>
+        <gene id="7631708" protId="NOMLE01425"/>
+        <gene id="7631707" protId="NOMLE01424"/>
+        <gene id="7631706" protId="NOMLE01423"/>
+        <gene id="7631709" protId="NOMLE01426"/>
+        <gene id="7631711" protId="NOMLE01428"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Ochotona princeps" NCBITaxId="9978">
+    <database name="Ochotona princeps from ENSEMBL v70" version="Ensembl 70; pika; 11-DEC-2012">
+      <genes>
+        <gene id="7363306" protId="OCHPR04827"/>
+        <gene id="7363307" protId="OCHPR04828"/>
+        <gene id="7363309" protId="OCHPR04830"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Pan troglodytes" NCBITaxId="9598">
+    <database name="Pan troglodytes from ENSEMBL v75" version="Ensembl 75; CHIMP2.1.4; 7-FEB-2014">
+      <genes>
+        <gene id="7595605" protId="PANTR02678"/>
+        <gene id="7595602" protId="PANTR02675"/>
+        <gene id="7595603" protId="PANTR02676"/>
+        <gene id="7595607" protId="PANTR02680"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Homo sapiens" NCBITaxId="9606">
+    <database name="Homo sapiens from ENSEMBL v86" version="Ensembl 86; GRCh38; 13-SEP-2016">
+      <genes>
+        <gene id="7566250" protId="HUMAN04032"/>
+        <gene id="7566245" protId="HUMAN04027"/>
+        <gene id="7566255" protId="HUMAN04037"/>
+        <gene id="7566249" protId="HUMAN04031"/>
+        <gene id="7566247" protId="HUMAN04029"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Tetraodon nigroviridis" NCBITaxId="99883">
+    <database name="Tetraodon nigroviridis from ENSEMBL v70" version="Ensembl 70; TETRAODON8; 11-DEC-2012">
+      <genes>
+        <gene id="7074139" protId="TETNG08032"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Chlorocebus sabaeus" NCBITaxId="60711">
+    <database name="Chlorocebus sabaeus from ENSEMBL v77" version="Ensembl 77; ChlSab1.1; 26-SEP-2014">
+      <genes>
+        <gene id="7477855" protId="CHLSB00730"/>
+        <gene id="7477856" protId="CHLSB00731"/>
+        <gene id="7477853" protId="CHLSB00728"/>
+        <gene id="7477854" protId="CHLSB00729"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Gorilla gorilla gorilla" NCBITaxId="9595">
+    <database name="Gorilla gorilla from ENSEMBL v75" version="Ensembl 75; gorGor3.1; 8-FEB-2014">
+      <genes>
+        <gene id="7543339" protId="GORGO02943"/>
+        <gene id="7543524" protId="GORGO03128"/>
+        <gene id="7543530" protId="GORGO03134"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Macropus eugenii" NCBITaxId="9315">
+    <database name="Macropus eugenii from ENSEMBL v70" version="Ensembl 70; Meug_1.0; 11-DEC-2012">
+      <genes>
+        <gene id="8068383" protId="MACEU02120"/>
+        <gene id="8071595" protId="MACEU05332"/>
+        <gene id="8071594" protId="MACEU05331"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Dipodomys ordii" NCBITaxId="10020">
+    <database name="Dipodomys ordii from ENSEMBL v70" version="Ensembl 70; dipOrd1; 11-DEC-2012">
+      <genes>
+        <gene id="7395092" protId="DIPOR01805"/>
+        <gene id="7396595" protId="DIPOR03308"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Gadus morhua" NCBITaxId="8049">
+    <database name="Gadus morhua from ENSEMBL v70" version="Ensembl 70; gadMor1; 11-DEC-2012">
+      <genes>
+        <gene id="7175397" protId="GADMO00981"/>
+        <gene id="7178451" protId="GADMO04035"/>
+        <gene id="7175396" protId="GADMO00980"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Meleagris gallopavo" NCBITaxId="9103">
+    <database name="Meleagris gallopavo from ENSEMBL v70" version="Ensembl 70; UMD2; 11-DEC-2012">
+      <genes>
+        <gene id="8098935" protId="MELGA01657"/>
+        <gene id="8098933" protId="MELGA01655"/>
+        <gene id="8099290" protId="MELGA02012"/>
+        <gene id="8098934" protId="MELGA01656"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Canis lupus familiaris" NCBITaxId="9615">
+    <database name="Canis familiaris from ENSEMBL v70" version="Ensembl 70; CanFam3.1; 11-DEC-2012">
+      <genes>
+        <gene id="7746050" protId="CANLF08387"/>
+        <gene id="7746054" protId="CANLF08391"/>
+        <gene id="7746055" protId="CANLF08392"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Oryctolagus cuniculus" NCBITaxId="9986">
+    <database name="Oryctolagus cuniculus from ENSEMBL v84" version="Ensembl 84; OryCun2.0; 24-FEB-2016">
+      <genes>
+        <gene id="7340046" protId="RABIT00934"/>
+        <gene id="7340045" protId="RABIT00933"/>
+        <gene id="7340043" protId="RABIT00931"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Ailuropoda melanoleuca" NCBITaxId="9646">
+    <database name="Ailuropoda melanoleuca from ENSEMBL v70" version="Ensembl 70; ailMel1; 12-DEC-2012">
+      <genes>
+        <gene id="7783881" protId="AILME05703"/>
+        <gene id="7783879" protId="AILME05701"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Pteropus vampyrus" NCBITaxId="132908">
+    <database name="Pteropus vampyrus from ENSEMBL v70" version="Ensembl 70; pteVam1; 12-DEC-2012">
+      <genes>
+        <gene id="7915275" protId="PTEVA05853"/>
+        <gene id="7915276" protId="PTEVA05854"/>
+        <gene id="7915274" protId="PTEVA05852"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Oryzias latipes" NCBITaxId="8090">
+    <database name="Oryzias latipes from ENSEMBL v70" version="Ensembl 70; MEDAKA1; 11-DEC-2012">
+      <genes>
+        <gene id="7093892" protId="ORYLA07765"/>
+        <gene id="7102680" protId="ORYLA16553"/>
+        <gene id="7102676" protId="ORYLA16549"/>
+        <gene id="7102678" protId="ORYLA16551"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Takifugu rubripes" NCBITaxId="31033">
+    <database name="Takifugu rubripes from ENSEMBL v70" version="Ensembl 70; FUGU4; 11-DEC-2012">
+      <genes>
+        <gene id="7065258" protId="TAKRU22093"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Pelodiscus sinensis" NCBITaxId="13735">
+    <database name="Pelodiscus sinensis from ENSEMBL v68" version="Ensembl 68; PelSin_1.0; 6-AUG-2012">
+      <genes>
+        <gene id="8161364" protId="PELSI01468"/>
+        <gene id="8161365" protId="PELSI01469"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Erinaceus europaeus" NCBITaxId="9365">
+    <database name="Erinaceus europaeus from ENSEMBL v70" version="Ensembl 70; HEDGEHOG; 12-DEC-2012">
+      <genes>
+        <gene id="7946302" protId="ERIEU00071"/>
+        <gene id="7952891" protId="ERIEU06660"/>
+        <gene id="7948012" protId="ERIEU01781"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Sus scrofa" NCBITaxId="9823">
+    <database name="Sus scrofa from ENSEMBL v86" version="Ensembl 86; Sscrofa10.2; 14-SEP-2016">
+      <genes>
+        <gene id="7893543" protId="PIGXX18036"/>
+        <gene id="7893545" protId="PIGXX18038"/>
+        <gene id="7893544" protId="PIGXX18037"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Echinops telfairi" NCBITaxId="9371">
+    <database name="Echinops telfairi from ENSEMBL v70" version="Ensembl 70; TENREC; 11-DEC-2012">
+      <genes>
+        <gene id="7324021" protId="ECHTE01408"/>
+        <gene id="7333579" protId="ECHTE10966"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Xenopus tropicalis" NCBITaxId="8364">
+    <database name="Xenopus tropicalis from ENSEMBL v73" version="Ensembl 73; JGI_4.2; 23-AUG-2013">
+      <genes>
+        <gene id="8211733" protId="XENTR15490"/>
+        <gene id="8207314" protId="XENTR11071"/>
+        <gene id="8211734" protId="XENTR15491"/>
+        <gene id="8211732" protId="XENTR15489"/>
+        <gene id="8211729" protId="XENTR15486"/>
+        <gene id="8211731" protId="XENTR15488"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Poecilia formosa" NCBITaxId="48698">
+    <database name="Poecilia formosa from ENSEMBL v77" version="Ensembl 77; PoeFor_5.1.2; 25-SEP-2014">
+      <genes>
+        <gene id="7117204" protId="POEFO10578"/>
+        <gene id="7117201" protId="POEFO10575"/>
+        <gene id="7117202" protId="POEFO10576"/>
+        <gene id="7117206" protId="POEFO10580"/>
+        <gene id="7117208" protId="POEFO10582"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Lepisosteus oculatus" NCBITaxId="7918">
+    <database name="Lepisosteus oculatus from ENSEMBL v74" version="Ensembl 74; LepOcu1; 27-NOV-2013">
+      <genes>
+        <gene id="7006417" protId="LEPOC03918"/>
+        <gene id="7006419" protId="LEPOC03920"/>
+        <gene id="7006418" protId="LEPOC03919"/>
+        <gene id="7006414" protId="LEPOC03915"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Loxodonta africana" NCBITaxId="9785">
+    <database name="Loxodonta africana from ENSEMBL v70" version="Ensembl 70; loxAfr3; 11-DEC-2012">
+      <genes>
+        <gene id="7304180" protId="LOXAF02617"/>
+        <gene id="7304182" protId="LOXAF02619"/>
+        <gene id="7304181" protId="LOXAF02618"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Bos taurus" NCBITaxId="9913">
+    <database name="Bos taurus from ENSEMBL v70" version="Ensembl 70; UMD3.1; 11-DEC-2012">
+      <genes>
+        <gene id="7838637" protId="BOVIN04524"/>
+        <gene id="7838652" protId="BOVIN04539"/>
+        <gene id="7838638" protId="BOVIN04525"/>
+        <gene id="7838636" protId="BOVIN04523"/>
+        <gene id="7838641" protId="BOVIN04528"/>
+        <gene id="7838640" protId="BOVIN04527"/>
+        <gene id="7838635" protId="BOVIN04522"/>
+        <gene id="7838653" protId="BOVIN04540"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Anolis carolinensis" NCBITaxId="28377">
+    <database name="Anolis carolinensis from ENSEMBL v70" version="Ensembl 70; AnoCar2.0; 11-DEC-2012">
+      <genes>
+        <gene id="8189431" protId="ANOCA11217"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Gallus gallus" NCBITaxId="9031">
+    <database name="Gallus gallus from ENSEMBL v75" version="Ensembl 75; Galgal4; 7-FEB-2014">
+      <genes>
+        <gene id="8113862" protId="CHICK01957"/>
+        <gene id="8113861" protId="CHICK01956"/>
+        <gene id="8113863" protId="CHICK01958"/>
+        <gene id="8113860" protId="CHICK01955"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Rattus norvegicus" NCBITaxId="10116">
+    <database name="Rattus norvegicus from ENSEMBL v83" version="Ensembl 83; Rnor_6.0; 28-NOV-2015">
+      <genes>
+        <gene id="7437334" protId="RATNO01610"/>
+        <gene id="7437333" protId="RATNO01609"/>
+        <gene id="7458049" protId="RATNO22325"/>
+        <gene id="7437330" protId="RATNO01606"/>
+        <gene id="7458050" protId="RATNO22326"/>
+        <gene id="7437332" protId="RATNO01608"/>
+        <gene id="7437331" protId="RATNO01607"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Mustela putorius furo" NCBITaxId="9669">
+    <database name="Mustela putorius furo from ENSEMBL v69" version="Ensembl 69; MusPutFur1.0; 4-OCT-2012">
+      <genes>
+        <gene id="7760273" protId="MUSPF02000"/>
+        <gene id="7760272" protId="MUSPF01999"/>
+        <gene id="7760271" protId="MUSPF01998"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Dasypus novemcinctus" NCBITaxId="9361">
+    <database name="Dasypus novemcinctus from ENSEMBL v78" version="Ensembl 78; Dasnov3.0; 21-NOV-2014">
+      <genes>
+        <gene id="8009372" protId="DASNO15152"/>
+        <gene id="8009373" protId="DASNO15153"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Choloepus hoffmanni" NCBITaxId="9358">
+    <database name="Choloepus hoffmanni from ENSEMBL v70" version="Ensembl 70; choHof1; 11-DEC-2012">
+      <genes>
+        <gene id="8023218" protId="CHOHO05465"/>
+        <gene id="8023284" protId="CHOHO05531"/>
+        <gene id="8023285" protId="CHOHO05532"/>
+        <gene id="8023216" protId="CHOHO05463"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Oreochromis niloticus" NCBITaxId="8128">
+    <database name="Oreochromis niloticus from ENSEMBL v67" version="Ensembl 67; Orenil1.0; 26-APR-2012">
+      <genes>
+        <gene id="7162564" protId="ORENI10405"/>
+        <gene id="7162556" protId="ORENI10397"/>
+        <gene id="7162559" protId="ORENI10400"/>
+        <gene id="7162562" protId="ORENI10403"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Ornithorhynchus anatinus" NCBITaxId="9258">
+    <database name="Ornithorhynchus anatinus from ENSEMBL v49" version="OANA5; Ensembl 49; 20-FEB-2008">
+      <genes>
+        <gene id="7278253" protId="ORNAN12422"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Gasterosteus aculeatus" NCBITaxId="69293">
+    <database name="Gasterosteus aculeatus from ENSEMBL v70" version="Ensembl 70; BROADS1; 12-DEC-2012">
+      <genes>
+        <gene id="7029857" protId="GASAC08465"/>
+        <gene id="7029853" protId="GASAC08461"/>
+        <gene id="7029851" protId="GASAC08459"/>
+        <gene id="7029854" protId="GASAC08462"/>
+        <gene id="7029859" protId="GASAC08467"/>
+        <gene id="7029856" protId="GASAC08464"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Cavia porcellus" NCBITaxId="10141">
+    <database name="Cavia porcellus from ENSEMBL v70" version="Ensembl 70; cavPor3; 11-DEC-2012">
+      <genes>
+        <gene id="7379013" protId="CAVPO04666"/>
+        <gene id="7379014" protId="CAVPO04667"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Macaca mulatta" NCBITaxId="9544">
+    <database name="Macaca mulatta from ENSEMBL v70" version="Ensembl 70; MMUL_1; 11-DEC-2012">
+      <genes>
+        <gene id="7503848" protId="MACMU07551"/>
+        <gene id="7503842" protId="MACMU07545"/>
+        <gene id="7503843" protId="MACMU07546"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Monodelphis domestica" NCBITaxId="13616">
+    <database name="Monodelphis domestica from ENSEMBL v80" version="Ensembl 80; BROADO5; 15-MAY-2015">
+      <genes>
+        <gene id="8057438" protId="MONDO08019"/>
+        <gene id="8057439" protId="MONDO08020"/>
+        <gene id="8061150" protId="MONDO11731"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Vicugna pacos" NCBITaxId="30538">
+    <database name="Vicugna pacos from ENSEMBL v75" version="Ensembl 75; vicPac1; 7-FEB-2014">
+      <genes>
+        <gene id="7905966" protId="VICPA08277"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Tursiops truncatus" NCBITaxId="9739">
+    <database name="Tursiops truncatus from ENSEMBL v70" version="Ensembl 70; turTru1; 11-DEC-2012">
+      <genes>
+        <gene id="7821335" protId="TURTR03718"/>
+        <gene id="7821336" protId="TURTR03719"/>
+        <gene id="7821334" protId="TURTR03717"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Sorex araneus" NCBITaxId="42254">
+    <database name="Sorex araneus from ENSEMBL v70" version="Ensembl 70; COMMON_SHREW1; 11-DEC-2012">
+      <genes>
+        <gene id="7965818" protId="SORAR05099"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Astyanax mexicanus" NCBITaxId="7994">
+    <database name="Astyanax mexicanus from ENSEMBL v74" version="Ensembl 74; AstMex102; 27-NOV-2013">
+      <genes>
+        <gene id="7213607" protId="ASTMX18712"/>
+        <gene id="7202602" protId="ASTMX07707"/>
+        <gene id="7213609" protId="ASTMX18714"/>
+        <gene id="7213601" protId="ASTMX18706"/>
+        <gene id="7213603" protId="ASTMX18708"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Felis catus" NCBITaxId="9685">
+    <database name="Felis catus from ENSEMBL v70" version="Ensembl 70; Felis_catus_6.2; 11-DEC-2012">
+      <genes>
+        <gene id="7809658" protId="FELCA11664"/>
+        <gene id="7809656" protId="FELCA11662"/>
+        <gene id="7809657" protId="FELCA11663"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Anas platyrhynchos" NCBITaxId="8839">
+    <database name="Anas platyrhynchos from ENSEMBL v73" version="Ensembl 73; BGI_duck_1.0; 24-AUG-2013">
+      <genes>
+        <gene id="8095994" protId="ANAPL14469"/>
+        <gene id="8095995" protId="ANAPL14470"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Papio anubis" NCBITaxId="9555">
+    <database name="Papio anubis from ENSEMBL v77" version="Ensembl 77; PapAnu2.0; 26-SEP-2014">
+      <genes>
+        <gene id="7527009" protId="PAPAN05942"/>
+        <gene id="7527011" protId="PAPAN05944"/>
+        <gene id="7527010" protId="PAPAN05943"/>
+        <gene id="7527008" protId="PAPAN05941"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Ictidomys tridecemlineatus" NCBITaxId="43179">
+    <database name="Spermophilus tridecemlineatus from ENSEMBL v67" version="Ensembl 67; spetri2; 26-APR-2012">
+      <genes>
+        <gene id="7464461" protId="ICTTR06375"/>
+        <gene id="7459553" protId="ICTTR01467"/>
+        <gene id="7460461" protId="ICTTR02375"/>
+        <gene id="7459554" protId="ICTTR01468"/>
+        <gene id="7459552" protId="ICTTR01466"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Myotis lucifugus" NCBITaxId="59463">
+    <database name="Myotis lucifugus from ENSEMBL v80" version="Ensembl 80; Myoluc2.0; 15-MAY-2015">
+      <genes>
+        <gene id="7935057" protId="MYOLU08688"/>
+        <gene id="7935055" protId="MYOLU08686"/>
+        <gene id="7935056" protId="MYOLU08687"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Equus caballus" NCBITaxId="9796">
+    <database name="Equus caballus from ENSEMBL v70" version="Ensembl 70; EquCab2; 11-DEC-2012">
+      <genes>
+        <gene id="7991769" protId="HORSE17954"/>
+        <gene id="7991768" protId="HORSE17953"/>
+        <gene id="7991767" protId="HORSE17952"/>
+      </genes>
+    </database>
+  </species>
+  <groups>
+    <orthologGroup id="262018">
+      <property name="TaxRange" value="Euteleostomi"/>
+      <paralogGroup>
+        <orthologGroup>
+          <property name="TaxRange" value="Clupeocephala"/>
+          <orthologGroup>
+            <property name="TaxRange" value="Otophysa"/>
+            <geneRef id="7213609"/>
+            <geneRef id="7237190"/>
+          </orthologGroup>
+          <orthologGroup>
+            <property name="TaxRange" value="Atherinomorphae"/>
+            <geneRef id="7102680"/>
+            <orthologGroup>
+              <property name="TaxRange" value="Poeciliinae"/>
+              <geneRef id="7117202"/>
+              <geneRef id="7139197"/>
+            </orthologGroup>
+          </orthologGroup>
+        </orthologGroup>
+        <orthologGroup>
+          <property name="TaxRange" value="Neopterygii"/>
+          <paralogGroup>
+            <geneRef id="7006419"/>
+            <geneRef id="7006417"/>
+            <geneRef id="7006418"/>
+            <geneRef id="7006414"/>
+          </paralogGroup>
+          <paralogGroup>
+            <orthologGroup>
+              <property name="TaxRange" value="Clupeocephala"/>
+              <paralogGroup>
+                <geneRef id="7237195"/>
+                <orthologGroup>
+                  <property name="TaxRange" value="Otophysa"/>
+                  <paralogGroup>
+                    <geneRef id="7221569"/>
+                    <geneRef id="7221571"/>
+                  </paralogGroup>
+                  <geneRef id="7202602"/>
+                </orthologGroup>
+              </paralogGroup>
+              <orthologGroup>
+                <property name="TaxRange" value="Acanthomorphata"/>
+                <paralogGroup>
+                  <geneRef id="7175396"/>
+                  <geneRef id="7178451"/>
+                  <geneRef id="7175397"/>
+                </paralogGroup>
+                <orthologGroup>
+                  <property name="TaxRange" value="Percomorphaceae"/>
+                  <paralogGroup>
+                    <orthologGroup>
+                      <property name="TaxRange" value="Ovalentaria"/>
+                      <paralogGroup>
+                        <geneRef id="7162559"/>
+                        <geneRef id="7162564"/>
+                      </paralogGroup>
+                      <orthologGroup>
+                        <property name="TaxRange" value="Atherinomorphae"/>
+                        <paralogGroup>
+                          <geneRef id="7102676"/>
+                          <geneRef id="7102678"/>
+                        </paralogGroup>
+                        <orthologGroup>
+                          <property name="TaxRange" value="Poeciliinae"/>
+                          <paralogGroup>
+                            <geneRef id="7117204"/>
+                            <geneRef id="7117206"/>
+                          </paralogGroup>
+                          <geneRef id="7139193"/>
+                        </orthologGroup>
+                      </orthologGroup>
+                    </orthologGroup>
+                    <orthologGroup>
+                      <property name="TaxRange" value="Atherinomorphae"/>
+                      <geneRef id="7093892"/>
+                      <geneRef id="7133764"/>
+                    </orthologGroup>
+                  </paralogGroup>
+                  <orthologGroup>
+                    <property name="TaxRange" value="Eupercaria"/>
+                    <paralogGroup>
+                      <geneRef id="7029857"/>
+                      <geneRef id="7029853"/>
+                      <geneRef id="7029859"/>
+                      <geneRef id="7029854"/>
+                      <geneRef id="7029856"/>
+                      <geneRef id="7029851"/>
+                    </paralogGroup>
+                    <orthologGroup>
+                      <property name="TaxRange" value="Tetraodontidae"/>
+                      <geneRef id="7065258"/>
+                      <geneRef id="7074139"/>
+                    </orthologGroup>
+                  </orthologGroup>
+                </orthologGroup>
+              </orthologGroup>
+            </orthologGroup>
+            <orthologGroup>
+              <property name="TaxRange" value="Clupeocephala"/>
+              <orthologGroup>
+                <property name="TaxRange" value="Otophysa"/>
+                <paralogGroup>
+                  <geneRef id="7213607"/>
+                  <geneRef id="7213601"/>
+                  <geneRef id="7213603"/>
+                </paralogGroup>
+                <geneRef id="7237192"/>
+              </orthologGroup>
+              <orthologGroup>
+                <property name="TaxRange" value="Ovalentaria"/>
+                <paralogGroup>
+                  <geneRef id="7162556"/>
+                  <geneRef id="7162562"/>
+                </paralogGroup>
+                <paralogGroup>
+                  <orthologGroup>
+                    <property name="TaxRange" value="Poeciliinae"/>
+                    <geneRef id="7117208"/>
+                    <geneRef id="7132286"/>
+                  </orthologGroup>
+                  <orthologGroup>
+                    <property name="TaxRange" value="Poeciliinae"/>
+                    <geneRef id="7117201"/>
+                    <geneRef id="7139198"/>
+                  </orthologGroup>
+                </paralogGroup>
+              </orthologGroup>
+            </orthologGroup>
+          </paralogGroup>
+        </orthologGroup>
+      </paralogGroup>
+      <orthologGroup>
+        <property name="TaxRange" value="Tetrapoda"/>
+        <paralogGroup>
+          <geneRef id="8211733"/>
+          <geneRef id="8211734"/>
+          <geneRef id="8207314"/>
+          <geneRef id="8211729"/>
+          <geneRef id="8211732"/>
+          <geneRef id="8211731"/>
+        </paralogGroup>
+        <orthologGroup>
+          <property name="TaxRange" value="Amniota"/>
+          <paralogGroup>
+            <orthologGroup>
+              <property name="TaxRange" value="Laurasiatheria"/>
+              <geneRef id="7935056"/>
+              <geneRef id="7952891"/>
+              <orthologGroup>
+                <property name="TaxRange" value="Carnivora"/>
+                <geneRef id="7809657"/>
+                <orthologGroup>
+                  <property name="TaxRange" value="Caniformia"/>
+                  <geneRef id="7746055"/>
+                  <geneRef id="7760271"/>
+                </orthologGroup>
+              </orthologGroup>
+              <orthologGroup>
+                <property name="TaxRange" value="Bovidae"/>
+                <paralogGroup>
+                  <geneRef id="7838636"/>
+                  <geneRef id="7838640"/>
+                </paralogGroup>
+                <geneRef id="7860797"/>
+              </orthologGroup>
+            </orthologGroup>
+            <orthologGroup>
+              <property name="TaxRange" value="Mammalia"/>
+              <geneRef id="7278253"/>
+              <orthologGroup>
+                <property name="TaxRange" value="Theria"/>
+                <orthologGroup>
+                  <property name="TaxRange" value="Metatheria"/>
+                  <geneRef id="8039628"/>
+                  <geneRef id="8057439"/>
+                  <geneRef id="8071595"/>
+                </orthologGroup>
+                <orthologGroup>
+                  <property name="TaxRange" value="Eutheria"/>
+                  <paralogGroup>
+                    <orthologGroup>
+                      <property name="TaxRange" value="Xenarthra"/>
+                      <geneRef id="8009372"/>
+                      <geneRef id="8023218"/>
+                    </orthologGroup>
+                    <orthologGroup>
+                      <property name="TaxRange" value="Xenarthra"/>
+                      <paralogGroup>
+                        <geneRef id="8023285"/>
+                        <geneRef id="8023284"/>
+                      </paralogGroup>
+                      <geneRef id="8009373"/>
+                    </orthologGroup>
+                    <geneRef id="8023216"/>
+                  </paralogGroup>
+                  <paralogGroup>
+                    <orthologGroup>
+                      <property name="TaxRange" value="Afrotheria"/>
+                      <paralogGroup>
+                        <geneRef id="7289179"/>
+                        <geneRef id="7289178"/>
+                      </paralogGroup>
+                      <paralogGroup>
+                        <geneRef id="7333579"/>
+                        <geneRef id="7324021"/>
+                      </paralogGroup>
+                      <geneRef id="7304180"/>
+                    </orthologGroup>
+                    <orthologGroup>
+                      <property name="TaxRange" value="Afrotheria"/>
+                      <geneRef id="7286054"/>
+                      <geneRef id="7304182"/>
+                    </orthologGroup>
+                    <geneRef id="7304181"/>
+                  </paralogGroup>
+                  <orthologGroup>
+                    <property name="TaxRange" value="Boreoeutheria"/>
+                    <paralogGroup>
+                      <orthologGroup>
+                        <property name="TaxRange" value="Euarchontoglires"/>
+                        <paralogGroup>
+                          <orthologGroup>
+                            <property name="TaxRange" value="Primates"/>
+                            <geneRef id="7721919"/>
+                            <orthologGroup>
+                              <property name="TaxRange" value="Haplorrhini"/>
+                              <geneRef id="7674803"/>
+                              <orthologGroup>
+                                <property name="TaxRange" value="Simiiformes"/>
+                                <geneRef id="7652429"/>
+                                <orthologGroup>
+                                  <property name="TaxRange" value="Catarrhini"/>
+                                  <orthologGroup>
+                                    <property name="TaxRange" value="Cercopithecinae"/>
+                                    <geneRef id="7477853"/>
+                                    <geneRef id="7503842"/>
+                                    <geneRef id="7527008"/>
+                                  </orthologGroup>
+                                  <orthologGroup>
+                                    <property name="TaxRange" value="Hominoidea"/>
+                                    <geneRef id="7631711"/>
+                                    <orthologGroup>
+                                      <property name="TaxRange" value="Hominidae"/>
+                                      <geneRef id="7613301"/>
+                                      <orthologGroup>
+                                        <property name="TaxRange" value="Homininae"/>
+                                        <geneRef id="7543530"/>
+                                        <geneRef id="7566255"/>
+                                        <geneRef id="7595607"/>
+                                      </orthologGroup>
+                                    </orthologGroup>
+                                  </orthologGroup>
+                                </orthologGroup>
+                              </orthologGroup>
+                            </orthologGroup>
+                          </orthologGroup>
+                          <orthologGroup>
+                            <property name="TaxRange" value="Primates"/>
+                            <geneRef id="7721918"/>
+                            <orthologGroup>
+                              <property name="TaxRange" value="Haplorrhini"/>
+                              <geneRef id="7674903"/>
+                              <orthologGroup>
+                                <property name="TaxRange" value="Simiiformes"/>
+                                <paralogGroup>
+                                  <geneRef id="7652428"/>
+                                  <geneRef id="7652427"/>
+                                </paralogGroup>
+                                <orthologGroup>
+                                  <property name="TaxRange" value="Catarrhini"/>
+                                  <orthologGroup>
+                                    <property name="TaxRange" value="Cercopithecinae"/>
+                                    <geneRef id="7477854"/>
+                                    <geneRef id="7503843"/>
+                                    <geneRef id="7527009"/>
+                                  </orthologGroup>
+                                  <orthologGroup>
+                                    <property name="TaxRange" value="Hominoidea"/>
+                                    <paralogGroup>
+                                      <geneRef id="7631708"/>
+                                      <geneRef id="7631709"/>
+                                    </paralogGroup>
+                                    <orthologGroup>
+                                      <property name="TaxRange" value="Hominidae"/>
+                                      <paralogGroup>
+                                        <geneRef id="7613304"/>
+                                        <geneRef id="7613303"/>
+                                      </paralogGroup>
+                                      <orthologGroup>
+                                        <property name="TaxRange" value="Homininae"/>
+                                        <paralogGroup>
+                                          <geneRef id="7566249"/>
+                                          <geneRef id="7566250"/>
+                                        </paralogGroup>
+                                        <geneRef id="7595605"/>
+                                      </orthologGroup>
+                                    </orthologGroup>
+                                  </orthologGroup>
+                                </orthologGroup>
+                              </orthologGroup>
+                            </orthologGroup>
+                          </orthologGroup>
+                        </paralogGroup>
+                        <orthologGroup>
+                          <property name="TaxRange" value="Glires"/>
+                          <paralogGroup>
+                            <orthologGroup>
+                              <property name="TaxRange" value="Lagomorpha"/>
+                              <geneRef id="7340046"/>
+                              <geneRef id="7363309"/>
+                            </orthologGroup>
+                            <orthologGroup>
+                              <property name="TaxRange" value="Lagomorpha"/>
+                              <geneRef id="7340045"/>
+                              <geneRef id="7363307"/>
+                            </orthologGroup>
+                          </paralogGroup>
+                          <paralogGroup>
+                            <orthologGroup>
+                              <property name="TaxRange" value="Sciurognathi"/>
+                              <paralogGroup>
+                                <geneRef id="7437333"/>
+                                <orthologGroup>
+                                  <property name="TaxRange" value="Murinae"/>
+                                  <geneRef id="7430772"/>
+                                  <geneRef id="7437332"/>
+                                </orthologGroup>
+                              </paralogGroup>
+                              <geneRef id="7459553"/>
+                            </orthologGroup>
+                            <orthologGroup>
+                              <property name="TaxRange" value="Rodentia"/>
+                              <geneRef id="7379013"/>
+                              <orthologGroup>
+                                <property name="TaxRange" value="Sciurognathi"/>
+                                <geneRef id="7396595"/>
+                                <geneRef id="7459552"/>
+                                <orthologGroup>
+                                  <property name="TaxRange" value="Murinae"/>
+                                  <geneRef id="7430773"/>
+                                  <geneRef id="7437334"/>
+                                </orthologGroup>
+                              </orthologGroup>
+                            </orthologGroup>
+                          </paralogGroup>
+                        </orthologGroup>
+                      </orthologGroup>
+                      <orthologGroup>
+                        <property name="TaxRange" value="Euarchontoglires"/>
+                        <orthologGroup>
+                          <property name="TaxRange" value="Glires"/>
+                          <paralogGroup>
+                            <geneRef id="7363306"/>
+                            <geneRef id="7340043"/>
+                          </paralogGroup>
+                          <orthologGroup>
+                            <property name="TaxRange" value="Rodentia"/>
+                            <geneRef id="7379014"/>
+                            <orthologGroup>
+                              <property name="TaxRange" value="Sciurognathi"/>
+                              <paralogGroup>
+                                <geneRef id="7464461"/>
+                                <geneRef id="7460461"/>
+                                <geneRef id="7459554"/>
+                              </paralogGroup>
+                              <paralogGroup>
+                                <geneRef id="7437330"/>
+                                <geneRef id="7458050"/>
+                                <orthologGroup>
+                                  <property name="TaxRange" value="Murinae"/>
+                                  <paralogGroup>
+                                    <geneRef id="7458049"/>
+                                    <geneRef id="7437331"/>
+                                  </paralogGroup>
+                                  <paralogGroup>
+                                    <geneRef id="7430769"/>
+                                    <geneRef id="7430770"/>
+                                  </paralogGroup>
+                                </orthologGroup>
+                              </paralogGroup>
+                              <geneRef id="7395092"/>
+                            </orthologGroup>
+                          </orthologGroup>
+                        </orthologGroup>
+                        <orthologGroup>
+                          <property name="TaxRange" value="Primates"/>
+                          <geneRef id="7721917"/>
+                          <orthologGroup>
+                            <property name="TaxRange" value="Haplorrhini"/>
+                            <geneRef id="7676987"/>
+                            <orthologGroup>
+                              <property name="TaxRange" value="Simiiformes"/>
+                              <geneRef id="7652426"/>
+                              <orthologGroup>
+                                <property name="TaxRange" value="Catarrhini"/>
+                                <paralogGroup>
+                                  <orthologGroup>
+                                    <property name="TaxRange" value="Hominoidea"/>
+                                    <geneRef id="7631706"/>
+                                    <orthologGroup>
+                                      <property name="TaxRange" value="Hominidae"/>
+                                      <geneRef id="7613305"/>
+                                      <orthologGroup>
+                                        <property name="TaxRange" value="Homininae"/>
+                                        <geneRef id="7543524"/>
+                                        <geneRef id="7566245"/>
+                                        <geneRef id="7595602"/>
+                                      </orthologGroup>
+                                    </orthologGroup>
+                                  </orthologGroup>
+                                  <orthologGroup>
+                                    <property name="TaxRange" value="Hominoidea"/>
+                                    <geneRef id="7631707"/>
+                                    <orthologGroup>
+                                      <property name="TaxRange" value="Homininae"/>
+                                      <geneRef id="7543339"/>
+                                      <geneRef id="7566247"/>
+                                      <geneRef id="7595603"/>
+                                    </orthologGroup>
+                                  </orthologGroup>
+                                </paralogGroup>
+                                <orthologGroup>
+                                  <property name="TaxRange" value="Cercopithecinae"/>
+                                  <paralogGroup>
+                                    <geneRef id="7477856"/>
+                                    <geneRef id="7477855"/>
+                                  </paralogGroup>
+                                  <paralogGroup>
+                                    <geneRef id="7527010"/>
+                                    <geneRef id="7527011"/>
+                                  </paralogGroup>
+                                  <geneRef id="7503848"/>
+                                </orthologGroup>
+                              </orthologGroup>
+                            </orthologGroup>
+                          </orthologGroup>
+                        </orthologGroup>
+                      </orthologGroup>
+                    </paralogGroup>
+                    <orthologGroup>
+                      <property name="TaxRange" value="Laurasiatheria"/>
+                      <paralogGroup>
+                        <geneRef id="7991769"/>
+                        <geneRef id="7991767"/>
+                        <geneRef id="7991768"/>
+                      </paralogGroup>
+                      <paralogGroup>
+                        <orthologGroup>
+                          <property name="TaxRange" value="Carnivora"/>
+                          <geneRef id="7809658"/>
+                          <orthologGroup>
+                            <property name="TaxRange" value="Caniformia"/>
+                            <geneRef id="7746054"/>
+                            <geneRef id="7783879"/>
+                          </orthologGroup>
+                        </orthologGroup>
+                        <orthologGroup>
+                          <property name="TaxRange" value="Carnivora"/>
+                          <paralogGroup>
+                            <geneRef id="7760273"/>
+                            <orthologGroup>
+                              <property name="TaxRange" value="Caniformia"/>
+                              <geneRef id="7746050"/>
+                              <geneRef id="7760272"/>
+                              <geneRef id="7783881"/>
+                            </orthologGroup>
+                          </paralogGroup>
+                          <geneRef id="7809656"/>
+                        </orthologGroup>
+                      </paralogGroup>
+                      <paralogGroup>
+                        <orthologGroup>
+                          <property name="TaxRange" value="Cetartiodactyla"/>
+                          <paralogGroup>
+                            <geneRef id="7821334"/>
+                            <geneRef id="7821335"/>
+                          </paralogGroup>
+                          <paralogGroup>
+                            <geneRef id="7860798"/>
+                            <orthologGroup>
+                              <property name="TaxRange" value="Bovidae"/>
+                              <paralogGroup>
+                                <geneRef id="7838653"/>
+                                <geneRef id="7838641"/>
+                                <geneRef id="7838652"/>
+                              </paralogGroup>
+                              <geneRef id="7860800"/>
+                            </orthologGroup>
+                            <orthologGroup>
+                              <property name="TaxRange" value="Bovidae"/>
+                              <geneRef id="7838637"/>
+                              <geneRef id="7860799"/>
+                            </orthologGroup>
+                          </paralogGroup>
+                          <paralogGroup>
+                            <geneRef id="7893543"/>
+                            <geneRef id="7893544"/>
+                          </paralogGroup>
+                          <geneRef id="7905966"/>
+                        </orthologGroup>
+                        <orthologGroup>
+                          <property name="TaxRange" value="Cetartiodactyla"/>
+                          <paralogGroup>
+                            <geneRef id="7838635"/>
+                            <geneRef id="7838638"/>
+                          </paralogGroup>
+                          <geneRef id="7821336"/>
+                          <geneRef id="7893545"/>
+                        </orthologGroup>
+                      </paralogGroup>
+                      <paralogGroup>
+                        <orthologGroup>
+                          <property name="TaxRange" value="Chiroptera"/>
+                          <geneRef id="7915276"/>
+                          <geneRef id="7935057"/>
+                        </orthologGroup>
+                        <orthologGroup>
+                          <property name="TaxRange" value="Chiroptera"/>
+                          <paralogGroup>
+                            <geneRef id="7915274"/>
+                            <geneRef id="7915275"/>
+                          </paralogGroup>
+                          <geneRef id="7935055"/>
+                        </orthologGroup>
+                      </paralogGroup>
+                      <orthologGroup>
+                        <property name="TaxRange" value="Insectivora"/>
+                        <paralogGroup>
+                          <geneRef id="7948012"/>
+                          <geneRef id="7946302"/>
+                        </paralogGroup>
+                        <geneRef id="7965818"/>
+                      </orthologGroup>
+                    </orthologGroup>
+                  </orthologGroup>
+                </orthologGroup>
+              </orthologGroup>
+            </orthologGroup>
+            <orthologGroup>
+              <property name="TaxRange" value="Metatheria"/>
+              <geneRef id="8030747"/>
+              <geneRef id="8057438"/>
+              <geneRef id="8071594"/>
+            </orthologGroup>
+            <orthologGroup>
+              <property name="TaxRange" value="Metatheria"/>
+              <geneRef id="8040992"/>
+              <geneRef id="8061150"/>
+              <geneRef id="8068383"/>
+            </orthologGroup>
+          </paralogGroup>
+          <orthologGroup>
+            <property name="TaxRange" value="Sauria"/>
+            <paralogGroup>
+              <orthologGroup>
+                <property name="TaxRange" value="Archelosauria"/>
+                <paralogGroup>
+                  <orthologGroup>
+                    <property name="TaxRange" value="Neognathae"/>
+                    <paralogGroup>
+                      <geneRef id="8142454"/>
+                      <orthologGroup>
+                        <property name="TaxRange" value="Passeriformes"/>
+                        <geneRef id="8141590"/>
+                        <geneRef id="8147735"/>
+                      </orthologGroup>
+                    </paralogGroup>
+                    <paralogGroup>
+                      <orthologGroup>
+                        <property name="TaxRange" value="Galloanserae"/>
+                        <geneRef id="8095994"/>
+                        <orthologGroup>
+                          <property name="TaxRange" value="Phasianidae"/>
+                          <paralogGroup>
+                            <geneRef id="8099290"/>
+                            <geneRef id="8098933"/>
+                          </paralogGroup>
+                          <paralogGroup>
+                            <geneRef id="8113860"/>
+                            <geneRef id="8113863"/>
+                          </paralogGroup>
+                        </orthologGroup>
+                      </orthologGroup>
+                      <orthologGroup>
+                        <property name="TaxRange" value="Galloanserae"/>
+                        <geneRef id="8095995"/>
+                        <orthologGroup>
+                          <property name="TaxRange" value="Phasianidae"/>
+                          <geneRef id="8098934"/>
+                          <geneRef id="8113862"/>
+                        </orthologGroup>
+                      </orthologGroup>
+                    </paralogGroup>
+                  </orthologGroup>
+                  <orthologGroup>
+                    <property name="TaxRange" value="Neognathae"/>
+                    <geneRef id="8142453"/>
+                    <orthologGroup>
+                      <property name="TaxRange" value="Phasianidae"/>
+                      <geneRef id="8098935"/>
+                      <geneRef id="8113861"/>
+                    </orthologGroup>
+                  </orthologGroup>
+                </paralogGroup>
+                <geneRef id="8161364"/>
+              </orthologGroup>
+              <geneRef id="8161365"/>
+            </paralogGroup>
+            <geneRef id="8189431"/>
+          </orthologGroup>
+        </orthologGroup>
+      </orthologGroup>
+    </orthologGroup>
+  </groups>
+</orthoXML>
