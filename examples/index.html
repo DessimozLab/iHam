@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <title>Test</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="https://d3js.org/d3.v3.js"></script>
+
+    <!-- Roboto font -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 
     <!-- TnT -->
     <link rel="stylesheet" href="http://tntvis.github.io/tnt/build/tnt.css" type="text/css" />
-    <!--<script src="http://tntvis.github.io/tnt/build/tnt.js" charset="utf-8"></script>-->
-    <script src="tnt.js" charset="utf-8"></script>
+    <script src="http://tntvis.github.io/tnt/build/tnt.js" charset="utf-8"></script>
+    <!--<script src="tnt.js" charset="utf-8"></script>-->
 
     <!-- TnT Tooltip-->
     <link rel="stylesheet" href="http://tntvis.github.io/tnt.tooltip/build/tnt.tooltip.css" type="text/css" />
@@ -17,9 +20,16 @@
 
     <script src="/build/iHam.js"></script>
     <link rel="stylesheet" href="/build/iHam.css" type="text/css" />
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
 </head>
 <body>
-<div id="iham"></div>
+<div>Node selected: <span id="current-node"></span></div>
+<div style="width: 1500px; min-width: 500px;" id="iham"></div>
 <script src="/examples/example.js"></script>
 </body>
 </html>

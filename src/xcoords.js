@@ -1,4 +1,9 @@
-export default function genes_2_xcoords(arr, maxs, current_hog_state) {
+const filter = (id, all) => {
+  const found = all.filter(d => d.id === id);
+  return found[0];
+};
+
+export default function genes_2_xcoords(arr, maxs, current_hog_state, fam_data) {
   if (arr === undefined) {
     return {
       genes: [],
@@ -10,13 +15,13 @@ export default function genes_2_xcoords(arr, maxs, current_hog_state) {
   const hogs_boundaries = [];
   let total_pos = 0;
   arr.forEach((hog_genes, hog) => {
-    // TODO: Put this back
     if (current_hog_state.removed_hogs.indexOf(hog) === -1) {
       const hog_gene_names = [];
       hog_genes.sort();
       hog_genes.forEach(function (gene, gene_pos) {
         genes.push({
           id: gene,
+          gene: filter(gene, fam_data),
           hog: hog,
           pos: total_pos + gene_pos,
           max: d3.sum(maxs),

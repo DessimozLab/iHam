@@ -1,13 +1,14 @@
 // hog feature
-// TnT doesn't have the features we need, so create ower own
+// TnT doesn't have the features we need, so create our own
+import {gene_tooltip, hog_header_tooltip} from './tooltips';
+
 export const hog_feature = tnt.board.track.feature()
   .index(function (d) {
     return d.id;
   })
   .create(function (new_hog, x_scale) {
     const track = this;
-    const padding = ~~(track.height() - (track.height() * 0.8)) / 2; // TODO: can this be factored out??
-    // otherwise it is repeated with every create event
+    const padding = ~~(track.height() - (track.height() * 0.8)) / 2;
 
     const height = track.height() - ~~(padding * 2);
     const dom1 = x_scale.domain()[1];
@@ -21,7 +22,7 @@ export const hog_feature = tnt.board.track.feature()
         const xnext = width * d.max_in_hog;
         return x + (xnext - x + width) / 2 + ~~(padding / 2) - 1;
       })
-      .attr("x2", function (d, i) {
+      .attr("x2", function (d) {
         const width = d3.min([x_scale(dom1 / d.max), height]);
         const x = width * (d.max_in_hog - 1);
         const xnext = width * d.max_in_hog;
@@ -34,7 +35,7 @@ export const hog_feature = tnt.board.track.feature()
   })
   .distribute(function (hogs, x_scale) {
     const track = this;
-    const padding = ~~(track.height() - (track.height() * 0.8)) / 2; // TODO: can this be factored out??
+    const padding = ~~(track.height() - (track.height() * 0.8)) / 2;
 
     const height = track.height() - ~~(padding * 2);
     const dom1 = x_scale.domain()[1];
@@ -66,7 +67,7 @@ export function hog_gene_feature(color) {
     color = () => "grey";
   }
 
-  feature.color = function(c) {
+  feature.color = function (c) {
     if (!arguments.length) {
       return color;
     }
@@ -80,8 +81,7 @@ export function hog_gene_feature(color) {
     })
     .create(function (new_elems, x_scale) {
       const track = this;
-      const padding = ~~(track.height() - (track.height() * 0.8)) / 2; // TODO: can this be factored out??
-      // otherwise it is repeated with every create event
+      const padding = ~~(track.height() - (track.height() * 0.8)) / 2;
       const height = track.height() - ~~(padding * 2);
       const dom1 = x_scale.domain()[1];
 
@@ -103,8 +103,7 @@ export function hog_gene_feature(color) {
     })
     .distribute(function (elems, x_scale) {
       const track = this;
-      const padding = ~~(track.height() - (track.height() * 0.8)) / 2; // TODO: can this be factored out??
-      // otherwise it is repeated with every create event
+      const padding = ~~(track.height() - (track.height() * 0.8)) / 2;
       const height = track.height() - ~~(padding * 2);
       const dom1 = x_scale.domain()[1];
 
@@ -119,24 +118,33 @@ export function hog_gene_feature(color) {
           const width = d3.min([x_scale(dom1 / d.max), height]);
           return width - 2 * padding;
         });
+    })
+    .on('click', function (gene) {
+      console.log(gene);
+      gene_tooltip.display.call(this, gene);
     });
 
   return feature;
 }
 
 export const hog_group = tnt.board.track.feature()
-  .index(d => {
-    return d.name;
-  })
+  .index(d => d.name)
   .create(function (new_group, x_scale) {
-    // const track = this;
+    const track = this;
+    const padding = ~~(track.height() - (track.height() * 0.8)) / 2;
+    const height = track.height() - ~~(padding * 2);
     const dom1 = x_scale.domain()[1];
 
     const g = new_group
       .append('g')
       .attr('transform', (g) => {
-        const hog_space = x_scale(dom1 / (g.total_hogs + 1));
-        const posx = (hog_space * g.hog_pos) + (hog_space / 2);
+        const width = d3.min([x_scale(dom1 / g.max), height]);
+        const posx = (g.hog_start * width) + (g.max_in_hog * width) / 2;
+        // const x = width * (g.max_in_hog - 1);
+        // const xnext = width * g.max_in_hog;
+        // const posx = x + (xnext / 2);
+        // const x_per_hog = x + (xnext - x + width) / 2 + ~~(padding / 2) - 1;
+        // const posx = (g.hog_pos * x_per_hog) + (g.hog_pos + 1) * x_per_hog / 2;
         return `translate(${posx}, 0)`;
       })
       .attr('class', d => d.name);
@@ -159,19 +167,26 @@ export const hog_group = tnt.board.track.feature()
       .attr('cy', -18)
       .attr('r', 2)
       .attr('fill', 'black');
+
   })
   .distribute(function (elems, x_scale) {
     const track = this;
+    const padding = ~~(track.height() - (track.height() * 0.8)) / 2;
+    const height = track.height() - ~~(padding * 2);
     const dom1 = x_scale.domain()[1];
 
     elems.select('g')
       .transition()
-      .attr('transform', function(g) {
-        const hog_space = x_scale(dom1 / (g.total_hogs + 1));
-        const posx = (hog_space * g.hog_pos) + (hog_space / 2);
+      .attr('transform', function (g) {
+        const width = d3.min([x_scale(dom1 / g.max), height]);
+        const posx = (g.hog_start * width) + (g.max_in_hog * width) / 2;
+        // const x = width * (g.max_in_hog - 1);
+        // const xnext = width * g.max_in_hog;
+        // const x_per_hog = x + (xnext - x + width) / 2 + ~~(padding / 2) - 1;
+        // const posx = (g.hog_pos * x_per_hog) + (g.hog_pos + 1) * x_per_hog / 2;
         return `translate(${posx}, 0)`;
       })
   })
-  .on('click', function (g) {
-    console.log(g);
+  .on('click', function (hog) {
+    hog_header_tooltip.display.call(this, hog);
   });

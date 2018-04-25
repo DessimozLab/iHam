@@ -1,11 +1,11 @@
-export default function Hog_state() {
-
-  const that = this;
+export default function Hog_state(fam_data) {
 
   this.current_level = '';
   this.hogs = undefined;
   this.number_species = 0;
   this.removed_hogs = [];
+
+  const that = this;
 
   this.reset_on = function (tree, per_species3, tax_name, threshold) {
     that.current_level = tax_name;
@@ -45,6 +45,7 @@ export default function Hog_state() {
       }
     }
 
+    // TODO: Convert this to event
     d3.select('.alert_remove')
       .attr('display', () => that.removed_hogs.length ? 'block': 'none');
 
@@ -56,10 +57,10 @@ export default function Hog_state() {
   };
 
   this.add_genes = function (array_hogs_with_genes) {
-    if (that.hogs === undefined) {
+    if (!that.hogs) {
       that.hogs = [];
-      for (var i = 0; i < array_hogs_with_genes.length; i++) {
-        var h = {
+      for (let i = 0; i < array_hogs_with_genes.length; i++) {
+        const h = {
           genes: [],
           name: `hog_${i}`,
           number_species: 0,
@@ -73,7 +74,7 @@ export default function Hog_state() {
       }
     }
 
-    for (var i = 0; i < array_hogs_with_genes.length; i++) {
+    for (let i = 0; i < array_hogs_with_genes.length; i++) {
       if (array_hogs_with_genes[i].length > 0) {
         that.hogs[i].genes = that.hogs[i].genes.concat(array_hogs_with_genes[i]);
         that.hogs[i].number_species += 1;
@@ -81,6 +82,12 @@ export default function Hog_state() {
           that.hogs[i].max_in_hog = array_hogs_with_genes[i].length
         }
       }
+    }
+
+    let genes_so_far = 0;
+    for (let i = 0; i < this.hogs.length; i++) {
+      this.hogs[i].hog_start = genes_so_far;
+      genes_so_far += this.hogs[i].max_in_hog;
     }
 
   }

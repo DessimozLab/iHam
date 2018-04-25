@@ -1,5 +1,5 @@
 let _mouse_over_node;
-export let mouse_over_node = {
+export const mouse_over_node = {
   display: function (node) {
     const obj = {
       // header: "Mouse over tooltip",
@@ -17,7 +17,7 @@ export let mouse_over_node = {
 };
 
 let _tree_node_tooltip;
-export let tree_node_tooltip = {
+export const tree_node_tooltip = {
   display: function (node, actions, frozen) { // actions: (on collapse / expand) and (on freeze)
     const obj = {};
     obj.header = node.node_name();
@@ -29,7 +29,6 @@ export let tree_node_tooltip = {
         value: node.is_collapsed() ? "Expand node" : "Collapse node",
         link: function (n) {
           tree_node_tooltip.close();
-          // n.toggle();
           actions.on_collapse();
         },
         obj: node
@@ -50,12 +49,60 @@ export let tree_node_tooltip = {
     });
 
 
-    _tree_node_tooltip = tooltip.table()
-      .width(250)
-      .id(1)
+    _tree_node_tooltip = tooltip.list()
+      .width(120)
+      .id('node_click_tooltip')
       .call(this, obj);
   },
-  close: () => {
-    _tree_node_tooltip.close();
-  }
+  close: () => _tree_node_tooltip.close()
+};
+
+let _gene_tooltip;
+export const gene_tooltip = {
+  display: function (gene) {
+    const obj = {};
+    obj.header = gene.gene.protid;
+    obj.rows = [];
+    obj.rows.push({
+      label: "Name",
+      value: gene.gene.xrefid
+    });
+
+   _gene_tooltip = tooltip.table()
+     .width(120)
+     .id('gene_tooltip')
+     .call(this, obj);
+  },
+  close: () => _gene_tooltip.close()
+};
+
+let _hog_header_tooltip;
+export const hog_header_tooltip = {
+  display: function (hog) {
+    const obj = {};
+    obj.header = hog.name;
+    obj.rows = [];
+    obj.rows.push({
+      value: `Number of genes: ${hog.genes.length}`
+    });
+    obj.rows.push({
+      value: `Coverage: ${hog.coverage} %`
+    });
+    obj.rows.push({
+      value: "Sequences (Fasta)",
+      link: function () {
+      }
+    });
+    obj.rows.push({
+      value: "HOGs tables",
+      link: function () {
+      }
+    });
+
+    _hog_header_tooltip = tooltip.list()
+      .width(120)
+      .id('hog_header_tooltip')
+      .call(this, obj);
+  },
+  close: () => _hog_header_tooltip.close()
 };

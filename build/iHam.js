@@ -198,21 +198,6 @@
 
 	var tnt_api = api_1;
 
-	function compute_size_annotations(maxs, tot_width, taxa_name) {
-	  if (taxa_name === 'LUCA') {
-	    return ~~(tot_width * 0.6);
-	  }
-
-	  var max_number_square = 0;
-	  var arrayLength = maxs[taxa_name].length;
-
-	  for (var i = 0; i < arrayLength; i++) {
-	    max_number_square += maxs[taxa_name][i];
-	  }
-
-	  return max_number_square;
-	} // get maximum number of genes per hog accross species
-
 	function get_maxs(data) {
 	  var maxs = {};
 	  var i;
@@ -244,15 +229,112 @@
 	  return maxs;
 	}
 
+	var _mouse_over_node;
+
+	var mouse_over_node = {
+	  display: function display(node) {
+	    var obj = {
+	      // header: "Mouse over tooltip",
+	      body: node.node_name()
+	    };
+	    _mouse_over_node = tooltip.plain().id('node_over_tooltip').width(140).show_closer(false).call(this, obj);
+	  },
+	  close: function close() {
+	    _mouse_over_node.close();
+	  }
+	};
+
+	var _tree_node_tooltip;
+
+	var tree_node_tooltip = {
+	  display: function display(node, actions, frozen) {
+	    // actions: (on collapse / expand) and (on freeze)
+	    var obj = {};
+	    obj.header = node.node_name();
+	    obj.rows = []; // collapse / uncollapse if internal node
+
+	    if (!node.is_leaf()) {
+	      obj.rows.push({
+	        value: node.is_collapsed() ? "Expand node" : "Collapse node",
+	        link: function link(n) {
+	          tree_node_tooltip.close();
+	          actions.on_collapse();
+	        },
+	        obj: node
+	      });
+	    } // There are 3 freezing possibilites:
+	    // "Freeze tree at this node",
+	    // "Unfreeze the tree",
+	    // "Re-freeze tree at this node"
+
+
+	    obj.rows.push({
+	      value: frozen === node.id() ? 'Unfreeze the tree' : 'Freeze at this node',
+	      link: function link(n) {
+	        tree_node_tooltip.close();
+	        actions.on_freeze();
+	      },
+	      obj: node
+	    });
+	    _tree_node_tooltip = tooltip.list().width(120).id('node_click_tooltip').call(this, obj);
+	  },
+	  close: function close() {
+	    return _tree_node_tooltip.close();
+	  }
+	};
+
+	var _gene_tooltip;
+
+	var gene_tooltip = {
+	  display: function display(gene) {
+	    var obj = {};
+	    obj.header = gene.gene.protid;
+	    obj.rows = [];
+	    obj.rows.push({
+	      label: "Name",
+	      value: gene.gene.xrefid
+	    });
+	    _gene_tooltip = tooltip.table().width(120).id('gene_tooltip').call(this, obj);
+	  },
+	  close: function close() {
+	    return _gene_tooltip.close();
+	  }
+	};
+
+	var _hog_header_tooltip;
+
+	var hog_header_tooltip = {
+	  display: function display(hog) {
+	    var obj = {};
+	    obj.header = hog.name;
+	    obj.rows = [];
+	    obj.rows.push({
+	      value: "Number of genes: ".concat(hog.genes.length)
+	    });
+	    obj.rows.push({
+	      value: "Coverage: ".concat(hog.coverage, " %")
+	    });
+	    obj.rows.push({
+	      value: "Sequences (Fasta)",
+	      link: function link() {}
+	    });
+	    obj.rows.push({
+	      value: "HOGs tables",
+	      link: function link() {}
+	    });
+	    _hog_header_tooltip = tooltip.list().width(120).id('hog_header_tooltip').call(this, obj);
+	  },
+	  close: function close() {
+	    return _hog_header_tooltip.close();
+	  }
+	};
+
 	// hog feature
-	// TnT doesn't have the features we need, so create ower own
 	var hog_feature = tnt.board.track.feature().index(function (d) {
 	  return d.id;
 	}).create(function (new_hog, x_scale) {
 	  var track = this;
-	  var padding = ~~(track.height() - track.height() * 0.8) / 2; // TODO: can this be factored out??
-	  // otherwise it is repeated with every create event
-
+	  var padding = ~~(track.height() - track.height() * 0.8) / 2;
 	  var height = track.height() - ~~(padding * 2);
 	  var dom1 = x_scale.domain()[1];
 	  new_hog.append("line").attr("class", "hog_boundary").attr("x1", function (d) {
@@ -260,7 +342,7 @@
 	    var x = width * (d.max_in_hog - 1);
 	    var xnext = width * d.max_in_hog;
 	    return x + (xnext - x + width) / 2 + ~~(padding / 2) - 1;
-	  }).attr("x2", function (d, i) {
+	  }).attr("x2", function (d) {
 	    var width = d3.min([x_scale(dom1 / d.max), height]);
 	    var x = width * (d.max_in_hog - 1);
 	    var xnext = width * d.max_in_hog;
@@ -268,8 +350,7 @@
 	  }).attr("y1", 0).attr("y2", track.height()).attr("stroke-width", 2).attr("stroke", "black");
 	}).distribute(function (hogs, x_scale) {
 	  var track = this;
-	  var padding = ~~(track.height() - track.height() * 0.8) / 2; // TODO: can this be factored out??
-
+	  var padding = ~~(track.height() - track.height() * 0.8) / 2;
 	  var height = track.height() - ~~(padding * 2);
 	  var dom1 = x_scale.domain()[1];
 	  hogs.select("line").transition().duration(200).attr("x1", function (d) {
@@ -308,9 +389,7 @@
 	    return d.id;
 	  }).create(function (new_elems, x_scale) {
 	    var track = this;
-	    var padding = ~~(track.height() - track.height() * 0.8) / 2; // TODO: can this be factored out??
-	    // otherwise it is repeated with every create event
-
+	    var padding = ~~(track.height() - track.height() * 0.8) / 2;
 	    var height = track.height() - ~~(padding * 2);
 	    var dom1 = x_scale.domain()[1];
 	    new_elems.append("rect").attr("class", "hog_gene").attr("x", function (d) {
@@ -323,9 +402,7 @@
 	    }).attr("height", height).attr("fill", color);
 	  }).distribute(function (elems, x_scale) {
 	    var track = this;
-	    var padding = ~~(track.height() - track.height() * 0.8) / 2; // TODO: can this be factored out??
-	    // otherwise it is repeated with every create event
-
+	    var padding = ~~(track.height() - track.height() * 0.8) / 2;
 	    var height = track.height() - ~~(padding * 2);
 	    var dom1 = x_scale.domain()[1];
 	    elems.select("rect").transition().attr("x", function (d) {
@@ -336,17 +413,27 @@
 	      var width = d3.min([x_scale(dom1 / d.max), height]);
 	      return width - 2 * padding;
 	    });
+	  }).on('click', function (gene) {
+	    console.log(gene);
+	    gene_tooltip.display.call(this, gene);
 	  });
 	  return feature;
 	}
 	var hog_group = tnt.board.track.feature().index(function (d) {
 	  return d.name;
 	}).create(function (new_group, x_scale) {
-	  // const track = this;
+	  var track = this;
+	  var padding = ~~(track.height() - track.height() * 0.8) / 2;
+	  var height = track.height() - ~~(padding * 2);
 	  var dom1 = x_scale.domain()[1];
 	  var g = new_group.append('g').attr('transform', function (g) {
-	    var hog_space = x_scale(dom1 / (g.total_hogs + 1));
-	    var posx = hog_space * g.hog_pos + hog_space / 2;
+	    var width = d3.min([x_scale(dom1 / g.max), height]);
+	    var posx = g.hog_start * width + g.max_in_hog * width / 2; // const x = width * (g.max_in_hog - 1);
+	    // const xnext = width * g.max_in_hog;
+	    // const posx = x + (xnext / 2);
+	    // const x_per_hog = x + (xnext - x + width) / 2 + ~~(padding / 2) - 1;
+	    // const posx = (g.hog_pos * x_per_hog) + (g.hog_pos + 1) * x_per_hog / 2;
+
 	    return "translate(".concat(posx, ", 0)");
 	  }).attr('class', function (d) {
 	    return d.name;
@@ -355,22 +442,29 @@
 	  g.append('circle').attr('cx', 0).attr('cy', -12).attr('r', 2).attr('fill', 'black');
 	  g.append('circle').attr('cx', 0).attr('cy', -18).attr('r', 2).attr('fill', 'black');
 	}).distribute(function (elems, x_scale) {
+	  var track = this;
+	  var padding = ~~(track.height() - track.height() * 0.8) / 2;
+	  var height = track.height() - ~~(padding * 2);
 	  var dom1 = x_scale.domain()[1];
 	  elems.select('g').transition().attr('transform', function (g) {
-	    var hog_space = x_scale(dom1 / (g.total_hogs + 1));
-	    var posx = hog_space * g.hog_pos + hog_space / 2;
+	    var width = d3.min([x_scale(dom1 / g.max), height]);
+	    var posx = g.hog_start * width + g.max_in_hog * width / 2; // const x = width * (g.max_in_hog - 1);
+	    // const xnext = width * g.max_in_hog;
+	    // const x_per_hog = x + (xnext - x + width) / 2 + ~~(padding / 2) - 1;
+	    // const posx = (g.hog_pos * x_per_hog) + (g.hog_pos + 1) * x_per_hog / 2;
+
 	    return "translate(".concat(posx, ", 0)");
 	  });
-	}).on('click', function (g) {
-	  console.log(g);
+	}).on('click', function (hog) {
+	  hog_header_tooltip.display.call(this, hog);
 	});
 
-	function Hog_state() {
-	  var that = this;
+	function Hog_state(fam_data) {
 	  this.current_level = '';
 	  this.hogs = undefined;
 	  this.number_species = 0;
 	  this.removed_hogs = [];
+	  var that = this;
 
 	  this.reset_on = function (tree, per_species3, tax_name, threshold) {
 	    that.current_level = tax_name;
@@ -404,7 +498,8 @@
 	      for (var _i2 = that.removed_hogs.length - 1; _i2 >= 0; _i2--) {
 	        that.hogs.splice(that.removed_hogs[_i2], 1);
 	      }
-	    }
+	    } // TODO: Convert this to event
+
 
 	    d3.select('.alert_remove').attr('display', function () {
 	      return that.removed_hogs.length ? 'block' : 'none';
@@ -415,7 +510,7 @@
 	  };
 
 	  this.add_genes = function (array_hogs_with_genes) {
-	    if (that.hogs === undefined) {
+	    if (!that.hogs) {
 	      that.hogs = [];
 
 	      for (var i = 0; i < array_hogs_with_genes.length; i++) {
@@ -432,20 +527,34 @@
 	      }
 	    }
 
-	    for (var i = 0; i < array_hogs_with_genes.length; i++) {
-	      if (array_hogs_with_genes[i].length > 0) {
-	        that.hogs[i].genes = that.hogs[i].genes.concat(array_hogs_with_genes[i]);
-	        that.hogs[i].number_species += 1;
+	    for (var _i3 = 0; _i3 < array_hogs_with_genes.length; _i3++) {
+	      if (array_hogs_with_genes[_i3].length > 0) {
+	        that.hogs[_i3].genes = that.hogs[_i3].genes.concat(array_hogs_with_genes[_i3]);
+	        that.hogs[_i3].number_species += 1;
 
-	        if (that.hogs[i].max_in_hog < array_hogs_with_genes[i].length) {
-	          that.hogs[i].max_in_hog = array_hogs_with_genes[i].length;
+	        if (that.hogs[_i3].max_in_hog < array_hogs_with_genes[_i3].length) {
+	          that.hogs[_i3].max_in_hog = array_hogs_with_genes[_i3].length;
 	        }
 	      }
+	    }
+
+	    var genes_so_far = 0;
+
+	    for (var _i4 = 0; _i4 < this.hogs.length; _i4++) {
+	      this.hogs[_i4].hog_start = genes_so_far;
+	      genes_so_far += this.hogs[_i4].max_in_hog;
 	    }
 	  };
 	}
 
-	function genes_2_xcoords(arr, maxs, current_hog_state) {
+	var filter = function filter(id, all) {
+	  var found = all.filter(function (d) {
+	    return d.id === id;
+	  });
+	  return found[0];
+	};
+
+	function genes_2_xcoords(arr, maxs, current_hog_state, fam_data) {
 	  if (arr === undefined) {
 	    return {
 	      genes: [],
@@ -458,13 +567,13 @@
 	  var hogs_boundaries = [];
 	  var total_pos = 0;
 	  arr.forEach(function (hog_genes, hog) {
-	    // TODO: Put this back
 	    if (current_hog_state.removed_hogs.indexOf(hog) === -1) {
 	      var hog_gene_names = [];
 	      hog_genes.sort();
 	      hog_genes.forEach(function (gene, gene_pos) {
 	        genes.push({
 	          id: gene,
+	          gene: filter(gene, fam_data),
 	          hog: hog,
 	          pos: total_pos + gene_pos,
 	          max: d3.sum(maxs),
@@ -489,62 +598,8 @@
 	  };
 	}
 
-	var _mouse_over_node;
-
-	var mouse_over_node = {
-	  display: function display(node) {
-	    var obj = {
-	      // header: "Mouse over tooltip",
-	      body: node.node_name()
-	    };
-	    _mouse_over_node = tooltip.plain().id('node_over_tooltip').width(140).show_closer(false).call(this, obj);
-	  },
-	  close: function close() {
-	    _mouse_over_node.close();
-	  }
-	};
-
-	var _tree_node_tooltip;
-
-	var tree_node_tooltip = {
-	  display: function display(node, actions, frozen) {
-	    // actions: (on collapse / expand) and (on freeze)
-	    var obj = {};
-	    obj.header = node.node_name();
-	    obj.rows = []; // collapse / uncollapse if internal node
-
-	    if (!node.is_leaf()) {
-	      obj.rows.push({
-	        value: node.is_collapsed() ? "Expand node" : "Collapse node",
-	        link: function link(n) {
-	          tree_node_tooltip.close(); // n.toggle();
-
-	          actions.on_collapse();
-	        },
-	        obj: node
-	      });
-	    } // There are 3 freezing possibilites:
-	    // "Freeze tree at this node",
-	    // "Unfreeze the tree",
-	    // "Re-freeze tree at this node"
-
-
-	    obj.rows.push({
-	      value: frozen === node.id() ? 'Unfreeze the tree' : 'Freeze at this node',
-	      link: function link(n) {
-	        tree_node_tooltip.close();
-	        actions.on_freeze();
-	      },
-	      obj: node
-	    });
-	    _tree_node_tooltip = tooltip.table().width(250).id(1).call(this, obj);
-	  },
-	  close: function close() {
-	    _tree_node_tooltip.close();
-	  }
-	};
-
 	/* global d3 */
+	var dispatch = d3.dispatch("node_selected", "click");
 
 	function iHam() {
 	  // internal (non API) options
@@ -555,8 +610,12 @@
 	  };
 	  var current_hog_state = new Hog_state();
 	  var board;
+	  var tree;
 	  var current_opened_taxa_name = '';
-	  var column_coverage_threshold = 0; // external options (exposed API)
+	  var column_coverage_threshold = 0; // width for tree and board
+
+	  var tree_width = 200;
+	  var board_width = 800;
 
 	  var config = {
 	    div_id: null,
@@ -564,6 +623,7 @@
 	    data_per_species: null,
 	    // TODO: this should be called simply data?
 	    tree_obj: null,
+	    fam_data: null,
 	    // orthoxml: null,
 	    // newick: null,
 	    pickerDiv: null,
@@ -606,18 +666,18 @@
 
 	  var theme = function theme(div) {
 	    // const data = parsers.parse_orthoxml(config.newick, config.orthoxml);
-	    // console.log(data);
 	    // Mocked data for now...
-	    config.data_per_species = JSON.parse('{"Plasmodium falciparum (isolate 3D7)":{"Plasmodium falciparum (isolate 3D7)":[[11605],[11731]],"Eukaryota":[[11605,11731]]},"Schizosaccharomyces pombe (strain 972 / ATCC 24843)":{"Schizosaccharomyces pombe (strain 972 / ATCC 24843)":[[11028]],"Ascomycota":[[11028]],"Eukaryota":[[11028]]},"Saccharomyces cerevisiae (strain ATCC 204508 / S288c)":{"Saccharomyces cerevisiae (strain ATCC 204508 / S288c)":[[12],[5839]],"Ascomycota":[[12,5839]],"Eukaryota":[[12,5839]]}}');
-	    config.tree_obj = JSON.parse('{"name":"Eukaryota","children":[{"name":"Plasmodium falciparum (isolate 3D7)"},{"name":"Ascomycota","children":[{"name":"Schizosaccharomyces pombe (strain 972 / ATCC 24843)"},{"name":"Saccharomyces cerevisiae (strain ATCC 204508 / S288c)"}]}]}');
+	    // config.data_per_species = JSON.parse('{"Plasmodium falciparum (isolate 3D7)":{"Plasmodium falciparum (isolate 3D7)":[[11605],[11731]],"Eukaryota":[[11605,11731]]},"Schizosaccharomyces pombe (strain 972 / ATCC 24843)":{"Schizosaccharomyces pombe (strain 972 / ATCC 24843)":[[11028]],"Ascomycota":[[11028]],"Eukaryota":[[11028]]},"Saccharomyces cerevisiae (strain ATCC 204508 / S288c)":{"Saccharomyces cerevisiae (strain ATCC 204508 / S288c)":[[12],[5839]],"Ascomycota":[[12,5839]],"Eukaryota":[[12,5839]]}}');
+	    // config.tree_obj = JSON.parse('{"name":"Eukaryota","children":[{"name":"Plasmodium falciparum (isolate 3D7)"},{"name":"Ascomycota","children":[{"name":"Schizosaccharomyces pombe (strain 972 / ATCC 24843)"},{"name":"Saccharomyces cerevisiae (strain ATCC 204508 / S288c)"}]}]}');
+	    // config.fam_data = JSON.parse('[{"id": 12, "protid": "YEAST00012", "sequence_length": 457, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "DHE5_YEAST", "gc_content": 0.4868995633187773}, {"id": 5839, "protid": "YEAST05839", "sequence_length": 454, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "DHE4_YEAST", "gc_content": 0.4468864468864469}, {"id": 11028, "protid": "SCHPO04676", "sequence_length": 451, "taxon": {"species": "Schizosaccharomyces pombe ", "strain": "(strain 972 / ATCC 24843)"}, "xrefid": "DHE4_SCHPO", "gc_content": 0.5007374631268436}, {"id": 11605, "protid": "PLAF700166", "sequence_length": 470, "taxon": {"species": "Plasmodium falciparum ", "strain": "(isolate 3D7)"}, "xrefid": "Q8ILT0", "gc_content": 0.3043170559094126}, {"id": 11731, "protid": "PLAF700292", "sequence_length": 510, "taxon": {"species": "Plasmodium falciparum ", "strain": "(isolate 3D7)"}, "xrefid": "Q8ILF7", "gc_content": 0.299412915851272}]');
+	    config.data_per_species = JSON.parse('{"Plasmodium falciparum (isolate 3D7)":{"Plasmodium falciparum (isolate 3D7)":[[13190]],"Eukaryota":[[13190]]},"Schizosaccharomyces pombe (strain 972 / ATCC 24843)":{"Schizosaccharomyces pombe (strain 972 / ATCC 24843)":[[6375],[8693],[8663],[10053],[10579],[10582],[10587],[10588]],"Ascomycota":[[10053,10579,10582,10587,10588,8663],[6375,8693],[]],"Eukaryota":[[10053,10579,10582,10587,10588,6375,8663,8693]]},"Ashbya gossypii (strain ATCC 10895 / CBS 109.51 / FGSC 9923 / NRRL Y-1056)":{"Ashbya gossypii (strain ATCC 10895 / CBS 109.51 / FGSC 9923 / NRRL Y-1056)":[[19423],[19949],[19951],[19952]],"Saccharomycetaceae":[[19949,19951,19952],[],[19423]],"Ascomycota":[[19949,19951,19952],[],[19423]],"Eukaryota":[[19423,19949,19951,19952]]},"Saccharomyces cerevisiae (strain ATCC 204508 / S288c)":{"Saccharomyces cerevisiae (strain ATCC 204508 / S288c)":[[718],[1791],[3104],[3475],[5277],[1323],[1324],[1326],[2154],[2952],[2954],[2956],[3099],[3965],[4524],[5297]],"Saccharomycetaceae":[[1323,1324,1326,2154,2952,2954,2956,3099,3965,4524,5297],[1791,3104,3475,5277,718],[]],"Ascomycota":[[1323,1324,1326,1791,2154,2952,2954,2956,3099,3104,3475,3965,4524,5277,5297,718],[],[]],"Eukaryota":[[1323,1324,1326,1791,2154,2952,2954,2956,3099,3104,3475,3965,4524,5277,5297,718]]}}');
+	    config.tree_obj = JSON.parse('{"name":"Eukaryota","children":[{"name":"Plasmodium falciparum (isolate 3D7)"},{"name":"Ascomycota","children":[{"name":"Schizosaccharomyces pombe (strain 972 / ATCC 24843)"},{"name":"Saccharomycetaceae","children":[{"name":"Ashbya gossypii (strain ATCC 10895 / CBS 109.51 / FGSC 9923 / NRRL Y-1056)"},{"name":"Saccharomyces cerevisiae (strain ATCC 204508 / S288c)"}]}]}]}');
+	    config.fam_data = JSON.parse('[{"id": 718, "protid": "YEAST00718", "sequence_length": 567, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT15_YEAST", "gc_content": 0.41901408450704225}, {"id": 1323, "protid": "YEAST01323", "sequence_length": 570, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT7_YEAST", "gc_content": 0.4138937536485698}, {"id": 1324, "protid": "YEAST01324", "sequence_length": 570, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT6_YEAST", "gc_content": 0.4133099824868651}, {"id": 1326, "protid": "YEAST01326", "sequence_length": 567, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT3_YEAST", "gc_content": 0.4055164319248826}, {"id": 1791, "protid": "YEAST01791", "sequence_length": 564, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT13_YEAST", "gc_content": 0.4230088495575221}, {"id": 2154, "protid": "YEAST02154", "sequence_length": 546, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT10_YEAST", "gc_content": 0.4113345521023766}, {"id": 2952, "protid": "YEAST02952", "sequence_length": 576, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT4_YEAST", "gc_content": 0.3928365106874639}, {"id": 2954, "protid": "YEAST02954", "sequence_length": 570, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT1_YEAST", "gc_content": 0.4115586690017513}, {"id": 2956, "protid": "YEAST02956", "sequence_length": 592, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT5_YEAST", "gc_content": 0.418212478920742}, {"id": 3099, "protid": "YEAST03099", "sequence_length": 567, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT9_YEAST", "gc_content": 0.43896713615023475}, {"id": 3104, "protid": "YEAST03104", "sequence_length": 569, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT8_YEAST", "gc_content": 0.4087719298245614}, {"id": 3475, "protid": "YEAST03475", "sequence_length": 567, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT16_YEAST", "gc_content": 0.42018779342723006}, {"id": 3965, "protid": "YEAST03965", "sequence_length": 574, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "GAL2_YEAST", "gc_content": 0.42144927536231885}, {"id": 4524, "protid": "YEAST04524", "sequence_length": 541, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT2_YEAST", "gc_content": 0.3985239852398524}, {"id": 5277, "protid": "YEAST05277", "sequence_length": 564, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT17_YEAST", "gc_content": 0.4176991150442478}, {"id": 5297, "protid": "YEAST05297", "sequence_length": 567, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT11_YEAST", "gc_content": 0.43896713615023475}, {"id": 6375, "protid": "SCHPO00023", "sequence_length": 555, "taxon": {"species": "Schizosaccharomyces pombe ", "strain": "(strain 972 / ATCC 24843)"}, "xrefid": "GHT3_SCHPO", "gc_content": 0.38968824940047964}, {"id": 8663, "protid": "SCHPO02311", "sequence_length": 518, "taxon": {"species": "Schizosaccharomyces pombe ", "strain": "(strain 972 / ATCC 24843)"}, "xrefid": "GHT7_SCHPO", "gc_content": 0.4007707129094412}, {"id": 8693, "protid": "SCHPO02341", "sequence_length": 557, "taxon": {"species": "Schizosaccharomyces pombe ", "strain": "(strain 972 / ATCC 24843)"}, "xrefid": "GHT4_SCHPO", "gc_content": 0.4074074074074074}, {"id": 10053, "protid": "SCHPO03701", "sequence_length": 531, "taxon": {"species": "Schizosaccharomyces pombe ", "strain": "(strain 972 / ATCC 24843)"}, "xrefid": "GHT2_SCHPO", "gc_content": 0.4166666666666667}, {"id": 10579, "protid": "SCHPO04227", "sequence_length": 535, "taxon": {"species": "Schizosaccharomyces pombe ", "strain": "(strain 972 / ATCC 24843)"}, "xrefid": "GHT6_SCHPO", "gc_content": 0.43781094527363185}, {"id": 10582, "protid": "SCHPO04230", "sequence_length": 546, "taxon": {"species": "Schizosaccharomyces pombe ", "strain": "(strain 972 / ATCC 24843)"}, "xrefid": "GHT5_SCHPO", "gc_content": 0.44363193174893356}, {"id": 10587, "protid": "SCHPO04235", "sequence_length": 547, "taxon": {"species": "Schizosaccharomyces pombe ", "strain": "(strain 972 / ATCC 24843)"}, "xrefid": "GHT8_SCHPO", "gc_content": 0.44038929440389296}, {"id": 10588, "protid": "SCHPO04236", "sequence_length": 557, "taxon": {"species": "Schizosaccharomyces pombe ", "strain": "(strain 972 / ATCC 24843)"}, "xrefid": "GHT1_SCHPO", "gc_content": 0.45340501792114696}, {"id": 13190, "protid": "PLAF701751", "sequence_length": 504, "taxon": {"species": "Plasmodium falciparum ", "strain": "(isolate 3D7)"}, "xrefid": "Q7KWJ5", "gc_content": 0.2963696369636964}, {"id": 19423, "protid": "ASHGO02481", "sequence_length": 547, "taxon": {"species": "Ashbya gossypii ", "strain": "(strain ATCC 10895 / CBS 109.51 / FGSC 9923 / NRRL Y-1056)"}, "xrefid": "Q757Q4", "gc_content": 0.5371046228710462}, {"id": 19949, "protid": "ASHGO03007", "sequence_length": 539, "taxon": {"species": "Ashbya gossypii ", "strain": "(strain ATCC 10895 / CBS 109.51 / FGSC 9923 / NRRL Y-1056)"}, "xrefid": "Q755M1", "gc_content": 0.45555555555555555}, {"id": 19951, "protid": "ASHGO03009", "sequence_length": 546, "taxon": {"species": "Ashbya gossypii ", "strain": "(strain ATCC 10895 / CBS 109.51 / FGSC 9923 / NRRL Y-1056)"}, "xrefid": "Q755L9", "gc_content": 0.47592931139549055}, {"id": 19952, "protid": "ASHGO03010", "sequence_length": 535, "taxon": {"species": "Ashbya gossypii ", "strain": "(strain ATCC 10895 / CBS 109.51 / FGSC 9923 / NRRL Y-1056)"}, "xrefid": "Q755L8", "gc_content": 0.4732587064676617}]');
 	    var maxs = get_maxs(config.data_per_species);
 
 	    var gene_color = function gene_color(gene) {
 	      return config.query_gene && gene.id === config.query_gene.id ? "#27ae60" : "#95a5a6";
 	    }; // todo -30 should be define by margin variables
-
-
-	    var tot_width = parseInt(d3.select(div).style('width')) - 30; // Node display
 
 	    var collapsed_node = tnt.tree.node_display.triangle().fill("grey").size(4);
 	    var leaf_node = tnt.tree.node_display.circle().fill("#2c3e50").size(4);
@@ -635,32 +695,15 @@
 	      }
 	    });
 
-	    function update_board() {
-	      // update the board
-	      board.update(); // and remove all headers not belonging to top level
-
-	      var tracks = board.tracks();
-	      var found_first = false;
-	      tracks.forEach(function (track) {
-	        var header = track.g.select('.tnt_elem_hog_groups').node();
-
-	        if (header && found_first) {
-	          track.g.selectAll('.tnt_elem_hog_groups').remove();
-	        }
-
-	        if (header) {
-	          found_first = true;
-	        }
-	      });
-	    }
-
 	    function update_nodes(node) {
 	      if (config.frozen_node) {
 	        return;
 	      }
 
-	      current_opened_taxa_name = node.node_name();
-	      board.width(compute_size_annotations(maxs, tot_width, node.node_name())); // TODO: At this point we need to call a method to display the current level in the Helader (outside the widget)
+	      dispatch.node_selected.call(this, node);
+	      current_opened_taxa_name = node.node_name(); // board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
+
+	      board.width(board_width); // TODO: At this point we need to call a method to display the current level in the Heaader (outside the widget)
 
 	      current_hog_state.reset_on(tree, config.data_per_species, current_opened_taxa_name, column_coverage_threshold); // board.update();
 
@@ -675,7 +718,8 @@
 	    } // Tree
 
 
-	    var tree = tnt.tree().data(config.tree_obj).layout(tnt.tree.layout.vertical().width(Math.max(240, ~~(tot_width * 0.4))).scale(false)).label(tnt.tree.label.text().fontsize(12).height(config.label_height).text(function (node) {
+	    tree = tnt.tree().data(config.tree_obj).layout(tnt.tree.layout.vertical() // .width(Math.max(240, ~~(tot_width * 0.4)))
+	    .width(tree_width).scale(false)).label(tnt.tree.label.text().fontsize(12).height(config.label_height).text(function (node) {
 	      var limit = 30;
 	      var data = node.data();
 
@@ -728,9 +772,8 @@
 	    current_opened_taxa_name = tree.root().node_name();
 	    current_hog_state.reset_on(tree, config.data_per_species, current_opened_taxa_name, column_coverage_threshold); // Board:
 
-	    board = tnt.board().from(0).zoom_in(1).allow_drag(false).to(2) // .width(500) // TODO: This shouldn't be hardcoded?
-	    .width(compute_size_annotations(maxs, tot_width, current_opened_taxa_name) * (config.label_height + 2)); // .max(5);
-	    // Board's track
+	    board = tnt.board().from(0).zoom_in(1).allow_drag(false).to(2) // .width(compute_size_annotations(maxs, tot_width, current_opened_taxa_name) * (config.label_height + 2));
+	    .width(board_width); // Board's track
 
 	    var track = function track(leaf) {
 	      var sp = leaf.node_name();
@@ -740,7 +783,7 @@
 	          var random_collapse_leaf_name = leaf.get_all_leaves(true)[0].node_name();
 
 	          if (config.data_per_species[random_collapse_leaf_name] !== undefined) {
-	            var genes2Xcoords = genes_2_xcoords(config.data_per_species[random_collapse_leaf_name][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state);
+	            var genes2Xcoords = genes_2_xcoords(config.data_per_species[random_collapse_leaf_name][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state, config.fam_data);
 	            genes2Xcoords.genes = [];
 	            return genes2Xcoords;
 	          }
@@ -754,18 +797,77 @@
 	          };
 	        }
 
-	        return genes_2_xcoords(config.data_per_species[sp][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state);
+	        var data = genes_2_xcoords(config.data_per_species[sp][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state, config.fam_data);
+	        console.log(data);
+	        return data;
 	      })).display(tnt.board.track.feature.composite().add("genes", hog_gene_feature(gene_color)).add("hogs", hog_feature).add('hog_groups', hog_group));
 	    }; // iHam setup
 
 
 	    var iHamVis = tnt().tree(tree).board(board).track(track);
 	    iHamVis(div);
-	    update_board();
+	    update_nodes(tree.root());
+	    set_widths();
 	  };
 
-	  var api = tnt_api(theme).getset(config);
-	  return theme;
+	  tnt_api(theme).getset(config); // resize the board container to fill space between tree panel and right
+
+	  function update_board() {
+	    // update the board
+	    board.update(); // and remove all headers not belonging to top level
+
+	    var tracks = board.tracks();
+	    var found_first = false;
+	    tracks.forEach(function (track) {
+	      var header = track.g.select('.tnt_elem_hog_groups').node();
+
+	      if (header && found_first) {
+	        track.g.selectAll('.tnt_elem_hog_groups').remove();
+	      }
+
+	      if (header) {
+	        found_first = true;
+	      }
+	    });
+	  }
+
+	  function set_widths() {
+	    if (board) {
+	      board.width(board_width).update();
+	      d3.select("#tnt_tree_container_hogvis_container").style("width", board_width);
+	    }
+
+	    if (tree) {
+	      tree.layout().width(tree_width);
+	      tree.update();
+	    }
+
+	    if (board) {
+	      update_board();
+	    }
+	  }
+
+	  theme.board_width = function (w) {
+	    if (!arguments.length) {
+	      return board_width;
+	    }
+
+	    board_width = w;
+	    set_widths();
+	    return this;
+	  };
+
+	  theme.tree_width = function (w) {
+	    if (!arguments.length) {
+	      return tree_width;
+	    }
+
+	    tree_width = w;
+	    set_widths();
+	    return this;
+	  };
+
+	  return d3.rebind(theme, dispatch, "on");
 	}
 
 	return iHam;
