@@ -1,6 +1,5 @@
 // hog feature
 // TnT doesn't have the features we need, so create our own
-import {gene_tooltip, hog_header_tooltip} from './tooltips';
 
 export const hog_feature = tnt.board.track.feature()
   .index(function (d) {
@@ -118,10 +117,6 @@ export function hog_gene_feature(color) {
           const width = d3.min([x_scale(dom1 / d.max), height]);
           return width - 2 * padding;
         });
-    })
-    .on('click', function (gene) {
-      console.log(gene);
-      gene_tooltip.display.call(this, gene);
     });
 
   return feature;
@@ -140,11 +135,6 @@ export const hog_group = tnt.board.track.feature()
       .attr('transform', (g) => {
         const width = d3.min([x_scale(dom1 / g.max), height]);
         const posx = (g.hog_start * width) + (g.max_in_hog * width) / 2;
-        // const x = width * (g.max_in_hog - 1);
-        // const xnext = width * g.max_in_hog;
-        // const posx = x + (xnext / 2);
-        // const x_per_hog = x + (xnext - x + width) / 2 + ~~(padding / 2) - 1;
-        // const posx = (g.hog_pos * x_per_hog) + (g.hog_pos + 1) * x_per_hog / 2;
         return `translate(${posx}, 0)`;
       })
       .attr('class', d => d.name);
@@ -180,13 +170,6 @@ export const hog_group = tnt.board.track.feature()
       .attr('transform', function (g) {
         const width = d3.min([x_scale(dom1 / g.max), height]);
         const posx = (g.hog_start * width) + (g.max_in_hog * width) / 2;
-        // const x = width * (g.max_in_hog - 1);
-        // const xnext = width * g.max_in_hog;
-        // const x_per_hog = x + (xnext - x + width) / 2 + ~~(padding / 2) - 1;
-        // const posx = (g.hog_pos * x_per_hog) + (g.hog_pos + 1) * x_per_hog / 2;
         return `translate(${posx}, 0)`;
       })
-  })
-  .on('click', function (hog) {
-    hog_header_tooltip.display.call(this, hog);
   });

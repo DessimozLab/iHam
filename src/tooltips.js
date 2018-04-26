@@ -1,6 +1,6 @@
 let _mouse_over_node;
 export const mouse_over_node = {
-  display: function (node) {
+  display: function (node, div) {
     const obj = {
       // header: "Mouse over tooltip",
       body: node.node_name()
@@ -9,6 +9,7 @@ export const mouse_over_node = {
       .id('node_over_tooltip')
       .width(140)
       .show_closer(false)
+      .container(div)
       .call(this, obj);
   },
   close: () => {
@@ -18,7 +19,7 @@ export const mouse_over_node = {
 
 let _tree_node_tooltip;
 export const tree_node_tooltip = {
-  display: function (node, actions, frozen) { // actions: (on collapse / expand) and (on freeze)
+  display: function (node, div, actions, frozen) { // actions: (on collapse / expand) and (on freeze)
     const obj = {};
     obj.header = node.node_name();
     obj.rows = [];
@@ -52,6 +53,7 @@ export const tree_node_tooltip = {
     _tree_node_tooltip = tooltip.list()
       .width(120)
       .id('node_click_tooltip')
+      .container(div)
       .call(this, obj);
   },
   close: () => _tree_node_tooltip.close()
@@ -59,7 +61,7 @@ export const tree_node_tooltip = {
 
 let _gene_tooltip;
 export const gene_tooltip = {
-  display: function (gene) {
+  display: function (gene, div) {
     const obj = {};
     obj.header = gene.gene.protid;
     obj.rows = [];
@@ -71,6 +73,7 @@ export const gene_tooltip = {
    _gene_tooltip = tooltip.table()
      .width(120)
      .id('gene_tooltip')
+     .container(div)
      .call(this, obj);
   },
   close: () => _gene_tooltip.close()
@@ -78,7 +81,7 @@ export const gene_tooltip = {
 
 let _hog_header_tooltip;
 export const hog_header_tooltip = {
-  display: function (hog) {
+  display: function (hog, div) {
     const obj = {};
     obj.header = hog.name;
     obj.rows = [];
@@ -102,6 +105,7 @@ export const hog_header_tooltip = {
     _hog_header_tooltip = tooltip.list()
       .width(120)
       .id('hog_header_tooltip')
+      .container(div)
       .call(this, obj);
   },
   close: () => _hog_header_tooltip.close()

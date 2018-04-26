@@ -229,107 +229,8 @@
 	  return maxs;
 	}
 
-	var _mouse_over_node;
-
-	var mouse_over_node = {
-	  display: function display(node) {
-	    var obj = {
-	      // header: "Mouse over tooltip",
-	      body: node.node_name()
-	    };
-	    _mouse_over_node = tooltip.plain().id('node_over_tooltip').width(140).show_closer(false).call(this, obj);
-	  },
-	  close: function close() {
-	    _mouse_over_node.close();
-	  }
-	};
-
-	var _tree_node_tooltip;
-
-	var tree_node_tooltip = {
-	  display: function display(node, actions, frozen) {
-	    // actions: (on collapse / expand) and (on freeze)
-	    var obj = {};
-	    obj.header = node.node_name();
-	    obj.rows = []; // collapse / uncollapse if internal node
-
-	    if (!node.is_leaf()) {
-	      obj.rows.push({
-	        value: node.is_collapsed() ? "Expand node" : "Collapse node",
-	        link: function link(n) {
-	          tree_node_tooltip.close();
-	          actions.on_collapse();
-	        },
-	        obj: node
-	      });
-	    } // There are 3 freezing possibilites:
-	    // "Freeze tree at this node",
-	    // "Unfreeze the tree",
-	    // "Re-freeze tree at this node"
-
-
-	    obj.rows.push({
-	      value: frozen === node.id() ? 'Unfreeze the tree' : 'Freeze at this node',
-	      link: function link(n) {
-	        tree_node_tooltip.close();
-	        actions.on_freeze();
-	      },
-	      obj: node
-	    });
-	    _tree_node_tooltip = tooltip.list().width(120).id('node_click_tooltip').call(this, obj);
-	  },
-	  close: function close() {
-	    return _tree_node_tooltip.close();
-	  }
-	};
-
-	var _gene_tooltip;
-
-	var gene_tooltip = {
-	  display: function display(gene) {
-	    var obj = {};
-	    obj.header = gene.gene.protid;
-	    obj.rows = [];
-	    obj.rows.push({
-	      label: "Name",
-	      value: gene.gene.xrefid
-	    });
-	    _gene_tooltip = tooltip.table().width(120).id('gene_tooltip').call(this, obj);
-	  },
-	  close: function close() {
-	    return _gene_tooltip.close();
-	  }
-	};
-
-	var _hog_header_tooltip;
-
-	var hog_header_tooltip = {
-	  display: function display(hog) {
-	    var obj = {};
-	    obj.header = hog.name;
-	    obj.rows = [];
-	    obj.rows.push({
-	      value: "Number of genes: ".concat(hog.genes.length)
-	    });
-	    obj.rows.push({
-	      value: "Coverage: ".concat(hog.coverage, " %")
-	    });
-	    obj.rows.push({
-	      value: "Sequences (Fasta)",
-	      link: function link() {}
-	    });
-	    obj.rows.push({
-	      value: "HOGs tables",
-	      link: function link() {}
-	    });
-	    _hog_header_tooltip = tooltip.list().width(120).id('hog_header_tooltip').call(this, obj);
-	  },
-	  close: function close() {
-	    return _hog_header_tooltip.close();
-	  }
-	};
-
 	// hog feature
+	// TnT doesn't have the features we need, so create our own
 	var hog_feature = tnt.board.track.feature().index(function (d) {
 	  return d.id;
 	}).create(function (new_hog, x_scale) {
@@ -413,9 +314,6 @@
 	      var width = d3.min([x_scale(dom1 / d.max), height]);
 	      return width - 2 * padding;
 	    });
-	  }).on('click', function (gene) {
-	    console.log(gene);
-	    gene_tooltip.display.call(this, gene);
 	  });
 	  return feature;
 	}
@@ -428,12 +326,7 @@
 	  var dom1 = x_scale.domain()[1];
 	  var g = new_group.append('g').attr('transform', function (g) {
 	    var width = d3.min([x_scale(dom1 / g.max), height]);
-	    var posx = g.hog_start * width + g.max_in_hog * width / 2; // const x = width * (g.max_in_hog - 1);
-	    // const xnext = width * g.max_in_hog;
-	    // const posx = x + (xnext / 2);
-	    // const x_per_hog = x + (xnext - x + width) / 2 + ~~(padding / 2) - 1;
-	    // const posx = (g.hog_pos * x_per_hog) + (g.hog_pos + 1) * x_per_hog / 2;
-
+	    var posx = g.hog_start * width + g.max_in_hog * width / 2;
 	    return "translate(".concat(posx, ", 0)");
 	  }).attr('class', function (d) {
 	    return d.name;
@@ -448,15 +341,9 @@
 	  var dom1 = x_scale.domain()[1];
 	  elems.select('g').transition().attr('transform', function (g) {
 	    var width = d3.min([x_scale(dom1 / g.max), height]);
-	    var posx = g.hog_start * width + g.max_in_hog * width / 2; // const x = width * (g.max_in_hog - 1);
-	    // const xnext = width * g.max_in_hog;
-	    // const x_per_hog = x + (xnext - x + width) / 2 + ~~(padding / 2) - 1;
-	    // const posx = (g.hog_pos * x_per_hog) + (g.hog_pos + 1) * x_per_hog / 2;
-
+	    var posx = g.hog_start * width + g.max_in_hog * width / 2;
 	    return "translate(".concat(posx, ", 0)");
 	  });
-	}).on('click', function (hog) {
-	  hog_header_tooltip.display.call(this, hog);
 	});
 
 	function Hog_state(fam_data) {
@@ -598,6 +485,106 @@
 	  };
 	}
 
+	var _mouse_over_node;
+
+	var mouse_over_node = {
+	  display: function display(node, div) {
+	    var obj = {
+	      // header: "Mouse over tooltip",
+	      body: node.node_name()
+	    };
+	    _mouse_over_node = tooltip.plain().id('node_over_tooltip').width(140).show_closer(false).container(div).call(this, obj);
+	  },
+	  close: function close() {
+	    _mouse_over_node.close();
+	  }
+	};
+
+	var _tree_node_tooltip;
+
+	var tree_node_tooltip = {
+	  display: function display(node, div, actions, frozen) {
+	    // actions: (on collapse / expand) and (on freeze)
+	    var obj = {};
+	    obj.header = node.node_name();
+	    obj.rows = []; // collapse / uncollapse if internal node
+
+	    if (!node.is_leaf()) {
+	      obj.rows.push({
+	        value: node.is_collapsed() ? "Expand node" : "Collapse node",
+	        link: function link(n) {
+	          tree_node_tooltip.close();
+	          actions.on_collapse();
+	        },
+	        obj: node
+	      });
+	    } // There are 3 freezing possibilites:
+	    // "Freeze tree at this node",
+	    // "Unfreeze the tree",
+	    // "Re-freeze tree at this node"
+
+
+	    obj.rows.push({
+	      value: frozen === node.id() ? 'Unfreeze the tree' : 'Freeze at this node',
+	      link: function link(n) {
+	        tree_node_tooltip.close();
+	        actions.on_freeze();
+	      },
+	      obj: node
+	    });
+	    _tree_node_tooltip = tooltip.list().width(120).id('node_click_tooltip').container(div).call(this, obj);
+	  },
+	  close: function close() {
+	    return _tree_node_tooltip.close();
+	  }
+	};
+
+	var _gene_tooltip;
+
+	var gene_tooltip = {
+	  display: function display(gene, div) {
+	    var obj = {};
+	    obj.header = gene.gene.protid;
+	    obj.rows = [];
+	    obj.rows.push({
+	      label: "Name",
+	      value: gene.gene.xrefid
+	    });
+	    _gene_tooltip = tooltip.table().width(120).id('gene_tooltip').container(div).call(this, obj);
+	  },
+	  close: function close() {
+	    return _gene_tooltip.close();
+	  }
+	};
+
+	var _hog_header_tooltip;
+
+	var hog_header_tooltip = {
+	  display: function display(hog, div) {
+	    var obj = {};
+	    obj.header = hog.name;
+	    obj.rows = [];
+	    obj.rows.push({
+	      value: "Number of genes: ".concat(hog.genes.length)
+	    });
+	    obj.rows.push({
+	      value: "Coverage: ".concat(hog.coverage, " %")
+	    });
+	    obj.rows.push({
+	      value: "Sequences (Fasta)",
+	      link: function link() {}
+	    });
+	    obj.rows.push({
+	      value: "HOGs tables",
+	      link: function link() {}
+	    });
+	    _hog_header_tooltip = tooltip.list().width(120).id('hog_header_tooltip').container(div).call(this, obj);
+	  },
+	  close: function close() {
+	    return _hog_header_tooltip.close();
+	  }
+	};
+
 	/* global d3 */
 	var dispatch = d3.dispatch("node_selected", "click");
 
@@ -665,11 +652,12 @@
 	  };
 
 	  var theme = function theme(div) {
-	    // const data = parsers.parse_orthoxml(config.newick, config.orthoxml);
+	    d3.select(div).style("position", "relative"); // const data = parsers.parse_orthoxml(config.newick, config.orthoxml);
 	    // Mocked data for now...
 	    // config.data_per_species = JSON.parse('{"Plasmodium falciparum (isolate 3D7)":{"Plasmodium falciparum (isolate 3D7)":[[11605],[11731]],"Eukaryota":[[11605,11731]]},"Schizosaccharomyces pombe (strain 972 / ATCC 24843)":{"Schizosaccharomyces pombe (strain 972 / ATCC 24843)":[[11028]],"Ascomycota":[[11028]],"Eukaryota":[[11028]]},"Saccharomyces cerevisiae (strain ATCC 204508 / S288c)":{"Saccharomyces cerevisiae (strain ATCC 204508 / S288c)":[[12],[5839]],"Ascomycota":[[12,5839]],"Eukaryota":[[12,5839]]}}');
 	    // config.tree_obj = JSON.parse('{"name":"Eukaryota","children":[{"name":"Plasmodium falciparum (isolate 3D7)"},{"name":"Ascomycota","children":[{"name":"Schizosaccharomyces pombe (strain 972 / ATCC 24843)"},{"name":"Saccharomyces cerevisiae (strain ATCC 204508 / S288c)"}]}]}');
 	    // config.fam_data = JSON.parse('[{"id": 12, "protid": "YEAST00012", "sequence_length": 457, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "DHE5_YEAST", "gc_content": 0.4868995633187773}, {"id": 5839, "protid": "YEAST05839", "sequence_length": 454, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "DHE4_YEAST", "gc_content": 0.4468864468864469}, {"id": 11028, "protid": "SCHPO04676", "sequence_length": 451, "taxon": {"species": "Schizosaccharomyces pombe ", "strain": "(strain 972 / ATCC 24843)"}, "xrefid": "DHE4_SCHPO", "gc_content": 0.5007374631268436}, {"id": 11605, "protid": "PLAF700166", "sequence_length": 470, "taxon": {"species": "Plasmodium falciparum ", "strain": "(isolate 3D7)"}, "xrefid": "Q8ILT0", "gc_content": 0.3043170559094126}, {"id": 11731, "protid": "PLAF700292", "sequence_length": 510, "taxon": {"species": "Plasmodium falciparum ", "strain": "(isolate 3D7)"}, "xrefid": "Q8ILF7", "gc_content": 0.299412915851272}]');
+
 	    config.data_per_species = JSON.parse('{"Plasmodium falciparum (isolate 3D7)":{"Plasmodium falciparum (isolate 3D7)":[[13190]],"Eukaryota":[[13190]]},"Schizosaccharomyces pombe (strain 972 / ATCC 24843)":{"Schizosaccharomyces pombe (strain 972 / ATCC 24843)":[[6375],[8693],[8663],[10053],[10579],[10582],[10587],[10588]],"Ascomycota":[[10053,10579,10582,10587,10588,8663],[6375,8693],[]],"Eukaryota":[[10053,10579,10582,10587,10588,6375,8663,8693]]},"Ashbya gossypii (strain ATCC 10895 / CBS 109.51 / FGSC 9923 / NRRL Y-1056)":{"Ashbya gossypii (strain ATCC 10895 / CBS 109.51 / FGSC 9923 / NRRL Y-1056)":[[19423],[19949],[19951],[19952]],"Saccharomycetaceae":[[19949,19951,19952],[],[19423]],"Ascomycota":[[19949,19951,19952],[],[19423]],"Eukaryota":[[19423,19949,19951,19952]]},"Saccharomyces cerevisiae (strain ATCC 204508 / S288c)":{"Saccharomyces cerevisiae (strain ATCC 204508 / S288c)":[[718],[1791],[3104],[3475],[5277],[1323],[1324],[1326],[2154],[2952],[2954],[2956],[3099],[3965],[4524],[5297]],"Saccharomycetaceae":[[1323,1324,1326,2154,2952,2954,2956,3099,3965,4524,5297],[1791,3104,3475,5277,718],[]],"Ascomycota":[[1323,1324,1326,1791,2154,2952,2954,2956,3099,3104,3475,3965,4524,5277,5297,718],[],[]],"Eukaryota":[[1323,1324,1326,1791,2154,2952,2954,2956,3099,3104,3475,3965,4524,5277,5297,718]]}}');
 	    config.tree_obj = JSON.parse('{"name":"Eukaryota","children":[{"name":"Plasmodium falciparum (isolate 3D7)"},{"name":"Ascomycota","children":[{"name":"Schizosaccharomyces pombe (strain 972 / ATCC 24843)"},{"name":"Saccharomycetaceae","children":[{"name":"Ashbya gossypii (strain ATCC 10895 / CBS 109.51 / FGSC 9923 / NRRL Y-1056)"},{"name":"Saccharomyces cerevisiae (strain ATCC 204508 / S288c)"}]}]}]}');
 	    config.fam_data = JSON.parse('[{"id": 718, "protid": "YEAST00718", "sequence_length": 567, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT15_YEAST", "gc_content": 0.41901408450704225}, {"id": 1323, "protid": "YEAST01323", "sequence_length": 570, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT7_YEAST", "gc_content": 0.4138937536485698}, {"id": 1324, "protid": "YEAST01324", "sequence_length": 570, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT6_YEAST", "gc_content": 0.4133099824868651}, {"id": 1326, "protid": "YEAST01326", "sequence_length": 567, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT3_YEAST", "gc_content": 0.4055164319248826}, {"id": 1791, "protid": "YEAST01791", "sequence_length": 564, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT13_YEAST", "gc_content": 0.4230088495575221}, {"id": 2154, "protid": "YEAST02154", "sequence_length": 546, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT10_YEAST", "gc_content": 0.4113345521023766}, {"id": 2952, "protid": "YEAST02952", "sequence_length": 576, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT4_YEAST", "gc_content": 0.3928365106874639}, {"id": 2954, "protid": "YEAST02954", "sequence_length": 570, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT1_YEAST", "gc_content": 0.4115586690017513}, {"id": 2956, "protid": "YEAST02956", "sequence_length": 592, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT5_YEAST", "gc_content": 0.418212478920742}, {"id": 3099, "protid": "YEAST03099", "sequence_length": 567, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT9_YEAST", "gc_content": 0.43896713615023475}, {"id": 3104, "protid": "YEAST03104", "sequence_length": 569, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT8_YEAST", "gc_content": 0.4087719298245614}, {"id": 3475, "protid": "YEAST03475", "sequence_length": 567, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT16_YEAST", "gc_content": 0.42018779342723006}, {"id": 3965, "protid": "YEAST03965", "sequence_length": 574, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "GAL2_YEAST", "gc_content": 0.42144927536231885}, {"id": 4524, "protid": "YEAST04524", "sequence_length": 541, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT2_YEAST", "gc_content": 0.3985239852398524}, {"id": 5277, "protid": "YEAST05277", "sequence_length": 564, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT17_YEAST", "gc_content": 0.4176991150442478}, {"id": 5297, "protid": "YEAST05297", "sequence_length": 567, "taxon": {"species": "Saccharomyces cerevisiae ", "strain": "(strain ATCC 204508 / S288c)"}, "xrefid": "HXT11_YEAST", "gc_content": 0.43896713615023475}, {"id": 6375, "protid": "SCHPO00023", "sequence_length": 555, "taxon": {"species": "Schizosaccharomyces pombe ", "strain": "(strain 972 / ATCC 24843)"}, "xrefid": "GHT3_SCHPO", "gc_content": 0.38968824940047964}, {"id": 8663, "protid": "SCHPO02311", "sequence_length": 518, "taxon": {"species": "Schizosaccharomyces pombe ", "strain": "(strain 972 / ATCC 24843)"}, "xrefid": "GHT7_SCHPO", "gc_content": 0.4007707129094412}, {"id": 8693, "protid": "SCHPO02341", "sequence_length": 557, "taxon": {"species": "Schizosaccharomyces pombe ", "strain": "(strain 972 / ATCC 24843)"}, "xrefid": "GHT4_SCHPO", "gc_content": 0.4074074074074074}, {"id": 10053, "protid": "SCHPO03701", "sequence_length": 531, "taxon": {"species": "Schizosaccharomyces pombe ", "strain": "(strain 972 / ATCC 24843)"}, "xrefid": "GHT2_SCHPO", "gc_content": 0.4166666666666667}, {"id": 10579, "protid": "SCHPO04227", "sequence_length": 535, "taxon": {"species": "Schizosaccharomyces pombe ", "strain": "(strain 972 / ATCC 24843)"}, "xrefid": "GHT6_SCHPO", "gc_content": 0.43781094527363185}, {"id": 10582, "protid": "SCHPO04230", "sequence_length": 546, "taxon": {"species": "Schizosaccharomyces pombe ", "strain": "(strain 972 / ATCC 24843)"}, "xrefid": "GHT5_SCHPO", "gc_content": 0.44363193174893356}, {"id": 10587, "protid": "SCHPO04235", "sequence_length": 547, "taxon": {"species": "Schizosaccharomyces pombe ", "strain": "(strain 972 / ATCC 24843)"}, "xrefid": "GHT8_SCHPO", "gc_content": 0.44038929440389296}, {"id": 10588, "protid": "SCHPO04236", "sequence_length": 557, "taxon": {"species": "Schizosaccharomyces pombe ", "strain": "(strain 972 / ATCC 24843)"}, "xrefid": "GHT1_SCHPO", "gc_content": 0.45340501792114696}, {"id": 13190, "protid": "PLAF701751", "sequence_length": 504, "taxon": {"species": "Plasmodium falciparum ", "strain": "(isolate 3D7)"}, "xrefid": "Q7KWJ5", "gc_content": 0.2963696369636964}, {"id": 19423, "protid": "ASHGO02481", "sequence_length": 547, "taxon": {"species": "Ashbya gossypii ", "strain": "(strain ATCC 10895 / CBS 109.51 / FGSC 9923 / NRRL Y-1056)"}, "xrefid": "Q757Q4", "gc_content": 0.5371046228710462}, {"id": 19949, "protid": "ASHGO03007", "sequence_length": 539, "taxon": {"species": "Ashbya gossypii ", "strain": "(strain ATCC 10895 / CBS 109.51 / FGSC 9923 / NRRL Y-1056)"}, "xrefid": "Q755M1", "gc_content": 0.45555555555555555}, {"id": 19951, "protid": "ASHGO03009", "sequence_length": 546, "taxon": {"species": "Ashbya gossypii ", "strain": "(strain ATCC 10895 / CBS 109.51 / FGSC 9923 / NRRL Y-1056)"}, "xrefid": "Q755L9", "gc_content": 0.47592931139549055}, {"id": 19952, "protid": "ASHGO03010", "sequence_length": 535, "taxon": {"species": "Ashbya gossypii ", "strain": "(strain ATCC 10895 / CBS 109.51 / FGSC 9923 / NRRL Y-1056)"}, "xrefid": "Q755L8", "gc_content": 0.4732587064676617}]');
@@ -750,7 +738,7 @@
 
 	      return "normal";
 	    })).on("click", function (node) {
-	      tree_node_tooltip.display.call(this, node, {
+	      tree_node_tooltip.display.call(this, node, div, {
 	        on_collapse: function on_collapse() {
 	          node.toggle();
 	          iHamVis.update();
@@ -765,7 +753,7 @@
 	      }, config.frozen_node);
 	    }).on("mouseover", function (node) {
 	      update_nodes.call(this, node);
-	      mouse_over_node.display.call(this, node);
+	      mouse_over_node.display.call(this, node, div);
 	    }).on("mouseout", function () {
 	      mouse_over_node.close();
 	    }).node_display(node_display).branch_color("black");
@@ -797,10 +785,12 @@
 	          };
 	        }
 
-	        var data = genes_2_xcoords(config.data_per_species[sp][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state, config.fam_data);
-	        console.log(data);
-	        return data;
-	      })).display(tnt.board.track.feature.composite().add("genes", hog_gene_feature(gene_color)).add("hogs", hog_feature).add('hog_groups', hog_group));
+	        return genes_2_xcoords(config.data_per_species[sp][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state, config.fam_data);
+	      })).display(tnt.board.track.feature.composite().add("genes", hog_gene_feature(gene_color).on("click", function (gene) {
+	        gene_tooltip.display.call(this, gene, div);
+	      })).add("hogs", hog_feature).add('hog_groups', hog_group.on('click', function (hog) {
+	        hog_header_tooltip.display.call(this, hog, div);
+	      })));
 	    }; // iHam setup
 
 

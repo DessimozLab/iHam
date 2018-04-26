@@ -9,7 +9,7 @@ import genes_2_xcoords from './xcoords';
 import './scss/iHam.scss';
 
 // import axios from 'axios';
-import {mouse_over_node, tree_node_tooltip} from './tooltips';
+import {gene_tooltip, mouse_over_node, tree_node_tooltip, hog_header_tooltip} from './tooltips';
 
 const dispatch = d3.dispatch("node_selected", "click");
 
@@ -95,6 +95,7 @@ function iHam() {
   };
 
   const theme = (div) => {
+    d3.select(div).style("position", "relative");
     // const data = parsers.parse_orthoxml(config.newick, config.orthoxml);
     // Mocked data for now...
     // config.data_per_species = JSON.parse('{"Plasmodium falciparum (isolate 3D7)":{"Plasmodium falciparum (isolate 3D7)":[[11605],[11731]],"Eukaryota":[[11605,11731]]},"Schizosaccharomyces pombe (strain 972 / ATCC 24843)":{"Schizosaccharomyces pombe (strain 972 / ATCC 24843)":[[11028]],"Ascomycota":[[11028]],"Eukaryota":[[11028]]},"Saccharomyces cerevisiae (strain ATCC 204508 / S288c)":{"Saccharomyces cerevisiae (strain ATCC 204508 / S288c)":[[12],[5839]],"Ascomycota":[[12,5839]],"Eukaryota":[[12,5839]]}}');
@@ -205,7 +206,7 @@ function iHam() {
         })
       )
       .on("click", function (node) {
-        tree_node_tooltip.display.call(this, node, {
+        tree_node_tooltip.display.call(this, node, div, {
             on_collapse: () => {
               node.toggle();
               iHamVis.update()
@@ -223,7 +224,7 @@ function iHam() {
       })
       .on("mouseover", function (node) {
         update_nodes.call(this, node);
-        mouse_over_node.display.call(this, node)
+        mouse_over_node.display.call(this, node, div)
       })
       .on("mouseout", function () {
         mouse_over_node.close();
@@ -271,15 +272,20 @@ function iHam() {
                 hog_groups: []
               };
             }
-            const data = genes_2_xcoords(config.data_per_species[sp][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state, config.fam_data);
-            console.log(data);
-            return data;
+            return genes_2_xcoords(config.data_per_species[sp][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state, config.fam_data);
           })
         )
         .display(tnt.board.track.feature.composite()
-          .add("genes", hog_gene_feature(gene_color))
+          .add("genes", hog_gene_feature(gene_color)
+            .on("click", function (gene) {
+              gene_tooltip.display.call(this, gene, div);
+            }))
           .add("hogs", hog_feature)
-          .add('hog_groups', hog_group)
+          .add('hog_groups', hog_group
+            .on('click', function (hog) {
+              hog_header_tooltip.display.call(this, hog, div);
+            })
+          )
         )
     };
 
