@@ -24,7 +24,7 @@ export const tree_node_tooltip = {
     obj.rows = [];
 
     // collapse / uncollapse if internal node
-    if (!node.is_leaf()) {
+    if (!node.is_leaf() || node.is_collapsed()) {
       obj.rows.push({
         value: node.is_collapsed() ? "Expand node" : "Collapse node",
         link: function (n) {

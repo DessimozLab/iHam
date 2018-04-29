@@ -495,7 +495,7 @@
 	    obj.header = node.node_name();
 	    obj.rows = []; // collapse / uncollapse if internal node
 
-	    if (!node.is_leaf()) {
+	    if (!node.is_leaf() || node.is_collapsed()) {
 	      obj.rows.push({
 	        value: node.is_collapsed() ? "Expand node" : "Collapse node",
 	        link: function link(n) {
@@ -692,13 +692,10 @@
 	      dispatch.node_selected.call(this, node);
 	      current_opened_taxa_name = node.node_name(); // board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
 
-	      board.width(board_width); // TODO: At this point we need to call a method to display the current level in the Header (outside the widget)
-
+	      board.width(board_width);
 	      var removed_hogs = current_hog_state.reset_on(tree, config.data_per_species, current_opened_taxa_name, column_coverage_threshold);
-	      dispatch.hogs_removed.call(this, removed_hogs); // board.update();
-
-	      update_board(); // add_hog_header(node, current_hog_state, config);
-	      // add_hog_header(current_opened_taxa_name, current_hog_state, config);
+	      dispatch.hogs_removed.call(this, removed_hogs);
+	      update_board();
 
 	      state.highlight_condition = function (n) {
 	        return node.id() === n.id();
