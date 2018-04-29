@@ -39,14 +39,43 @@ export const tree_node_tooltip = {
     // "Freeze tree at this node",
     // "Unfreeze the tree",
     // "Re-freeze tree at this node"
-    obj.rows.push({
-      value: frozen === node.id() ? 'Unfreeze the tree' : 'Freeze at this node',
-      link: function (n) {
-        tree_node_tooltip.close();
-        actions.on_freeze();
-      },
-      obj: node
-    });
+    // If no frozen, freeze at this node
+    if (!frozen) {
+      obj.rows.push({
+        value: 'Freeze at this node',
+        link: function () {
+          tree_node_tooltip.close();
+          actions.on_freeze("freeze");
+        }
+      })
+    }
+    // If frozen at other node, unfreeze and freeze here
+    if (frozen && (frozen !== node.id())) {
+      obj.rows.push({
+        value: 'Unfreeze the tree',
+        link: function() {
+          tree_node_tooltip.close();
+          actions.on_freeze("unfreeze");
+        }
+      });
+      obj.rows.push({
+        value: 'Re-freeze tree at this node',
+        link: function() {
+          tree_node_tooltip.close();
+          actions.on_freeze("refreeze");
+        }
+      });
+    }
+    if (frozen && (frozen === node.id())) {
+      obj.rows.push({
+        value: 'Unfreeze the tree',
+        link: function (n) {
+          tree_node_tooltip.close();
+          actions.on_freeze("unfreeze");
+        },
+        obj: node
+      });
+    }
 
 
     _tree_node_tooltip = tooltip.list()

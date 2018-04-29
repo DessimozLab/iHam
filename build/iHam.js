@@ -508,16 +508,48 @@
 	    // "Freeze tree at this node",
 	    // "Unfreeze the tree",
 	    // "Re-freeze tree at this node"
+	    // If no frozen, freeze at this node
 
 
-	    obj.rows.push({
-	      value: frozen === node.id() ? 'Unfreeze the tree' : 'Freeze at this node',
-	      link: function link(n) {
-	        tree_node_tooltip.close();
-	        actions.on_freeze();
-	      },
-	      obj: node
-	    });
+	    if (!frozen) {
+	      obj.rows.push({
+	        value: 'Freeze at this node',
+	        link: function link() {
+	          tree_node_tooltip.close();
+	          actions.on_freeze("freeze");
+	        }
+	      });
+	    } // If frozen at other node, unfreeze and freeze here
+
+
+	    if (frozen && frozen !== node.id()) {
+	      obj.rows.push({
+	        value: 'Unfreeze the tree',
+	        link: function link() {
+	          tree_node_tooltip.close();
+	          actions.on_freeze("unfreeze");
+	        }
+	      });
+	      obj.rows.push({
+	        value: 'Re-freeze tree at this node',
+	        link: function link() {
+	          tree_node_tooltip.close();
+	          actions.on_freeze("refreeze");
+	        }
+	      });
+	    }
+
+	    if (frozen && frozen === node.id()) {
+	      obj.rows.push({
+	        value: 'Unfreeze the tree',
+	        link: function link(n) {
+	          tree_node_tooltip.close();
+	          actions.on_freeze("unfreeze");
+	        },
+	        obj: node
+	      });
+	    }
+
 	    _tree_node_tooltip = tooltip.list().width(120).id('node_click_tooltip').container(div).call(this, obj);
 	  },
 	  close: function close() {
@@ -625,30 +657,7 @@
 	    post_init: function post_init() {},
 	    frozen_node: null,
 	    //
-	    label_height: 20,
-	    // TODO: definition?
-	    gene_data_vis: [{
-	      name: 'Query Gene',
-	      scale: 'on_off'
-	    }, {
-	      name: "Gene Length",
-	      scale: "linear",
-	      field: "sequence_length",
-	      func: "color1d"
-	    }, {
-	      name: "GC Content",
-	      scale: "linear",
-	      field: "gc_content",
-	      func: "color1d"
-	    }] // get_fam_gene_data: function (target) {
-	    //   axios.get(`/oma/hogdata${this.query_gene}/json`)
-	    //     .then(resp => {
-	    //       console.log('resp...');
-	    //       console.log(resp);
-	    //       resp.data.forEach(gene => target[gene.id] = gene);
-	    //     });
-	    // }
-
+	    label_height: 20
 	  };
 
 	  var theme = function theme(div) {
@@ -742,10 +751,14 @@
 	          node.toggle();
 	          iHamVis.update();
 	        },
-	        on_freeze: function on_freeze() {
-	          if (config.frozen_node) {
+	        on_freeze: function on_freeze(action) {
+	          if (action === "unfreeze") {
 	            config.frozen_node = null;
-	          } else {
+	          } else if (action === "freeze") {
+	            config.frozen_node = node.id();
+	          } else if (action === "refreeze") {
+	            config.frozen_node = null;
+	            update_nodes(node);
 	            config.frozen_node = node.id();
 	          }
 	        }

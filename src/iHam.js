@@ -68,35 +68,6 @@ function iHam() {
 
     //
     label_height: 20,
-
-    // TODO: definition?
-    gene_data_vis: [
-      {
-        name: 'Query Gene',
-        scale: 'on_off'
-      },
-      {
-        name: "Gene Length",
-        scale: "linear",
-        field: "sequence_length",
-        func: "color1d"
-      },
-      {
-        name: "GC Content",
-        scale: "linear",
-        field: "gc_content",
-        func: "color1d"
-      }
-    ],
-
-    // get_fam_gene_data: function (target) {
-    //   axios.get(`/oma/hogdata${this.query_gene}/json`)
-    //     .then(resp => {
-    //       console.log('resp...');
-    //       console.log(resp);
-    //       resp.data.forEach(gene => target[gene.id] = gene);
-    //     });
-    // }
   };
 
   const theme = (div) => {
@@ -214,10 +185,14 @@ function iHam() {
               node.toggle();
               iHamVis.update()
             },
-            on_freeze: () => {
-              if (config.frozen_node) {
+            on_freeze: (action) => {
+              if (action === "unfreeze") {
                 config.frozen_node = null;
-              } else {
+              } else if (action === "freeze") {
+                config.frozen_node = node.id();
+              } else if (action === "refreeze") {
+                config.frozen_node = null;
+                update_nodes(node);
                 config.frozen_node = node.id();
               }
             },
