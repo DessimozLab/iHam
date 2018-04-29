@@ -12,7 +12,7 @@ import './scss/iHam.scss';
 // import axios from 'axios';
 import {gene_tooltip, mouse_over_node, tree_node_tooltip, hog_header_tooltip} from './tooltips';
 
-const dispatch = d3.dispatch("node_selected", "click");
+const dispatch = d3.dispatch("node_selected", "hogs_removed", "click");
 
 function iHam() {
   // internal (non API) options
@@ -159,8 +159,9 @@ function iHam() {
       current_opened_taxa_name = node.node_name();
       // board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
       board.width(board_width);
-      // TODO: At this point we need to call a method to display the current level in the Heaader (outside the widget)
-      current_hog_state.reset_on(tree, config.data_per_species, current_opened_taxa_name, column_coverage_threshold);
+      // TODO: At this point we need to call a method to display the current level in the Header (outside the widget)
+      const removed_hogs = current_hog_state.reset_on(tree, config.data_per_species, current_opened_taxa_name, column_coverage_threshold);
+      dispatch.hogs_removed.call(this, removed_hogs);
       // board.update();
       update_board();
       // add_hog_header(node, current_hog_state, config);
@@ -168,7 +169,7 @@ function iHam() {
 
       state.highlight_condition = n => node.id() === n.id();
       tree.update_nodes();
-    }
+    };
 
     // Tree
     tree = tnt.tree()

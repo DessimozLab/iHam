@@ -32,7 +32,6 @@ export default function Hog_state() {
     if (that.hogs !== undefined) {
       for (let i = 0; i < that.hogs.length; i++) {
         const cov = that.hogs[i].number_species * 100 / that.number_species;
-        console.log(cov);
         if (cov >= threshold) {
           that.hogs[i].coverage = cov
         }
@@ -46,10 +45,7 @@ export default function Hog_state() {
       }
     }
 
-    if(that.removed_hogs.length) {
-      console.log("reporting some removed hogs...");
-
-    }
+    return that.removed_hogs;
 
     // TODO: Convert this to event
     // d3.select('.alert_remove')
@@ -59,7 +55,6 @@ export default function Hog_state() {
     //   $('.alert_remove').show();}
     // else {
     //   $('.alert_remove').hide();}
-
   };
 
   this.add_genes = function (array_hogs_with_genes) {

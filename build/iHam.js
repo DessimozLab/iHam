@@ -375,7 +375,6 @@
 	    if (that.hogs !== undefined) {
 	      for (var _i = 0; _i < that.hogs.length; _i++) {
 	        var cov = that.hogs[_i].number_species * 100 / that.number_species;
-	        console.log(cov);
 
 	        if (cov >= threshold) {
 	          that.hogs[_i].coverage = cov;
@@ -389,16 +388,13 @@
 	      }
 	    }
 
-	    if (that.removed_hogs.length) {
-	      console.log("reporting some removed hogs...");
-	    } // TODO: Convert this to event
+	    return that.removed_hogs; // TODO: Convert this to event
 	    // d3.select('.alert_remove')
 	    //   .attr('display', () => that.removed_hogs.length ? 'block': 'none');
 	    // if (that.removed_hogs.length > 0) {
 	    //   $('.alert_remove').show();}
 	    // else {
 	    //   $('.alert_remove').hide();}
-
 	  };
 
 	  this.add_genes = function (array_hogs_with_genes) {
@@ -584,7 +580,7 @@
 	};
 
 	/* global d3 */
-	var dispatch = d3.dispatch("node_selected", "click");
+	var dispatch = d3.dispatch("node_selected", "hogs_removed", "click");
 
 	function iHam() {
 	  // internal (non API) options
@@ -696,9 +692,10 @@
 	      dispatch.node_selected.call(this, node);
 	      current_opened_taxa_name = node.node_name(); // board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
 
-	      board.width(board_width); // TODO: At this point we need to call a method to display the current level in the Heaader (outside the widget)
+	      board.width(board_width); // TODO: At this point we need to call a method to display the current level in the Header (outside the widget)
 
-	      current_hog_state.reset_on(tree, config.data_per_species, current_opened_taxa_name, column_coverage_threshold); // board.update();
+	      var removed_hogs = current_hog_state.reset_on(tree, config.data_per_species, current_opened_taxa_name, column_coverage_threshold);
+	      dispatch.hogs_removed.call(this, removed_hogs); // board.update();
 
 	      update_board(); // add_hog_header(node, current_hog_state, config);
 	      // add_hog_header(current_opened_taxa_name, current_hog_state, config);
