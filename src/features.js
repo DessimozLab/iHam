@@ -59,14 +59,16 @@ export const hog_feature = tnt.board.track.feature()
       });
   });
 
-export function hog_gene_feature(color) {
+export function hog_gene_feature() {
   const feature = tnt.board.track.feature();
 
-  if (!color) {
-    color = () => "grey";
-  }
+  let color = () => "grey";
 
-  feature.color = function (c) {
+  // if (!color) {
+  //   color = () => "grey";
+  // }
+
+  feature.colors = function (c) {
     if (!arguments.length) {
       return color;
     }

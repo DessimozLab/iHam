@@ -2,7 +2,6 @@ let _mouse_over_node;
 export const mouse_over_node = {
   display: function (node, div) {
     const obj = {
-      // header: "Mouse over tooltip",
       body: node.node_name()
     };
     _mouse_over_node = tooltip.plain()
@@ -61,7 +60,7 @@ export const tree_node_tooltip = {
 
 let _gene_tooltip;
 export const gene_tooltip = {
-  display: function (gene, div) {
+  display: function (gene, div, mouseover) {
     const obj = {};
     obj.header = gene.gene.protid;
     obj.rows = [];
@@ -70,11 +69,17 @@ export const gene_tooltip = {
       value: gene.gene.xrefid
     });
 
-   _gene_tooltip = tooltip.table()
-     .width(120)
-     .id('gene_tooltip')
-     .container(div)
-     .call(this, obj);
+    _gene_tooltip = tooltip.table()
+      .width(120)
+      .id('gene_tooltip')
+      .container(div);
+
+    if (mouseover) {
+      _gene_tooltip.show_closer(false);
+      _gene_tooltip.id("gene_tooltip_mouseover");
+    }
+
+    _gene_tooltip.call(this, obj);
   },
   close: () => _gene_tooltip.close()
 };

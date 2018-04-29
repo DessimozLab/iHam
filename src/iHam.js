@@ -7,6 +7,7 @@ import {hog_feature, hog_gene_feature, hog_group} from './features';
 import hog_state from './hog_state';
 import genes_2_xcoords from './xcoords';
 import './scss/iHam.scss';
+// import getBoardTrack from './track';
 
 // import axios from 'axios';
 import {gene_tooltip, mouse_over_node, tree_node_tooltip, hog_header_tooltip} from './tooltips';
@@ -21,11 +22,13 @@ function iHam() {
 
   const current_hog_state = new hog_state();
 
+  let genes_feature;
   let board;
   let tree;
+  let iHamVis;
   let current_opened_taxa_name = '';
+  let curr_node;
   let column_coverage_threshold = 0;
-
 
   // width for tree and board
   let tree_width = 200;
@@ -34,11 +37,13 @@ function iHam() {
   const min_width_tree_container = 100;
   const min_width_annot_container = 100;
 
+  let gene_color;
+  let update_nodes;
 
   // external options (exposed API)
   const config = {
     div_id: null,
-
+    gene_tooltips_on: "click",
     query_gene: {},
     data_per_species: null, // TODO: this should be called simply data?
     tree_obj: null,
@@ -107,7 +112,7 @@ function iHam() {
 
     const maxs = get_maxs(config.data_per_species);
 
-    const gene_color = gene => {
+    gene_color = gene => {
       return (config.query_gene && gene.id === config.query_gene.id ? "#27ae60" : "#95a5a6");
     };
 
@@ -145,10 +150,11 @@ function iHam() {
         }
       });
 
-    function update_nodes(node) {
+    update_nodes = function (node) {
       if (config.frozen_node) {
         return;
       }
+      curr_node = node;
       dispatch.node_selected.call(this, node);
       current_opened_taxa_name = node.node_name();
       // board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
@@ -169,8 +175,8 @@ function iHam() {
       .data(config.tree_obj)
       .layout(tnt.tree.layout.vertical()
         // .width(Math.max(240, ~~(tot_width * 0.4)))
-        .width(tree_width)
-        .scale(false)
+          .width(tree_width)
+          .scale(false)
       )
       .label(tnt.tree.label.text()
         .fontsize(12)
@@ -224,10 +230,10 @@ function iHam() {
       })
       .on("mouseover", function (node) {
         update_nodes.call(this, node);
-        mouse_over_node.display.call(this, node, div)
+        // mouse_over_node.display.call(this, node, div)
       })
       .on("mouseout", function () {
-        mouse_over_node.close();
+        // mouse_over_node.close();
       })
       .node_display(node_display)
       .branch_color("black");
@@ -245,7 +251,8 @@ function iHam() {
       .width(board_width);
 
     // Board's track
-    const track = function (leaf) {
+    genes_feature = hog_gene_feature().colors(gene_color)
+    function track (leaf) {
 
       const sp = leaf.node_name();
 
@@ -276,10 +283,23 @@ function iHam() {
           })
         )
         .display(tnt.board.track.feature.composite()
-          .add("genes", hog_gene_feature(gene_color)
+          .add("genes", genes_feature
             .on("click", function (gene) {
-              gene_tooltip.display.call(this, gene, div);
-            }))
+              if (config.gene_tooltips_on === "click") {
+                gene_tooltip.display.call(this, gene, div, false);
+              }
+            })
+            .on("mouseover", function (gene) {
+              if (config.gene_tooltips_on === "mouseover") {
+                gene_tooltip.display.call(this, gene, div, true);
+              }
+            })
+            .on("mouseout", function () {
+              if (config.gene_tooltips_on === "mouseover") {
+                gene_tooltip.close();
+              }
+            })
+          )
           .add("hogs", hog_feature)
           .add('hog_groups', hog_group
             .on('click', function (hog) {
@@ -287,10 +307,11 @@ function iHam() {
             })
           )
         )
-    };
+    }
+
 
     // iHam setup
-    const iHamVis = tnt()
+    iHamVis = tnt()
       .tree(tree)
       .board(board)
       .track(track);
@@ -303,32 +324,6 @@ function iHam() {
   apijs(theme)
     .getset(config);
 
-
-  // resize the board container to fill space between tree panel and right
-  function set_widths2() {
-
-    const viewerC = d3.select("#hogvis_container");
-    const viewerT = d3.select("#tnt_annot_container_hogvis_container");
-    const viewerB = d3.select("#tnt_tree_container_hogvis_container");
-
-    // const viewerC = document.getElementById("hogvis_container");
-    // const viewerS = document.getElementById("tnt_annot_container_hogvis_container");
-    // const viewerT = document.getElementById("tnt_tree_container_hogvis_container");
-
-    const scroller_width = viewerC.node().offsetWidth - viewerT.node().offsetWidth - 40;
-    if (scroller_width > min_width_annot_container) {
-      viewerB.style("width", scroller_width);
-
-      viewerS.style.width = scroller_width + "px";
-      // $('#hogvisheader').width($('#hogs').width() - 20); // Because padding of #hogs is 10px
-    }
-    else {
-      if (viewerT.offsetWidth - scroller_width > min_width_tree_container) {
-        viewerT.style.width = viewerT.offsetWidth - scroller_width + "px";
-        $('#hogvisheader').width($('#hogs').width() - 20); // Because padding of #hogs is 10px
-      }
-    }
-  }
 
   function update_board() {
     // update the board
@@ -384,6 +379,27 @@ function iHam() {
 
     tree_width = w;
     set_widths();
+    return this;
+  };
+
+  theme.gene_colors = function (cb) {
+    if (!arguments.length) {
+      return gene_color;
+    }
+    gene_color = cb;
+
+    genes_feature.colors(cb);
+    board.width(board_width);
+    update_board();
+    return this;
+  };
+
+  theme.coverage_threshold = function (min) {
+    if (!arguments.length) {
+      return column_coverage_threshold;
+    }
+    column_coverage_threshold = min;
+    update_nodes(curr_node);
     return this;
   };
 

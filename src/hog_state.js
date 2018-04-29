@@ -1,4 +1,4 @@
-export default function Hog_state(fam_data) {
+export default function Hog_state() {
 
   this.current_level = '';
   this.hogs = undefined;
@@ -32,6 +32,7 @@ export default function Hog_state(fam_data) {
     if (that.hogs !== undefined) {
       for (let i = 0; i < that.hogs.length; i++) {
         const cov = that.hogs[i].number_species * 100 / that.number_species;
+        console.log(cov);
         if (cov >= threshold) {
           that.hogs[i].coverage = cov
         }
@@ -45,9 +46,14 @@ export default function Hog_state(fam_data) {
       }
     }
 
+    if(that.removed_hogs.length) {
+      console.log("reporting some removed hogs...");
+
+    }
+
     // TODO: Convert this to event
-    d3.select('.alert_remove')
-      .attr('display', () => that.removed_hogs.length ? 'block': 'none');
+    // d3.select('.alert_remove')
+    //   .attr('display', () => that.removed_hogs.length ? 'block': 'none');
 
     // if (that.removed_hogs.length > 0) {
     //   $('.alert_remove').show();}
