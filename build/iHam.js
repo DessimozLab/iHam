@@ -593,7 +593,7 @@
 	      value: "Number of genes: ".concat(hog.genes.length)
 	    });
 	    obj.rows.push({
-	      value: "Coverage: ".concat(hog.coverage, " %")
+	      value: "Coverage: ".concat(hog.coverage.toFixed(2), " %")
 	    });
 	    obj.rows.push({
 	      value: "Sequences (Fasta)",

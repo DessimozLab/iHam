@@ -123,7 +123,7 @@ export const hog_header_tooltip = {
       value: `Number of genes: ${hog.genes.length}`
     });
     obj.rows.push({
-      value: `Coverage: ${hog.coverage} %`
+      value: `Coverage: ${hog.coverage.toFixed(2)} %`
     });
     obj.rows.push({
       value: "Sequences (Fasta)",
