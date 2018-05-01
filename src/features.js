@@ -135,6 +135,7 @@ export const hog_group = tnt.board.track.feature()
     const g = new_group
       .append('g')
       .attr('transform', (g) => {
+        // console.log(g.max);
         const width = d3.min([x_scale(dom1 / g.max), height]);
         const posx = (g.hog_start * width) + (g.max_in_hog * width) / 2;
         return `translate(${posx}, 0)`;

@@ -33,7 +33,7 @@ export default function Hog_state() {
       for (let i = 0; i < that.hogs.length; i++) {
         const cov = that.hogs[i].number_species * 100 / that.number_species;
         if (cov >= threshold) {
-          that.hogs[i].coverage = cov
+          that.hogs[i].coverage = cov;
         }
         else {
           that.removed_hogs.push(i)
@@ -46,15 +46,6 @@ export default function Hog_state() {
     }
 
     return that.removed_hogs;
-
-    // TODO: Convert this to event
-    // d3.select('.alert_remove')
-    //   .attr('display', () => that.removed_hogs.length ? 'block': 'none');
-
-    // if (that.removed_hogs.length > 0) {
-    //   $('.alert_remove').show();}
-    // else {
-    //   $('.alert_remove').hide();}
   };
 
   this.add_genes = function (array_hogs_with_genes) {

@@ -14,6 +14,7 @@ export default function genes_2_xcoords(arr, maxs, current_hog_state, fam_data) 
   const genes = [];
   const hogs_boundaries = [];
   let total_pos = 0;
+  const max = d3.sum(maxs);
   arr.forEach((hog_genes, hog) => {
     if (current_hog_state.removed_hogs.indexOf(hog) === -1) {
       const hog_gene_names = [];
@@ -24,7 +25,7 @@ export default function genes_2_xcoords(arr, maxs, current_hog_state, fam_data) 
           gene: filter(gene, fam_data),
           hog: hog,
           pos: total_pos + gene_pos,
-          max: d3.sum(maxs),
+          max,
           max_in_hog: maxs[hog],
           pos_in_hog: gene_pos
         });
@@ -38,6 +39,10 @@ export default function genes_2_xcoords(arr, maxs, current_hog_state, fam_data) 
         id: hog_gene_names.length ? hog_gene_names.join('_') : ("hog_" + hog)
       });
     }
+  });
+
+  current_hog_state.hogs.forEach(hog => {
+    hog.max = max;
   });
 
   return {
