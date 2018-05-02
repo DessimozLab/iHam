@@ -13,6 +13,9 @@ export default {
     format: 'umd',
     name: 'iHam'
   },
+  moduleContext: {
+    'node_modules/sax/lib/sax.js': 'window'
+  },
   plugins: [
     scss({
       output: 'build/iHam.css'
@@ -30,7 +33,7 @@ export default {
       // non-CommonJS modules will be ignored, but you can also
       // specifically include/exclude files
       include: [
-        'node_modules/**'
+        'node_modules/**',
       ],  // Default: undefined
       // exclude: [ 'node_modules/foo/**', 'node_modules/bar/**' ],  // Default: undefined
       // these values can also be regular expressions

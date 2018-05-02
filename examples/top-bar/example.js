@@ -16,7 +16,7 @@
 
     axios.all([orthoxml, newick, fam_data])
       .then(resps => {
-        var data = parse_xml(resps[1], resps[0]);
+        // var data = parse_xml(resps[1], resps[0]);
         var fam_data = resps[2];
         var theme = iHam()
           .on('node_selected', function (node) {
@@ -26,10 +26,10 @@
           .query_gene({
             id: 12
           })
-          // .orthoxml(resps[0])
-          // .newick(resps[1])
-          .data_per_species(data.per_species)
-          .tree_obj(data.tree)
+          .orthoxml(resps[0])
+          .newick(resps[1])
+          // .data_per_species(data.per_species)
+          // .tree_obj(data.tree)
           .fam_data(fam_data)
           .tree_width(500)
           .board_width(800)

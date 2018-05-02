@@ -1,5 +1,4 @@
-import iHam from './src/iHam';
-// import hogvis from 'js-orthoxml-hogvis';
-// console.log(hogvis);
+//import iHam from './src/iHam';
+//export default iHam;
+module.exports = require('./src/iHam.js');
 
-export default iHam;

@@ -1,4 +1,4 @@
-export default function Hog_state() {
+module.exports = function Hog_state() {
 
   this.current_level = '';
   this.hogs = undefined;

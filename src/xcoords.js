@@ -3,7 +3,7 @@ const filter = (id, all) => {
   return found[0];
 };
 
-export default function genes_2_xcoords(arr, maxs, current_hog_state, fam_data) {
+module.exports = function(arr, maxs, current_hog_state, fam_data) {
   if (arr === undefined) {
     return {
       genes: [],
@@ -50,4 +50,5 @@ export default function genes_2_xcoords(arr, maxs, current_hog_state, fam_data) 
     hogs: hogs_boundaries.slice(0, -1),
     hog_groups: current_hog_state.hogs
   };
-}
+};
+
