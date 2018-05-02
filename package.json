@@ -34,7 +34,7 @@
     "build": "src/*.js"
   },
   "scripts": {
-    "build": "browserify browser.js --standalone iHam -t [ babelify --presets [ '@babel/preset-env' ] ] > build/iHam.js",
+    "build": "browserify browser.js --standalone iHam -t [ babelify ] > build/iHam.js",
     "build-css": "node-sass index.scss > build/iHam.css",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "npm-watch"
