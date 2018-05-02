@@ -8284,6 +8284,11 @@ function iHam() {
 
     update_nodes = function update_nodes(node) {
       if (config.frozen_node) {
+        // board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
+        board.width(board_width);
+        var _removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold);
+        dispatch.hogs_removed.call(this, _removed_hogs);
+        update_board();
         return;
       }
       curr_node = node;
