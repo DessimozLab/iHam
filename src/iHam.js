@@ -90,15 +90,10 @@ function iHam() {
         xrefid: gene.xrefid
       };
     });
-    console.log(fam_data_obj);
     d3.select(div).style("position", "relative");
 
     const maxs = get_maxs(data_per_species);
     const current_hog_state = new hog_state(maxs);
-
-    console.log(tree_obj);
-    console.log(data_per_species);
-    console.log(config.fam_data);
 
     gene_color = gene => {
       return (config.query_gene && gene.id === config.query_gene.id ? "#27ae60" : "#95a5a6");
