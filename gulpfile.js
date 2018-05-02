@@ -11,8 +11,8 @@ var pump = require('pump');
 var babelify = require('babelify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
-var sourcemaps  = require('gulp-sourcemaps');
-var plugins = require('gulp-load-plugins');
+// var sourcemaps  = require('gulp-sourcemaps');
+// var plugins = require('gulp-load-plugins');
 
 // gulp helper
 var gzip = require('gulp-gzip');
@@ -84,30 +84,11 @@ gulp.task('build-browser', ['sass'], function () {
   return browserify({entries: browserFile, debug: true})
     .transform("babelify", { presets: ["es2015"] })
     .bundle()
-    // .on('error', function () {
-    //   var args = Array.prototype.slice.call(arguments);
-    //
-    //   plugins().notify.onError({
-    //     'title': 'Compile Error',
-    //     'message': '<%= error.message %>'
-    //   }).apply(this, args);
-    //
-    //   this.emit('end');
-    // })
     .pipe(source(browserFile))
     .pipe(buffer())
-    // .pipe(sourcemaps.init())
-    // .pipe(uglify())
     .pipe(rename(outputFileSt))
     .pipe(gulp.dest(buildDir))
 });
-
-// gulp.task('build-browser', ['sass'], function () {
-//   return gulp.src(browserFile)
-//     .pipe(browserify({debug: true}).transform(babelify))
-//     .pipe(rename(outputFileSt))
-//     .pipe(gulp.dest(buildDir));
-// });
 
 // browserify min
 gulp.task('build-browser-min', ['build-browser'], function (cb) {

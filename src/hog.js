@@ -820,8 +820,8 @@ hog_theme = function () {
                 else {
                     gene_tooltip_mode = 'mouseover';
                     d3.selectAll('rect.hog_gene').style("cursor", "none");
-                    d3.select('#setting_ok_mouseover').classed('hidden', false)
-                    d3.select('#setting_ok_click').classed('hidden', true)
+                    d3.select('#setting_ok_mouseover').classed('hidden', false);
+                    d3.select('#setting_ok_click').classed('hidden', true);
                 }
 
                 annot.update();

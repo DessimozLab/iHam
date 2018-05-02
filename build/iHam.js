@@ -2,7 +2,6 @@
 "use strict";
 
 module.exports = require("./index.js");
-// module.exports = require("./src/test.js");
 
 },{"./index.js":2}],2:[function(require,module,exports){
 'use strict';
@@ -8066,7 +8065,7 @@ module.exports = function Hog_state() {
 
   var that = this;
 
-  this.reset_on = function (tree, per_species3, tax_name, threshold) {
+  this.reset_on = function (tree, per_species3, tax_name, threshold, fam_data) {
     that.current_level = tax_name;
     that.hogs = undefined;
     that.number_species = 0;
@@ -8105,6 +8104,7 @@ module.exports = function Hog_state() {
     var genes_so_far = 0;
     for (var _i3 = 0; _i3 < that.hogs.length; _i3++) {
       that.hogs[_i3].hog_start = genes_so_far;
+      that.hogs[_i3].protid = fam_data[that.hogs[_i3].genes[0]].protid;
       genes_so_far += that.hogs[_i3].max_in_hog;
     }
 
@@ -8244,6 +8244,18 @@ function iHam() {
     var data = parse_orthoxml(config.newick, config.orthoxml);
     var data_per_species = data.per_species;
     var tree_obj = data.tree;
+    var fam_data_obj = {};
+    config.fam_data.forEach(function (gene) {
+      fam_data_obj[gene.id] = {
+        gc_content: gene.gc_content,
+        id: gene.id,
+        protid: gene.protid,
+        sequence_length: gene.sequence_length,
+        taxon: gene.taxon,
+        xrefid: gene.xrefid
+      };
+    });
+    console.log(fam_data_obj);
     d3.select(div).style("position", "relative");
 
     var maxs = get_maxs(data_per_species);
@@ -8286,7 +8298,7 @@ function iHam() {
       if (config.frozen_node) {
         // board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
         board.width(board_width);
-        var _removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold);
+        var _removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
         dispatch.hogs_removed.call(this, _removed_hogs);
         update_board();
         return;
@@ -8296,7 +8308,7 @@ function iHam() {
       current_opened_taxa_name = node.node_name();
       // board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
       board.width(board_width);
-      var removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold);
+      var removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
       dispatch.hogs_removed.call(this, removed_hogs);
       update_board();
 
@@ -8359,7 +8371,7 @@ function iHam() {
     }).node_display(node_display).branch_color("black");
 
     current_opened_taxa_name = tree.root().node_name();
-    current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold);
+    current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
 
     // Board:
     board = tnt.board().from(0).zoom_in(1).allow_drag(false).to(2)
@@ -8378,7 +8390,7 @@ function iHam() {
           var random_collapse_leaf_name = leaf.get_all_leaves(true)[0].node_name();
 
           if (data_per_species[random_collapse_leaf_name] !== undefined) {
-            var genes2Xcoords = genes_2_xcoords(data_per_species[random_collapse_leaf_name][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state, config.fam_data);
+            var genes2Xcoords = genes_2_xcoords(data_per_species[random_collapse_leaf_name][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state, fam_data_obj);
             genes2Xcoords.genes = [];
 
             return genes2Xcoords;
@@ -8392,7 +8404,7 @@ function iHam() {
             hog_groups: []
           };
         }
-        return genes_2_xcoords(data_per_species[sp][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state, config.fam_data);
+        return genes_2_xcoords(data_per_species[sp][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state, fam_data_obj);
       })).display(tnt.board.track.feature.composite().add("genes", genes_feature.on("click", function (gene) {
         if (config.gene_tooltips_on === "click") {
           gene_tooltip.display.call(this, gene, div, false);
@@ -8406,7 +8418,7 @@ function iHam() {
           gene_tooltip.close();
         }
       })).add("hogs", hog_feature).add('hog_groups', hog_group.on('click', function (hog) {
-        hog_header_tooltip.display.call(this, hog, div);
+        hog_header_tooltip.display.call(this, hog, current_opened_taxa_name, div);
       })));
     }
 
@@ -8611,7 +8623,8 @@ module.exports = {
     }
   },
   hog_header_tooltip: {
-    display: function display(hog, div) {
+    display: function display(hog, taxa_name, div) {
+      console.log(hog);
       var obj = {};
       obj.header = hog.name;
       obj.rows = [];
@@ -8622,12 +8635,10 @@ module.exports = {
         value: "Coverage: " + hog.coverage.toFixed(2) + " %"
       });
       obj.rows.push({
-        value: "Sequences (Fasta)",
-        link: function link() {}
+        value: "<a href=\"https://omabrowser.org/oma/hogs/" + hog.protid + "/" + taxa_name.replace(" ", "%20") + "/fasta\" target=\"_blank\">Sequences (Fasta)</a>"
       });
       obj.rows.push({
-        value: "HOGs tables",
-        link: function link() {}
+        value: "<a href=\"https://omabrowser.org/oma/hogs/" + hog.protid + "/" + taxa_name.replace(" ", "%20") + "/\" target=\"_blank\">HOGs tables</a>"
       });
 
       _hog_header_tooltip = tooltip.list().width(120).id('hog_header_tooltip').container(div).call(this, obj);
@@ -8685,12 +8696,10 @@ module.exports = {
 },{}],42:[function(require,module,exports){
 "use strict";
 
-var filter = function filter(id, all) {
-  var found = all.filter(function (d) {
-    return d.id === id;
-  });
-  return found[0];
-};
+// const filter = (id, all) => {
+//   const found = all.filter(d => d.id === id);
+//   return found[0];
+// };
 
 module.exports = function (arr, maxs, current_hog_state, fam_data) {
   if (arr === undefined) {
@@ -8711,7 +8720,8 @@ module.exports = function (arr, maxs, current_hog_state, fam_data) {
       hog_genes.forEach(function (gene, gene_pos) {
         genes.push({
           id: gene,
-          gene: filter(gene, fam_data),
+          // gene: filter(gene, fam_data),
+          gene: fam_data[gene],
           hog: hog,
           pos: total_pos + gene_pos,
           max: max,

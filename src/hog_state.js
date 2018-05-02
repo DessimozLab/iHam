@@ -7,7 +7,7 @@ module.exports = function Hog_state() {
 
   const that = this;
 
-  this.reset_on = function (tree, per_species3, tax_name, threshold) {
+  this.reset_on = function (tree, per_species3, tax_name, threshold, fam_data) {
     that.current_level = tax_name;
     that.hogs = undefined;
     that.number_species = 0;
@@ -48,6 +48,7 @@ module.exports = function Hog_state() {
     let genes_so_far = 0;
     for (let i = 0; i < that.hogs.length; i++) {
       that.hogs[i].hog_start = genes_so_far;
+      that.hogs[i].protid = fam_data[that.hogs[i].genes[0]].protid;
       genes_so_far += that.hogs[i].max_in_hog;
     }
 

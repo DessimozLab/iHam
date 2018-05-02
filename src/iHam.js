@@ -79,6 +79,18 @@ function iHam() {
     const data = parse_orthoxml(config.newick, config.orthoxml);
     const data_per_species = data.per_species;
     const tree_obj = data.tree;
+    const fam_data_obj = {};
+    config.fam_data.forEach(gene => {
+      fam_data_obj[gene.id] = {
+        gc_content: gene.gc_content,
+        id: gene.id,
+        protid: gene.protid,
+        sequence_length: gene.sequence_length,
+        taxon: gene.taxon,
+        xrefid: gene.xrefid
+      };
+    });
+    console.log(fam_data_obj);
     d3.select(div).style("position", "relative");
 
     const maxs = get_maxs(data_per_species);
@@ -130,7 +142,7 @@ function iHam() {
       if (config.frozen_node) {
         // board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
         board.width(board_width);
-        const removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold);
+        const removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
         dispatch.hogs_removed.call(this, removed_hogs);
         update_board();
         return;
@@ -140,7 +152,7 @@ function iHam() {
       current_opened_taxa_name = node.node_name();
       // board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
       board.width(board_width);
-      const removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold);
+      const removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
       dispatch.hogs_removed.call(this, removed_hogs);
       update_board();
 
@@ -221,7 +233,7 @@ function iHam() {
       .branch_color("black");
 
     current_opened_taxa_name = tree.root().node_name();
-    current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold);
+    current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
 
     // Board:
     board = tnt.board()
@@ -247,7 +259,7 @@ function iHam() {
               const random_collapse_leaf_name = leaf.get_all_leaves(true)[0].node_name();
 
               if (data_per_species[random_collapse_leaf_name] !== undefined) {
-                const genes2Xcoords = genes_2_xcoords(data_per_species[random_collapse_leaf_name][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state, config.fam_data);
+                const genes2Xcoords = genes_2_xcoords(data_per_species[random_collapse_leaf_name][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state, fam_data_obj);
                 genes2Xcoords.genes = [];
 
                 return genes2Xcoords;
@@ -261,7 +273,7 @@ function iHam() {
                 hog_groups: []
               };
             }
-            return genes_2_xcoords(data_per_species[sp][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state, config.fam_data);
+            return genes_2_xcoords(data_per_species[sp][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state, fam_data_obj);
           })
         )
         .display(tnt.board.track.feature.composite()
@@ -285,7 +297,7 @@ function iHam() {
           .add("hogs", hog_feature)
           .add('hog_groups', hog_group
             .on('click', function (hog) {
-              hog_header_tooltip.display.call(this, hog, div);
+              hog_header_tooltip.display.call(this, hog, current_opened_taxa_name, div);
             })
           )
         )

@@ -115,7 +115,8 @@ module.exports = {
     close: () => _gene_tooltip.close()
   },
   hog_header_tooltip: {
-    display: function (hog, div) {
+    display: function (hog, taxa_name, div) {
+      console.log(hog);
       const obj = {};
       obj.header = hog.name;
       obj.rows = [];
@@ -126,14 +127,10 @@ module.exports = {
         value: `Coverage: ${hog.coverage.toFixed(2)} %`
       });
       obj.rows.push({
-        value: "Sequences (Fasta)",
-        link: function () {
-        }
+        value: `<a href="https://omabrowser.org/oma/hogs/${hog.protid}/${taxa_name.replace(" ", "%20")}/fasta" target="_blank">Sequences (Fasta)</a>`,
       });
       obj.rows.push({
-        value: "HOGs tables",
-        link: function () {
-        }
+        value: `<a href="https://omabrowser.org/oma/hogs/${hog.protid}/${taxa_name.replace(" ", "%20")}/" target="_blank">HOGs tables</a>`,
       });
 
       _hog_header_tooltip = tooltip.list()
