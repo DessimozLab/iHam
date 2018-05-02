@@ -32,7 +32,7 @@ module.exports = {
         obj.rows.push({
           value: node.is_collapsed() ? "Expand node" : "Collapse node",
           link: function (n) {
-            tree_node_tooltip.close();
+            _tree_node_tooltip.close();
             actions.on_collapse();
           },
           obj: node
@@ -48,7 +48,7 @@ module.exports = {
         obj.rows.push({
           value: 'Freeze at this node',
           link: function () {
-            tree_node_tooltip.close();
+            _tree_node_tooltip.close();
             actions.on_freeze("freeze");
           }
         })
@@ -58,14 +58,14 @@ module.exports = {
         obj.rows.push({
           value: 'Unfreeze the tree',
           link: function () {
-            tree_node_tooltip.close();
+            _tree_node_tooltip.close();
             actions.on_freeze("unfreeze");
           }
         });
         obj.rows.push({
           value: 'Re-freeze tree at this node',
           link: function () {
-            tree_node_tooltip.close();
+            _tree_node_tooltip.close();
             actions.on_freeze("refreeze");
           }
         });
@@ -74,7 +74,7 @@ module.exports = {
         obj.rows.push({
           value: 'Unfreeze the tree',
           link: function (n) {
-            tree_node_tooltip.close();
+            _tree_node_tooltip.close();
             actions.on_freeze("unfreeze");
           },
           obj: node
@@ -144,5 +144,6 @@ module.exports = {
     },
     close: () => _hog_header_tooltip.close()
   }
-}
+};
+
 

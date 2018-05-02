@@ -16,7 +16,6 @@
 
     axios.all([orthoxml, newick, fam_data])
       .then(resps => {
-        // var data = parse_xml(resps[1], resps[0]);
         var fam_data = resps[2];
         var theme = iHam()
           .on('node_selected', function (node) {

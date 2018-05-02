@@ -45,6 +45,7 @@ module.exports = function(arr, maxs, current_hog_state, fam_data) {
     hog.max = max;
   });
 
+
   return {
     genes: genes,
     hogs: hogs_boundaries.slice(0, -1),

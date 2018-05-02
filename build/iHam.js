@@ -1,13 +1,15 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.iHam = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+"use strict";
+
 module.exports = require("./index.js");
 // module.exports = require("./src/test.js");
 
-
 },{"./index.js":2}],2:[function(require,module,exports){
+'use strict';
+
 //import iHam from './src/iHam';
 //export default iHam;
 module.exports = require('./src/iHam.js');
-
 
 },{"./src/iHam.js":39}],3:[function(require,module,exports){
 'use strict'
@@ -7917,71 +7919,60 @@ function config (name) {
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],37:[function(require,module,exports){
+"use strict";
+
 // hog feature
 // TnT doesn't have the features we need, so create our own
 
 module.exports = {
-  hog_feature: tnt.board.track.feature()
-    .index(function (d) {
-      return d.id;
-    })
-    .create(function (new_hog, x_scale) {
-      const track = this;
-      const padding = ~~(track.height() - (track.height() * 0.8)) / 2;
+  hog_feature: tnt.board.track.feature().index(function (d) {
+    return d.id;
+  }).create(function (new_hog, x_scale) {
+    var track = this;
+    var padding = ~~(track.height() - track.height() * 0.8) / 2;
 
-      const height = track.height() - ~~(padding * 2);
-      const dom1 = x_scale.domain()[1];
+    var height = track.height() - ~~(padding * 2);
+    var dom1 = x_scale.domain()[1];
 
-      new_hog
-        .append("line")
-        .attr("class", "hog_boundary")
-        .attr("x1", function (d) {
-          const width = d3.min([x_scale(dom1 / d.max), height]);
-          const x = width * (d.max_in_hog - 1);
-          const xnext = width * d.max_in_hog;
-          return x + (xnext - x + width) / 2 + ~~(padding / 2) - 1;
-        })
-        .attr("x2", function (d) {
-          const width = d3.min([x_scale(dom1 / d.max), height]);
-          const x = width * (d.max_in_hog - 1);
-          const xnext = width * d.max_in_hog;
-          return x + (xnext - x + width) / 2 + ~~(padding / 2) - 1;
-        })
-        .attr("y1", 0)
-        .attr("y2", track.height())
-        .attr("stroke-width", 2)
-        .attr("stroke", "black");
-    })
-    .distribute(function (hogs, x_scale) {
-      const track = this;
-      const padding = ~~(track.height() - (track.height() * 0.8)) / 2;
+    new_hog.append("line").attr("class", "hog_boundary").attr("x1", function (d) {
+      var width = d3.min([x_scale(dom1 / d.max), height]);
+      var x = width * (d.max_in_hog - 1);
+      var xnext = width * d.max_in_hog;
+      return x + (xnext - x + width) / 2 + ~~(padding / 2) - 1;
+    }).attr("x2", function (d) {
+      var width = d3.min([x_scale(dom1 / d.max), height]);
+      var x = width * (d.max_in_hog - 1);
+      var xnext = width * d.max_in_hog;
+      return x + (xnext - x + width) / 2 + ~~(padding / 2) - 1;
+    }).attr("y1", 0).attr("y2", track.height()).attr("stroke-width", 2).attr("stroke", "black");
+  }).distribute(function (hogs, x_scale) {
+    var track = this;
+    var padding = ~~(track.height() - track.height() * 0.8) / 2;
 
-      const height = track.height() - ~~(padding * 2);
-      const dom1 = x_scale.domain()[1];
+    var height = track.height() - ~~(padding * 2);
+    var dom1 = x_scale.domain()[1];
 
-      hogs.select("line")
-        .transition()
-        .duration(200)
-        .attr("x1", function (d) {
-          const width = d3.min([x_scale(dom1 / d.max), height]);
-          const x = width * (d.max_in_hog - 1);
-          const xnext = width * d.max_in_hog;
-          return x + (xnext - x + width) / 2 + ~~(padding / 2) - 1;
-        })
-        .attr("x2", function (d) {
-          const width = d3.min([x_scale(dom1 / d.max), height]);
-          // var x = x_scale((dom1/d.max) * d.max_in_hog);
-          // var xnext = x_scale((dom1/d.max) * (d.max_in_hog + 1));
-          const x = width * (d.max_in_hog - 1);
-          const xnext = width * d.max_in_hog;
+    hogs.select("line").transition().duration(200).attr("x1", function (d) {
+      var width = d3.min([x_scale(dom1 / d.max), height]);
+      var x = width * (d.max_in_hog - 1);
+      var xnext = width * d.max_in_hog;
+      return x + (xnext - x + width) / 2 + ~~(padding / 2) - 1;
+    }).attr("x2", function (d) {
+      var width = d3.min([x_scale(dom1 / d.max), height]);
+      // var x = x_scale((dom1/d.max) * d.max_in_hog);
+      // var xnext = x_scale((dom1/d.max) * (d.max_in_hog + 1));
+      var x = width * (d.max_in_hog - 1);
+      var xnext = width * d.max_in_hog;
 
-          return x + (xnext - x + width) / 2 + ~~(padding / 2) - 1;
-        });
-    }),
-  hog_gene_feature: function () {
-    const feature = tnt.board.track.feature();
+      return x + (xnext - x + width) / 2 + ~~(padding / 2) - 1;
+    });
+  }),
+  hog_gene_feature: function hog_gene_feature() {
+    var feature = tnt.board.track.feature();
 
-    let color = () => "grey";
+    var color = function color() {
+      return "grey";
+    };
 
     // if (!color) {
     //   color = () => "grey";
@@ -7995,110 +7986,77 @@ module.exports = {
       return this;
     };
 
-    feature
-      .index(function (d) {
-        return d.id;
-      })
-      .create(function (new_elems, x_scale) {
-        const track = this;
-        const padding = ~~(track.height() - (track.height() * 0.8)) / 2;
-        const height = track.height() - ~~(padding * 2);
-        const dom1 = x_scale.domain()[1];
+    feature.index(function (d) {
+      return d.id;
+    }).create(function (new_elems, x_scale) {
+      var track = this;
+      var padding = ~~(track.height() - track.height() * 0.8) / 2;
+      var height = track.height() - ~~(padding * 2);
+      var dom1 = x_scale.domain()[1];
 
-        new_elems
-          .append("rect")
-          .attr("class", "hog_gene")
-          .attr("x", function (d) {
-            const width = d3.min([x_scale(dom1 / d.max), height]);
-            const x = width * d.pos;
-            return x + padding;
-          })
-          .attr("y", padding)
-          .attr("width", function (d) {
-            const width = d3.min([x_scale(dom1 / d.max), height]);
-            return width - 2 * padding;
-          })
-          .attr("height", height)
-          .attr("fill", color);
-      })
-      .distribute(function (elems, x_scale) {
-        const track = this;
-        const padding = ~~(track.height() - (track.height() * 0.8)) / 2;
-        const height = track.height() - ~~(padding * 2);
-        const dom1 = x_scale.domain()[1];
+      new_elems.append("rect").attr("class", "hog_gene").attr("x", function (d) {
+        var width = d3.min([x_scale(dom1 / d.max), height]);
+        var x = width * d.pos;
+        return x + padding;
+      }).attr("y", padding).attr("width", function (d) {
+        var width = d3.min([x_scale(dom1 / d.max), height]);
+        return width - 2 * padding;
+      }).attr("height", height).attr("fill", color);
+    }).distribute(function (elems, x_scale) {
+      var track = this;
+      var padding = ~~(track.height() - track.height() * 0.8) / 2;
+      var height = track.height() - ~~(padding * 2);
+      var dom1 = x_scale.domain()[1];
 
-        elems.select("rect")
-          .transition()
-          .attr("x", function (d) {
-            const width = d3.min([x_scale(dom1 / d.max), height]);
-            const x = width * d.pos;
-            return x + padding;
-          })
-          .attr("width", function (d) {
-            const width = d3.min([x_scale(dom1 / d.max), height]);
-            return width - 2 * padding;
-          });
+      elems.select("rect").transition().attr("x", function (d) {
+        var width = d3.min([x_scale(dom1 / d.max), height]);
+        var x = width * d.pos;
+        return x + padding;
+      }).attr("width", function (d) {
+        var width = d3.min([x_scale(dom1 / d.max), height]);
+        return width - 2 * padding;
       });
+    });
 
     return feature;
-
   },
-  hog_group: tnt.board.track.feature()
-    .index(d => d.name)
-    .create(function (new_group, x_scale) {
-      const track = this;
-      const padding = ~~(track.height() - (track.height() * 0.8)) / 2;
-      const height = track.height() - ~~(padding * 2);
-      const dom1 = x_scale.domain()[1];
+  hog_group: tnt.board.track.feature().index(function (d) {
+    return d.name;
+  }).create(function (new_group, x_scale) {
+    var track = this;
+    var padding = ~~(track.height() - track.height() * 0.8) / 2;
+    var height = track.height() - ~~(padding * 2);
+    var dom1 = x_scale.domain()[1];
 
-      const g = new_group
-        .append('g')
-        .attr('transform', (g) => {
-          // console.log(g.max);
-          const width = d3.min([x_scale(dom1 / g.max), height]);
-          const posx = (g.hog_start * width) + (g.max_in_hog * width) / 2;
-          return `translate(${posx}, 0)`;
-        })
-        .attr('class', d => d.name);
+    var g = new_group.append('g').attr('transform', function (g) {
+      // console.log(g.max);
+      var width = d3.min([x_scale(dom1 / g.max), height]);
+      var posx = g.hog_start * width + g.max_in_hog * width / 2;
+      return "translate(" + posx + ", 0)";
+    }).attr('class', function (d) {
+      return d.name;
+    });
 
-      g
-        .append('circle')
-        .attr('cx', 0)
-        .attr('cy', -6)
-        .attr('r', 2)
-        .attr('fill', 'black');
-      g
-        .append('circle')
-        .attr('cx', 0)
-        .attr('cy', -12)
-        .attr('r', 2)
-        .attr('fill', 'black');
-      g
-        .append('circle')
-        .attr('cx', 0)
-        .attr('cy', -18)
-        .attr('r', 2)
-        .attr('fill', 'black');
+    g.append('circle').attr('cx', 0).attr('cy', -6).attr('r', 2).attr('fill', 'black');
+    g.append('circle').attr('cx', 0).attr('cy', -12).attr('r', 2).attr('fill', 'black');
+    g.append('circle').attr('cx', 0).attr('cy', -18).attr('r', 2).attr('fill', 'black');
+  }).distribute(function (elems, x_scale) {
+    var track = this;
+    var padding = ~~(track.height() - track.height() * 0.8) / 2;
+    var height = track.height() - ~~(padding * 2);
+    var dom1 = x_scale.domain()[1];
 
-    })
-    .distribute(function (elems, x_scale) {
-      const track = this;
-      const padding = ~~(track.height() - (track.height() * 0.8)) / 2;
-      const height = track.height() - ~~(padding * 2);
-      const dom1 = x_scale.domain()[1];
-
-      elems.select('g')
-        .transition()
-        .attr('transform', function (g) {
-          const width = d3.min([x_scale(dom1 / g.max), height]);
-          const posx = (g.hog_start * width) + (g.max_in_hog * width) / 2;
-          return `translate(${posx}, 0)`;
-        })
-    })
+    elems.select('g').transition().attr('transform', function (g) {
+      var width = d3.min([x_scale(dom1 / g.max), height]);
+      var posx = g.hog_start * width + g.max_in_hog * width / 2;
+      return "translate(" + posx + ", 0)";
+    });
+  })
 };
 
-
 },{}],38:[function(require,module,exports){
+'use strict';
+
 module.exports = function Hog_state() {
 
   this.current_level = '';
@@ -8106,7 +8064,7 @@ module.exports = function Hog_state() {
   this.number_species = 0;
   this.removed_hogs = [];
 
-  const that = this;
+  var that = this;
 
   this.reset_on = function (tree, per_species3, tax_name, threshold) {
     that.current_level = tax_name;
@@ -8114,14 +8072,13 @@ module.exports = function Hog_state() {
     that.number_species = 0;
     that.removed_hogs = [];
 
+    var leaves = tree.root().get_all_leaves();
 
-    const leaves = tree.root().get_all_leaves();
-
-    for (let i = 0; i < leaves.length; i++) {
+    for (var i = 0; i < leaves.length; i++) {
 
       if (per_species3[leaves[i].property('name')] !== undefined && per_species3[leaves[i].property('name')][tax_name] !== undefined) {
 
-        const slice = per_species3[leaves[i].property('name')][tax_name];
+        var slice = per_species3[leaves[i].property('name')][tax_name];
 
         if (slice && slice.length > 0) {
           that.number_species += 1;
@@ -8131,19 +8088,24 @@ module.exports = function Hog_state() {
     }
 
     if (that.hogs !== undefined) {
-      for (let i = 0; i < that.hogs.length; i++) {
-        const cov = that.hogs[i].number_species * 100 / that.number_species;
+      for (var _i = 0; _i < that.hogs.length; _i++) {
+        var cov = that.hogs[_i].number_species * 100 / that.number_species;
         if (cov >= threshold) {
-          that.hogs[i].coverage = cov;
-        }
-        else {
-          that.removed_hogs.push(i)
+          that.hogs[_i].coverage = cov;
+        } else {
+          that.removed_hogs.push(_i);
         }
       }
 
-      for (let i = that.removed_hogs.length - 1; i >= 0; i--) {
-        that.hogs.splice(that.removed_hogs[i], 1);
+      for (var _i2 = that.removed_hogs.length - 1; _i2 >= 0; _i2--) {
+        that.hogs.splice(that.removed_hogs[_i2], 1);
       }
+    }
+
+    var genes_so_far = 0;
+    for (var _i3 = 0; _i3 < that.hogs.length; _i3++) {
+      that.hogs[_i3].hog_start = genes_so_far;
+      genes_so_far += that.hogs[_i3].max_in_hog;
     }
 
     return that.removed_hogs;
@@ -8152,10 +8114,10 @@ module.exports = function Hog_state() {
   this.add_genes = function (array_hogs_with_genes) {
     if (!that.hogs) {
       that.hogs = [];
-      for (let i = 0; i < array_hogs_with_genes.length; i++) {
-        const h = {
+      for (var i = 0; i < array_hogs_with_genes.length; i++) {
+        var h = {
           genes: [],
-          name: `hog_${i}`,
+          name: 'hog_' + i,
           number_species: 0,
           max_in_hog: 0,
           coverage: 0,
@@ -8167,76 +8129,89 @@ module.exports = function Hog_state() {
       }
     }
 
-    for (let i = 0; i < array_hogs_with_genes.length; i++) {
-      if (array_hogs_with_genes[i].length > 0) {
-        that.hogs[i].genes = that.hogs[i].genes.concat(array_hogs_with_genes[i]);
-        that.hogs[i].number_species += 1;
-        if (that.hogs[i].max_in_hog < array_hogs_with_genes[i].length) {
-          that.hogs[i].max_in_hog = array_hogs_with_genes[i].length
+    for (var _i4 = 0; _i4 < array_hogs_with_genes.length; _i4++) {
+      if (array_hogs_with_genes[_i4].length > 0) {
+        that.hogs[_i4].genes = that.hogs[_i4].genes.concat(array_hogs_with_genes[_i4]);
+        that.hogs[_i4].number_species += 1;
+        if (that.hogs[_i4].max_in_hog < array_hogs_with_genes[_i4].length) {
+          that.hogs[_i4].max_in_hog = array_hogs_with_genes[_i4].length;
         }
       }
     }
-
-    let genes_so_far = 0;
-    for (let i = 0; i < this.hogs.length; i++) {
-      this.hogs[i].hog_start = genes_so_far;
-      genes_so_far += this.hogs[i].max_in_hog;
-    }
-
-  }
-}
-
+  };
+};
 
 },{}],39:[function(require,module,exports){
+'use strict';
+
 /* global d3 */
 
-const apijs = require('tnt.api');
+var apijs = require('tnt.api');
 // import apijs from 'tnt.api';
 // import {compute_size_annotations, get_maxs} from './utils.js';
-const {compute_size_annotations, get_maxs} = require('./utils.js');
+
+var _require = require('./utils.js'),
+    compute_size_annotations = _require.compute_size_annotations,
+    get_maxs = _require.get_maxs;
 // import hog_state from './hog_state';
-const hog_state = require('./hog_state');
+
+
+var hog_state = require('./hog_state');
 // import {hog_feature, hog_gene_feature, hog_group} from './features';
-const {hog_feature, hog_gene_feature, hog_group} = require('./features');
+
+var _require2 = require('./features'),
+    hog_feature = _require2.hog_feature,
+    hog_gene_feature = _require2.hog_gene_feature,
+    hog_group = _require2.hog_group;
 // import parser from "iham-parsers";
-const {parse_orthoxml} = require('iham-parsers');
+
+
+var _require3 = require('iham-parsers'),
+    parse_orthoxml = _require3.parse_orthoxml;
 // const parser = require('iham-parsers');
 // import genes_2_xcoords from './xcoords';
-const genes_2_xcoords = require('./xcoords');
 
+
+var genes_2_xcoords = require('./xcoords');
 
 // import {gene_tooltip, mouse_over_node, tree_node_tooltip, hog_header_tooltip} from './tooltips';
-const {gene_tooltip, mouse_over_node, tree_node_tooltip, hog_header_tooltip} = require('./tooltips');
 
-const dispatch = d3.dispatch("node_selected", "hogs_removed", "click");
+var _require4 = require('./tooltips'),
+    gene_tooltip = _require4.gene_tooltip,
+    mouse_over_node = _require4.mouse_over_node,
+    tree_node_tooltip = _require4.tree_node_tooltip,
+    hog_header_tooltip = _require4.hog_header_tooltip;
+
+var dispatch = d3.dispatch("node_selected", "hogs_removed", "click");
 
 function iHam() {
   // internal (non API) options
-  const state = {
-    highlight_condition: () => false,
+  var state = {
+    highlight_condition: function highlight_condition() {
+      return false;
+    }
   };
 
-
-  let genes_feature;
-  let board;
-  let tree;
-  let iHamVis;
-  let current_opened_taxa_name = '';
-  let curr_node;
-  let column_coverage_threshold = 0;
+  var genes_feature = void 0;
+  var board = void 0;
+  var tree = void 0;
+  var iHamVis = void 0;
+  var current_opened_taxa_name = '';
+  var curr_node = void 0;
+  var column_coverage_threshold = 0;
 
   // width for tree and board
-  let tree_width = 200;
-  let board_width = 800;
+  var tree_width = 200;
+  var board_width = 800;
 
-  const min_width_tree_container = 100;
-  const min_width_annot_container = 100;
+  var min_width_tree_container = 100;
+  var min_width_annot_container = 100;
 
-  let gene_color;
-  let update_nodes;
+  var gene_color = void 0;
+  var update_nodes = void 0;
 
   // external options (exposed API)
-  const config = {
+  var config = {
     div_id: null,
     gene_tooltips_on: "click",
     query_gene: {},
@@ -8262,61 +8237,52 @@ function iHam() {
     frozen_node: null,
 
     //
-    label_height: 20,
+    label_height: 20
   };
 
-  const theme = (div) => {
-    const data = parse_orthoxml(config.newick, config.orthoxml);
-    const data_per_species = data.per_species;
-    const tree_obj = data.tree;
+  var theme = function theme(div) {
+    var data = parse_orthoxml(config.newick, config.orthoxml);
+    var data_per_species = data.per_species;
+    var tree_obj = data.tree;
     d3.select(div).style("position", "relative");
 
-    const maxs = get_maxs(data_per_species);
-    const current_hog_state = new hog_state(maxs);
+    var maxs = get_maxs(data_per_species);
+    var current_hog_state = new hog_state(maxs);
 
     console.log(tree_obj);
     console.log(data_per_species);
     console.log(config.fam_data);
 
-    gene_color = gene => {
-      return (config.query_gene && gene.id === config.query_gene.id ? "#27ae60" : "#95a5a6");
+    gene_color = function gene_color(gene) {
+      return config.query_gene && gene.id === config.query_gene.id ? "#27ae60" : "#95a5a6";
     };
 
     // todo -30 should be define by margin variables
     // const tot_width = parseInt(d3.select(div).style('width')) - 30;
-    const tot_width = board_width + tree_width;
+    var tot_width = board_width + tree_width;
 
     // Node display
-    const collapsed_node = tnt.tree.node_display.triangle()
-      .fill("grey")
-      .size(4);
+    var collapsed_node = tnt.tree.node_display.triangle().fill("grey").size(4);
 
-    const leaf_node = tnt.tree.node_display.circle()
-      .fill("#2c3e50")
-      .size(4);
+    var leaf_node = tnt.tree.node_display.circle().fill("#2c3e50").size(4);
 
-    const int_node = tnt.tree.node_display.circle()
-      .fill("#34495e")
-      .size(4);
+    var int_node = tnt.tree.node_display.circle().fill("#34495e").size(4);
 
-    const highlight_node = tnt.tree.node_display.circle()
-      .fill("#e74c3c")
-      .size(6);
+    var highlight_node = tnt.tree.node_display.circle().fill("#e74c3c").size(6);
 
-    const node_display = tnt.tree.node_display()
-      .display(function (node) {
-        if (state.highlight_condition(node)) {
-          highlight_node.display().call(this, node);
-        } else if (node.is_collapsed()) {
-          collapsed_node.display().call(this, node);
-        } else if (node.is_leaf()) {
-          leaf_node.display().call(this, node);
-        } else if (!node.is_leaf()) {
-          int_node.display().call(this, node);
-        }
-      });
+    var node_display = tnt.tree.node_display().display(function (node) {
+      if (state.highlight_condition(node)) {
+        highlight_node.display().call(this, node);
+      } else if (node.is_collapsed()) {
+        collapsed_node.display().call(this, node);
+      } else if (node.is_leaf()) {
+        leaf_node.display().call(this, node);
+      } else if (!node.is_leaf()) {
+        int_node.display().call(this, node);
+      }
+    });
 
-    update_nodes = function (node) {
+    update_nodes = function update_nodes(node) {
       if (config.frozen_node) {
         return;
       }
@@ -8325,203 +8291,157 @@ function iHam() {
       current_opened_taxa_name = node.node_name();
       // board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
       board.width(board_width);
-      const removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold);
+      var removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold);
       dispatch.hogs_removed.call(this, removed_hogs);
       update_board();
 
-      state.highlight_condition = n => node.id() === n.id();
+      state.highlight_condition = function (n) {
+        return node.id() === n.id();
+      };
       tree.update_nodes();
     };
 
     // Tree
-    tree = tnt.tree()
-      .data(tree_obj)
-      .layout(tnt.tree.layout.vertical()
-        // .width(Math.max(240, ~~(tot_width * 0.4)))
-          .width(tree_width)
-          .scale(false)
-      )
-      .label(tnt.tree.label.text()
-        .fontsize(12)
-        .height(config.label_height)
-        .text(node => {
-          const limit = 30;
-          const data = node.data();
-          if (node.is_collapsed()) {
-            return `[${node.n_hidden()} hidden taxa]`;
+    tree = tnt.tree().data(tree_obj).layout(tnt.tree.layout.vertical()
+    // .width(Math.max(240, ~~(tot_width * 0.4)))
+    .width(tree_width).scale(false)).label(tnt.tree.label.text().fontsize(12).height(config.label_height).text(function (node) {
+      var limit = 30;
+      var data = node.data();
+      if (node.is_collapsed()) {
+        return '[' + node.n_hidden() + ' hidden taxa]';
+      }
+      if ((!config.show_internal_labels || !state.highlight_condition(node)) && data.children && data.children.length > 0) {
+        return "";
+      }
+      if (data.name.length > limit) {
+        var truncName = data.name.substr(0, limit - 3) + "...";
+        return truncName.replace(/_/g, ' ');
+      }
+      return data.name.replace(/_/g, ' ');
+    }).color(function (node) {
+      if (node.is_collapsed()) {
+        return 'grey';
+      }
+      return 'black';
+    }).fontweight(function (node) {
+      if (state.highlight_condition(node)) {
+        return "bold";
+      }
+      return "normal";
+    })).on("click", function (node) {
+      tree_node_tooltip.display.call(this, node, div, {
+        on_collapse: function on_collapse() {
+          node.toggle();
+          iHamVis.update();
+        },
+        on_freeze: function on_freeze(action) {
+          if (action === "unfreeze") {
+            config.frozen_node = null;
+          } else if (action === "freeze") {
+            config.frozen_node = node.id();
+          } else if (action === "refreeze") {
+            config.frozen_node = null;
+            update_nodes(node);
+            config.frozen_node = node.id();
           }
-          if ((!config.show_internal_labels ||
-            !state.highlight_condition(node)) &&
-            data.children && data.children.length > 0) {
-            return "";
-          }
-          if (data.name.length > limit) {
-            const truncName = data.name.substr(0, limit - 3) + "...";
-            return truncName.replace(/_/g, ' ');
-          }
-          return data.name.replace(/_/g, ' ');
-        })
-        .color(node => {
-          if (node.is_collapsed()) {
-            return 'grey';
-          }
-          return 'black';
-        })
-        .fontweight(node => {
-          if (state.highlight_condition(node)) {
-            return "bold";
-          }
-          return "normal";
-        })
-      )
-      .on("click", function (node) {
-        tree_node_tooltip.display.call(this, node, div, {
-            on_collapse: () => {
-              node.toggle();
-              iHamVis.update()
-            },
-            on_freeze: (action) => {
-              if (action === "unfreeze") {
-                config.frozen_node = null;
-              } else if (action === "freeze") {
-                config.frozen_node = node.id();
-              } else if (action === "refreeze") {
-                config.frozen_node = null;
-                update_nodes(node);
-                config.frozen_node = node.id();
-              }
-            },
-          },
-          config.frozen_node
-        );
-      })
-      .on("mouseover", function (node) {
-        update_nodes.call(this, node);
-        // mouse_over_node.display.call(this, node, div)
-      })
-      .on("mouseout", function () {
-        // mouse_over_node.close();
-      })
-      .node_display(node_display)
-      .branch_color("black");
+        }
+      }, config.frozen_node);
+    }).on("mouseover", function (node) {
+      update_nodes.call(this, node);
+      // mouse_over_node.display.call(this, node, div)
+    }).on("mouseout", function () {
+      // mouse_over_node.close();
+    }).node_display(node_display).branch_color("black");
 
     current_opened_taxa_name = tree.root().node_name();
     current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold);
 
     // Board:
-    board = tnt.board()
-      .from(0)
-      .zoom_in(1)
-      .allow_drag(false)
-      .to(2)
-      // .width(compute_size_annotations(maxs, tot_width, current_opened_taxa_name) * (config.label_height + 2));
-      .width(board_width);
+    board = tnt.board().from(0).zoom_in(1).allow_drag(false).to(2)
+    // .width(compute_size_annotations(maxs, tot_width, current_opened_taxa_name) * (config.label_height + 2));
+    .width(board_width);
 
     // Board's track
-    genes_feature = hog_gene_feature().colors(gene_color)
-    function track (leaf) {
+    genes_feature = hog_gene_feature().colors(gene_color);
+    function track(leaf) {
 
-      const sp = leaf.node_name();
+      var sp = leaf.node_name();
 
-      return tnt.board.track()
-        .color("#FFF")
-        .data(tnt.board.track.data.sync()
-          .retriever(() => {
-            // in case the branch is collapsed we still draw empty hogs columns
-            if (leaf.is_collapsed()) {
-              const random_collapse_leaf_name = leaf.get_all_leaves(true)[0].node_name();
+      return tnt.board.track().color("#FFF").data(tnt.board.track.data.sync().retriever(function () {
+        // in case the branch is collapsed we still draw empty hogs columns
+        if (leaf.is_collapsed()) {
+          var random_collapse_leaf_name = leaf.get_all_leaves(true)[0].node_name();
 
-              if (data_per_species[random_collapse_leaf_name] !== undefined) {
-                const genes2Xcoords = genes_2_xcoords(data_per_species[random_collapse_leaf_name][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state, config.fam_data);
-                genes2Xcoords.genes = [];
+          if (data_per_species[random_collapse_leaf_name] !== undefined) {
+            var genes2Xcoords = genes_2_xcoords(data_per_species[random_collapse_leaf_name][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state, config.fam_data);
+            genes2Xcoords.genes = [];
 
-                return genes2Xcoords;
-              }
-            }
+            return genes2Xcoords;
+          }
+        }
 
-            if (data_per_species[sp] === undefined) {
-              return {
-                genes: [],
-                hogs: [],
-                hog_groups: []
-              };
-            }
-            return genes_2_xcoords(data_per_species[sp][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state, config.fam_data);
-          })
-        )
-        .display(tnt.board.track.feature.composite()
-          .add("genes", genes_feature
-            .on("click", function (gene) {
-              if (config.gene_tooltips_on === "click") {
-                gene_tooltip.display.call(this, gene, div, false);
-              }
-            })
-            .on("mouseover", function (gene) {
-              if (config.gene_tooltips_on === "mouseover") {
-                gene_tooltip.display.call(this, gene, div, true);
-              }
-            })
-            .on("mouseout", function () {
-              if (config.gene_tooltips_on === "mouseover") {
-                gene_tooltip.close();
-              }
-            })
-          )
-          .add("hogs", hog_feature)
-          .add('hog_groups', hog_group
-            .on('click', function (hog) {
-              hog_header_tooltip.display.call(this, hog, div);
-            })
-          )
-        )
+        if (data_per_species[sp] === undefined) {
+          return {
+            genes: [],
+            hogs: [],
+            hog_groups: []
+          };
+        }
+        return genes_2_xcoords(data_per_species[sp][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state, config.fam_data);
+      })).display(tnt.board.track.feature.composite().add("genes", genes_feature.on("click", function (gene) {
+        if (config.gene_tooltips_on === "click") {
+          gene_tooltip.display.call(this, gene, div, false);
+        }
+      }).on("mouseover", function (gene) {
+        if (config.gene_tooltips_on === "mouseover") {
+          gene_tooltip.display.call(this, gene, div, true);
+        }
+      }).on("mouseout", function () {
+        if (config.gene_tooltips_on === "mouseover") {
+          gene_tooltip.close();
+        }
+      })).add("hogs", hog_feature).add('hog_groups', hog_group.on('click', function (hog) {
+        hog_header_tooltip.display.call(this, hog, div);
+      })));
     }
 
-
     // iHam setup
-    iHamVis = tnt()
-      .tree(tree)
-      .board(board)
-      .track(track);
+    iHamVis = tnt().tree(tree).board(board).track(track);
 
     iHamVis(div);
     update_nodes(tree.root());
     set_widths();
   };
 
-  apijs(theme)
-    .getset(config);
-
+  apijs(theme).getset(config);
 
   function update_board() {
     // update the board
     board.update();
 
     // and remove all headers not belonging to top level
-    const tracks = board.tracks();
-    let found_first = false;
-    tracks.forEach(track => {
-      const header = track.g.select('.tnt_elem_hog_groups').node();
+    var tracks = board.tracks();
+    var found_first = false;
+    tracks.forEach(function (track) {
+      var header = track.g.select('.tnt_elem_hog_groups').node();
       if (header && found_first) {
         track.g.selectAll('.tnt_elem_hog_groups').remove();
       }
       if (header) {
         found_first = true;
       }
-    })
+    });
   }
 
   function set_widths() {
     if (board) {
-      board.width(board_width)
-        .update();
-      d3.select("#tnt_tree_container_hogvis_container")
-        .style("width", board_width);
+      board.width(board_width).update();
+      d3.select("#tnt_tree_container_hogvis_container").style("width", board_width);
     }
 
     if (tree) {
       tree.layout().width(tree_width);
-      tree
-        .update();
+      tree.update();
     }
 
     if (board) {
@@ -8576,32 +8496,29 @@ function iHam() {
 module.exports = iHam;
 
 },{"./features":37,"./hog_state":38,"./tooltips":40,"./utils.js":41,"./xcoords":42,"iham-parsers":9,"tnt.api":34}],40:[function(require,module,exports){
-let _mouse_over_node;
-let _tree_node_tooltip;
-let _gene_tooltip;
-let _hog_header_tooltip;
+"use strict";
 
+var _mouse_over_node = void 0;
+var _tree_node_tooltip = void 0;
+var _gene_tooltip = void 0;
+var _hog_header_tooltip = void 0;
 
 module.exports = {
   mouse_over_node: {
-    display: function (node, div) {
-      const obj = {
+    display: function display(node, div) {
+      var obj = {
         body: node.node_name()
       };
-      _mouse_over_node = tooltip.plain()
-        .id('node_over_tooltip')
-        .width(140)
-        .show_closer(false)
-        .container(div)
-        .call(this, obj);
+      _mouse_over_node = tooltip.plain().id('node_over_tooltip').width(140).show_closer(false).container(div).call(this, obj);
     },
-    close: () => {
+    close: function close() {
       _mouse_over_node.close();
     }
   },
   tree_node_tooltip: {
-    display: function (node, div, actions, frozen) { // actions: (on collapse / expand) and (on freeze)
-      const obj = {};
+    display: function display(node, div, actions, frozen) {
+      // actions: (on collapse / expand) and (on freeze)
+      var obj = {};
       obj.header = node.node_name();
       obj.rows = [];
 
@@ -8609,8 +8526,8 @@ module.exports = {
       if (!node.is_leaf() || node.is_collapsed()) {
         obj.rows.push({
           value: node.is_collapsed() ? "Expand node" : "Collapse node",
-          link: function (n) {
-            tree_node_tooltip.close();
+          link: function link(n) {
+            _tree_node_tooltip.close();
             actions.on_collapse();
           },
           obj: node
@@ -8625,52 +8542,49 @@ module.exports = {
       if (!frozen) {
         obj.rows.push({
           value: 'Freeze at this node',
-          link: function () {
-            tree_node_tooltip.close();
+          link: function link() {
+            _tree_node_tooltip.close();
             actions.on_freeze("freeze");
           }
-        })
+        });
       }
       // If frozen at other node, unfreeze and freeze here
-      if (frozen && (frozen !== node.id())) {
+      if (frozen && frozen !== node.id()) {
         obj.rows.push({
           value: 'Unfreeze the tree',
-          link: function () {
-            tree_node_tooltip.close();
+          link: function link() {
+            _tree_node_tooltip.close();
             actions.on_freeze("unfreeze");
           }
         });
         obj.rows.push({
           value: 'Re-freeze tree at this node',
-          link: function () {
-            tree_node_tooltip.close();
+          link: function link() {
+            _tree_node_tooltip.close();
             actions.on_freeze("refreeze");
           }
         });
       }
-      if (frozen && (frozen === node.id())) {
+      if (frozen && frozen === node.id()) {
         obj.rows.push({
           value: 'Unfreeze the tree',
-          link: function (n) {
-            tree_node_tooltip.close();
+          link: function link(n) {
+            _tree_node_tooltip.close();
             actions.on_freeze("unfreeze");
           },
           obj: node
         });
       }
 
-
-      _tree_node_tooltip = tooltip.list()
-        .width(120)
-        .id('node_click_tooltip')
-        .container(div)
-        .call(this, obj);
+      _tree_node_tooltip = tooltip.list().width(120).id('node_click_tooltip').container(div).call(this, obj);
     },
-    close: () => _tree_node_tooltip.close()
+    close: function close() {
+      return _tree_node_tooltip.close();
+    }
   },
   gene_tooltip: {
-    display: function (gene, div, mouseover) {
-      const obj = {};
+    display: function display(gene, div, mouseover) {
+      var obj = {};
       obj.header = gene.gene.protid;
       obj.rows = [];
       obj.rows.push({
@@ -8678,10 +8592,7 @@ module.exports = {
         value: gene.gene.xrefid
       });
 
-      _gene_tooltip = tooltip.table()
-        .width(120)
-        .id('gene_tooltip')
-        .container(div);
+      _gene_tooltip = tooltip.table().width(120).id('gene_tooltip').container(div);
 
       if (mouseover) {
         _gene_tooltip.show_closer(false);
@@ -8690,73 +8601,71 @@ module.exports = {
 
       _gene_tooltip.call(this, obj);
     },
-    close: () => _gene_tooltip.close()
+    close: function close() {
+      return _gene_tooltip.close();
+    }
   },
   hog_header_tooltip: {
-    display: function (hog, div) {
-      const obj = {};
+    display: function display(hog, div) {
+      var obj = {};
       obj.header = hog.name;
       obj.rows = [];
       obj.rows.push({
-        value: `Number of genes: ${hog.genes.length}`
+        value: "Number of genes: " + hog.genes.length
       });
       obj.rows.push({
-        value: `Coverage: ${hog.coverage.toFixed(2)} %`
+        value: "Coverage: " + hog.coverage.toFixed(2) + " %"
       });
       obj.rows.push({
         value: "Sequences (Fasta)",
-        link: function () {
-        }
+        link: function link() {}
       });
       obj.rows.push({
         value: "HOGs tables",
-        link: function () {
-        }
+        link: function link() {}
       });
 
-      _hog_header_tooltip = tooltip.list()
-        .width(120)
-        .id('hog_header_tooltip')
-        .container(div)
-        .call(this, obj);
+      _hog_header_tooltip = tooltip.list().width(120).id('hog_header_tooltip').container(div).call(this, obj);
     },
-    close: () => _hog_header_tooltip.close()
+    close: function close() {
+      return _hog_header_tooltip.close();
+    }
   }
-}
-
+};
 
 },{}],41:[function(require,module,exports){
+'use strict';
+
 module.exports = {
-  compute_size_annotations: function (maxs, tot_width, taxa_name) {
+  compute_size_annotations: function compute_size_annotations(maxs, tot_width, taxa_name) {
     if (taxa_name === 'LUCA') {
-      return ~~(tot_width * 0.6)
+      return ~~(tot_width * 0.6);
     }
 
-    let max_number_square = 0;
-    const arrayLength = maxs[taxa_name].length;
-    for (let i = 0; i < arrayLength; i++) {
+    var max_number_square = 0;
+    var arrayLength = maxs[taxa_name].length;
+    for (var i = 0; i < arrayLength; i++) {
       max_number_square += maxs[taxa_name][i];
     }
 
     return max_number_square;
   },
-  get_maxs: function (data) {
-    const maxs = {};
-    let i;
-    let sp;
-    let internal;
+  get_maxs: function get_maxs(data) {
+    var maxs = {};
+    var i = void 0;
+    var sp = void 0;
+    var internal = void 0;
     for (sp in data) {
       if (data.hasOwnProperty(sp)) {
-        const sp_data = data[sp];
+        var sp_data = data[sp];
         for (internal in sp_data) {
           if (maxs[internal] === undefined) {
             maxs[internal] = [];
           }
           if (sp_data.hasOwnProperty(internal)) {
-            const internal_data = sp_data[internal];
+            var internal_data = sp_data[internal];
             for (i = 0; i < internal_data.length; i++) {
-              if ((maxs[internal][i] === undefined) ||
-                (maxs[internal][i] < internal_data[i].length)) {
+              if (maxs[internal][i] === undefined || maxs[internal][i] < internal_data[i].length) {
                 maxs[internal][i] = internal_data[i].length;
               }
             }
@@ -8769,12 +8678,16 @@ module.exports = {
 };
 
 },{}],42:[function(require,module,exports){
-const filter = (id, all) => {
-  const found = all.filter(d => d.id === id);
+"use strict";
+
+var filter = function filter(id, all) {
+  var found = all.filter(function (d) {
+    return d.id === id;
+  });
   return found[0];
 };
 
-module.exports = function(arr, maxs, current_hog_state, fam_data) {
+module.exports = function (arr, maxs, current_hog_state, fam_data) {
   if (arr === undefined) {
     return {
       genes: [],
@@ -8782,13 +8695,13 @@ module.exports = function(arr, maxs, current_hog_state, fam_data) {
       hog_groups: []
     };
   }
-  const genes = [];
-  const hogs_boundaries = [];
-  let total_pos = 0;
-  const max = d3.sum(maxs);
-  arr.forEach((hog_genes, hog) => {
+  var genes = [];
+  var hogs_boundaries = [];
+  var total_pos = 0;
+  var max = d3.sum(maxs);
+  arr.forEach(function (hog_genes, hog) {
     if (current_hog_state.removed_hogs.indexOf(hog) === -1) {
-      const hog_gene_names = [];
+      var hog_gene_names = [];
       hog_genes.sort();
       hog_genes.forEach(function (gene, gene_pos) {
         genes.push({
@@ -8796,7 +8709,7 @@ module.exports = function(arr, maxs, current_hog_state, fam_data) {
           gene: filter(gene, fam_data),
           hog: hog,
           pos: total_pos + gene_pos,
-          max,
+          max: max,
           max_in_hog: maxs[hog],
           pos_in_hog: gene_pos
         });
@@ -8807,12 +8720,12 @@ module.exports = function(arr, maxs, current_hog_state, fam_data) {
         max: d3.sum(maxs),
         max_in_hog: total_pos,
         hog: hog,
-        id: hog_gene_names.length ? hog_gene_names.join('_') : ("hog_" + hog)
+        id: hog_gene_names.length ? hog_gene_names.join('_') : "hog_" + hog
       });
     }
   });
 
-  current_hog_state.hogs.forEach(hog => {
+  current_hog_state.hogs.forEach(function (hog) {
     hog.max = max;
   });
 
@@ -8822,7 +8735,6 @@ module.exports = function(arr, maxs, current_hog_state, fam_data) {
     hog_groups: current_hog_state.hogs
   };
 };
-
 
 },{}]},{},[1])(1)
 });

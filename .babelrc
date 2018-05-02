@@ -2,7 +2,7 @@
   "presets": [
     ["env", {
       "targets": {
-        "safari": "8"
+        "ie": "9"
       }
     }]
   ]

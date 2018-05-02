@@ -36,13 +36,19 @@ module.exports = function Hog_state() {
           that.hogs[i].coverage = cov;
         }
         else {
-          that.removed_hogs.push(i)
+          that.removed_hogs.push(i);
         }
       }
 
       for (let i = that.removed_hogs.length - 1; i >= 0; i--) {
         that.hogs.splice(that.removed_hogs[i], 1);
       }
+    }
+
+    let genes_so_far = 0;
+    for (let i = 0; i < that.hogs.length; i++) {
+      that.hogs[i].hog_start = genes_so_far;
+      genes_so_far += that.hogs[i].max_in_hog;
     }
 
     return that.removed_hogs;
@@ -75,13 +81,7 @@ module.exports = function Hog_state() {
         }
       }
     }
-
-    let genes_so_far = 0;
-    for (let i = 0; i < this.hogs.length; i++) {
-      this.hogs[i].hog_start = genes_so_far;
-      genes_so_far += this.hogs[i].max_in_hog;
-    }
-
   }
-}
+};
+
 
