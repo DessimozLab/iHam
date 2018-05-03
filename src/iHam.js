@@ -1,24 +1,14 @@
 /* global d3 */
 
 const apijs = require('tnt.api');
-// import apijs from 'tnt.api';
-// import {compute_size_annotations, get_maxs} from './utils.js';
 const {compute_size_annotations, get_maxs} = require('./utils.js');
-// import hog_state from './hog_state';
 const hog_state = require('./hog_state');
-// import {hog_feature, hog_gene_feature, hog_group} from './features';
 const {hog_feature, hog_gene_feature, hog_group} = require('./features');
-// import parser from "iham-parsers";
 const {parse_orthoxml} = require('iham-parsers');
-// const parser = require('iham-parsers');
-// import genes_2_xcoords from './xcoords';
 const genes_2_xcoords = require('./xcoords');
-
-
-// import {gene_tooltip, mouse_over_node, tree_node_tooltip, hog_header_tooltip} from './tooltips';
 const {gene_tooltip, mouse_over_node, tree_node_tooltip, hog_header_tooltip} = require('./tooltips');
 
-const dispatch = d3.dispatch("node_selected", "hogs_removed", "click");
+const dispatch = d3.dispatch("node_selected", "hogs_removed", "click", "updating", "updated");
 
 function iHam() {
   // internal (non API) options
@@ -132,25 +122,31 @@ function iHam() {
       });
 
     update_nodes = function (node) {
-      if (config.frozen_node) {
+      dispatch.updating.call(this);
+
+      setTimeout(function () {
+        if (config.frozen_node) {
+          // board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
+          board.width(board_width);
+          const removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
+          dispatch.hogs_removed.call(this, removed_hogs);
+          update_board();
+          dispatch.updated.call(this);
+          return;
+        }
+        curr_node = node;
+        dispatch.node_selected.call(this, node);
+        current_opened_taxa_name = node.node_name();
         // board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
         board.width(board_width);
         const removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
         dispatch.hogs_removed.call(this, removed_hogs);
         update_board();
-        return;
-      }
-      curr_node = node;
-      dispatch.node_selected.call(this, node);
-      current_opened_taxa_name = node.node_name();
-      // board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
-      board.width(board_width);
-      const removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
-      dispatch.hogs_removed.call(this, removed_hogs);
-      update_board();
 
-      state.highlight_condition = n => node.id() === n.id();
-      tree.update_nodes();
+        state.highlight_condition = n => node.id() === n.id();
+        tree.update_nodes();
+        dispatch.updated.call(this);
+      }, 0);
     };
 
     // Tree

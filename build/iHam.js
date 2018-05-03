@@ -8147,34 +8147,22 @@ module.exports = function Hog_state() {
 /* global d3 */
 
 var apijs = require('tnt.api');
-// import apijs from 'tnt.api';
-// import {compute_size_annotations, get_maxs} from './utils.js';
 
 var _require = require('./utils.js'),
     compute_size_annotations = _require.compute_size_annotations,
     get_maxs = _require.get_maxs;
-// import hog_state from './hog_state';
-
 
 var hog_state = require('./hog_state');
-// import {hog_feature, hog_gene_feature, hog_group} from './features';
 
 var _require2 = require('./features'),
     hog_feature = _require2.hog_feature,
     hog_gene_feature = _require2.hog_gene_feature,
     hog_group = _require2.hog_group;
-// import parser from "iham-parsers";
-
 
 var _require3 = require('iham-parsers'),
     parse_orthoxml = _require3.parse_orthoxml;
-// const parser = require('iham-parsers');
-// import genes_2_xcoords from './xcoords';
-
 
 var genes_2_xcoords = require('./xcoords');
-
-// import {gene_tooltip, mouse_over_node, tree_node_tooltip, hog_header_tooltip} from './tooltips';
 
 var _require4 = require('./tooltips'),
     gene_tooltip = _require4.gene_tooltip,
@@ -8182,7 +8170,7 @@ var _require4 = require('./tooltips'),
     tree_node_tooltip = _require4.tree_node_tooltip,
     hog_header_tooltip = _require4.hog_header_tooltip;
 
-var dispatch = d3.dispatch("node_selected", "hogs_removed", "click");
+var dispatch = d3.dispatch("node_selected", "hogs_removed", "click", "updating", "updated");
 
 function iHam() {
   // internal (non API) options
@@ -8288,27 +8276,33 @@ function iHam() {
     });
 
     update_nodes = function update_nodes(node) {
-      if (config.frozen_node) {
+      dispatch.updating.call(this);
+
+      setTimeout(function () {
+        if (config.frozen_node) {
+          // board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
+          board.width(board_width);
+          var _removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
+          dispatch.hogs_removed.call(this, _removed_hogs);
+          update_board();
+          dispatch.updated.call(this);
+          return;
+        }
+        curr_node = node;
+        dispatch.node_selected.call(this, node);
+        current_opened_taxa_name = node.node_name();
         // board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
         board.width(board_width);
-        var _removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
-        dispatch.hogs_removed.call(this, _removed_hogs);
+        var removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
+        dispatch.hogs_removed.call(this, removed_hogs);
         update_board();
-        return;
-      }
-      curr_node = node;
-      dispatch.node_selected.call(this, node);
-      current_opened_taxa_name = node.node_name();
-      // board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
-      board.width(board_width);
-      var removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
-      dispatch.hogs_removed.call(this, removed_hogs);
-      update_board();
 
-      state.highlight_condition = function (n) {
-        return node.id() === n.id();
-      };
-      tree.update_nodes();
+        state.highlight_condition = function (n) {
+          return node.id() === n.id();
+        };
+        tree.update_nodes();
+        dispatch.updated.call(this);
+      }, 0);
     };
 
     // Tree

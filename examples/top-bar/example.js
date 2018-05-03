@@ -14,6 +14,14 @@
       .tree_width(500)
       .board_width(800)
       .query_gene({id: 3965})
+      .on("updating", function() {
+        d3.select("#updating")
+          .style("display", 'block');
+      })
+      .on("updated", function () {
+        d3.select("#updating")
+          .style("display", "none");
+      })
       .on("hogs_removed", function (what) {
         if (what.length) {
           d3.select(".alert_remove")
