@@ -47,7 +47,6 @@ function iHam() {
 
   // external options (exposed API)
   const config = {
-    div_id: null,
     gene_tooltips_on: "click",
     query_gene: {},
     // data_per_species: null, // TODO: this should be called simply data?
@@ -55,7 +54,6 @@ function iHam() {
     fam_data: null,
     orthoxml: null,
     newick: null,
-    pickerDiv: null, // TODO: Still don't know what is this for
 
     // Options
     // display or not internal node label
