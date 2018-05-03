@@ -11,8 +11,8 @@
       .orthoxml(data.orthoxml)
       .newick(data.tree)
       .fam_data(data.fam_data)
-      .tree_width(500)
-      .board_width(800)
+      .tree_width(330)
+      .board_width(530)
       .query_gene({id: 3965})
       .on("updating", function() {
         d3.select("#updating")
