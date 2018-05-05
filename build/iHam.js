@@ -8288,6 +8288,7 @@ function iHam() {
           dispatch.updated.call(this);
           return;
         }
+
         curr_node = node;
         dispatch.node_selected.call(this, node);
         current_opened_taxa_name = node.node_name();
@@ -8368,6 +8369,7 @@ function iHam() {
     // Board's track
     genes_feature = hog_gene_feature().colors(gene_color);
     function track(leaf) {
+      console.log(leaf.data());
 
       var sp = leaf.node_name();
 
@@ -8410,7 +8412,9 @@ function iHam() {
     }
 
     // iHam setup
-    iHamVis = tnt().tree(tree).board(board).track(track);
+    iHamVis = tnt().tree(tree).board(board).track(track).on('drag', function () {
+      remove_top_level();
+    });
 
     iHamVis(div);
     update_nodes(tree.root());
@@ -8419,11 +8423,8 @@ function iHam() {
 
   apijs(theme).getset(config);
 
-  function update_board() {
-    // update the board
-    board.update();
-
-    // and remove all headers not belonging to top level
+  function remove_top_level() {
+    // remove all headers not belonging to top level
     var tracks = board.tracks();
     var found_first = false;
     tracks.forEach(function (track) {
@@ -8435,6 +8436,12 @@ function iHam() {
         found_first = true;
       }
     });
+  }
+
+  function update_board() {
+    // update the board
+    board.update();
+    remove_top_level();
   }
 
   function set_widths() {
@@ -8683,11 +8690,6 @@ module.exports = {
 },{}],42:[function(require,module,exports){
 "use strict";
 
-// const filter = (id, all) => {
-//   const found = all.filter(d => d.id === id);
-//   return found[0];
-// };
-
 module.exports = function (arr, maxs, current_hog_state, fam_data) {
   if (arr === undefined) {
     return {
@@ -8707,7 +8709,6 @@ module.exports = function (arr, maxs, current_hog_state, fam_data) {
       hog_genes.forEach(function (gene, gene_pos) {
         genes.push({
           id: gene,
-          // gene: filter(gene, fam_data),
           gene: fam_data[gene],
           hog: hog,
           pos: total_pos + gene_pos,

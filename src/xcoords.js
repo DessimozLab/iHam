@@ -1,8 +1,3 @@
-// const filter = (id, all) => {
-//   const found = all.filter(d => d.id === id);
-//   return found[0];
-// };
-
 module.exports = function(arr, maxs, current_hog_state, fam_data) {
   if (arr === undefined) {
     return {
@@ -22,7 +17,6 @@ module.exports = function(arr, maxs, current_hog_state, fam_data) {
       hog_genes.forEach(function (gene, gene_pos) {
         genes.push({
           id: gene,
-          // gene: filter(gene, fam_data),
           gene: fam_data[gene],
           hog: hog,
           pos: total_pos + gene_pos,

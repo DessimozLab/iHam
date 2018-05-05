@@ -134,6 +134,7 @@ function iHam() {
           dispatch.updated.call(this);
           return;
         }
+
         curr_node = node;
         dispatch.node_selected.call(this, node);
         current_opened_taxa_name = node.node_name();
@@ -234,8 +235,9 @@ function iHam() {
       .width(board_width);
 
     // Board's track
-    genes_feature = hog_gene_feature().colors(gene_color)
+    genes_feature = hog_gene_feature().colors(gene_color);
     function track (leaf) {
+      console.log(leaf.data());
 
       const sp = leaf.node_name();
 
@@ -297,7 +299,10 @@ function iHam() {
     iHamVis = tnt()
       .tree(tree)
       .board(board)
-      .track(track);
+      .track(track)
+      .on('drag', function () {
+        remove_top_level();
+      });
 
     iHamVis(div);
     update_nodes(tree.root());
@@ -307,12 +312,8 @@ function iHam() {
   apijs(theme)
     .getset(config);
 
-
-  function update_board() {
-    // update the board
-    board.update();
-
-    // and remove all headers not belonging to top level
+  function remove_top_level() {
+    // remove all headers not belonging to top level
     const tracks = board.tracks();
     let found_first = false;
     tracks.forEach(track => {
@@ -324,6 +325,12 @@ function iHam() {
         found_first = true;
       }
     })
+  }
+
+  function update_board() {
+    // update the board
+    board.update();
+    remove_top_level();
   }
 
   function set_widths() {
