@@ -1,0 +1,36 @@
+.axis path, .axis line {
+  fill: none;
+  stroke: black;
+  shape-rendering: crispEdges; }
+
+.axis text {
+  font-family: sans-serif;
+  font-size: 11px; }
+
+.tnt_framed {
+  border: none;
+  border-radius: 0px !important; }
+
+.tnt_tooltip_active {
+  opacity: 0.98 !important; }
+
+.tnt_tooltip {
+  border: none !important;
+  z-index: 1000000 !important; }
+
+.tnt_groupDiv {
+  display: inline-block; }
+
+div[id^="tnt_tree_container_"] {
+  display: inherit;
+  overflow-x: auto; }
+
+div[id^="tnt_annot_container_"] {
+  display: inherit;
+  overflow-x: auto; }
+
+#tnt_tooltip_node_over_tooltip {
+  pointer-events: none; }
+
+#tnt_tooltip_gene_tooltip_mouseover {
+  pointer-events: none; }
