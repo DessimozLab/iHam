@@ -1,4 +1,4 @@
-module.exports = function(arr, maxs, current_hog_state, fam_data) {
+module.exports = function(arr, maxs, current_hog_state, fam_data, is_first) {
   if (arr === undefined) {
     return {
       genes: [],
@@ -36,15 +36,19 @@ module.exports = function(arr, maxs, current_hog_state, fam_data) {
     }
   });
 
-  current_hog_state.hogs.forEach(hog => {
-    hog.max = max;
-  });
+  let hogs = [];
+  if (is_first && current_hog_state.hogs) {
+    current_hog_state.hogs.forEach(hog => {
+      hog.max = max;
+    });
+    hogs = current_hog_state.hogs;
+  }
 
 
   return {
     genes: genes,
     hogs: hogs_boundaries.slice(0, -1),
-    hog_groups: current_hog_state.hogs
+    hog_groups: hogs
   };
 };
 

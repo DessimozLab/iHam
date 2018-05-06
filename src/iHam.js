@@ -22,6 +22,7 @@ function iHam() {
   let tree;
   let iHamVis;
   let current_opened_taxa_name = '';
+  let current_opened_node = null;
   let curr_node;
   let column_coverage_threshold = 0;
 
@@ -124,30 +125,33 @@ function iHam() {
     update_nodes = function (node) {
       dispatch.updating.call(this);
 
-      setTimeout(function () {
-        if (config.frozen_node) {
-          // board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
-          board.width(board_width);
-          const removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
-          dispatch.hogs_removed.call(this, removed_hogs);
-          update_board();
-          dispatch.updated.call(this);
-          return;
-        }
-
-        curr_node = node;
-        dispatch.node_selected.call(this, node);
-        current_opened_taxa_name = node.node_name();
+      if (config.frozen_node) {
         // board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
-        board.width(board_width);
         const removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
         dispatch.hogs_removed.call(this, removed_hogs);
-        update_board();
+        board.width(board_width);
+        // update_board();
+        board.update();
+        dispatch.updated.call(this);
+        return;
+      }
+
+      // setTimeout(function () {
+        curr_node = node;
+        dispatch.node_selected.call(this, node);
+        current_opened_node = node;
+        current_opened_taxa_name = node.node_name();
+        // board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
+        const removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
+        dispatch.hogs_removed.call(this, removed_hogs);
+        board.width(board_width);
+        // update_board();
+        board.update();
 
         state.highlight_condition = n => node.id() === n.id();
         tree.update_nodes();
         dispatch.updated.call(this);
-      }, 0);
+      // }, 0);
     };
 
     // Tree
@@ -195,7 +199,8 @@ function iHam() {
         tree_node_tooltip.display.call(this, node, div, {
             on_collapse: () => {
               node.toggle();
-              iHamVis.update()
+              // update_nodes(node);
+              iHamVis.update();
             },
             on_freeze: (action) => {
               if (action === "unfreeze") {
@@ -222,6 +227,7 @@ function iHam() {
       .node_display(node_display)
       .branch_color("black");
 
+    current_opened_node = tree.root();
     current_opened_taxa_name = tree.root().node_name();
     current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
 
@@ -237,7 +243,6 @@ function iHam() {
     // Board's track
     genes_feature = hog_gene_feature().colors(gene_color);
     function track (leaf) {
-      console.log(leaf.data());
 
       const sp = leaf.node_name();
 
@@ -250,9 +255,8 @@ function iHam() {
               const random_collapse_leaf_name = leaf.get_all_leaves(true)[0].node_name();
 
               if (data_per_species[random_collapse_leaf_name] !== undefined) {
-                const genes2Xcoords = genes_2_xcoords(data_per_species[random_collapse_leaf_name][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state, fam_data_obj);
+                const genes2Xcoords = genes_2_xcoords(data_per_species[random_collapse_leaf_name][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state, fam_data_obj, false);
                 genes2Xcoords.genes = [];
-
                 return genes2Xcoords;
               }
             }
@@ -264,7 +268,24 @@ function iHam() {
                 hog_groups: []
               };
             }
-            return genes_2_xcoords(data_per_species[sp][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state, fam_data_obj);
+
+            const all_leaves = current_opened_node.get_all_leaves();
+            let first_node_with_data;
+            for (let i = 0; i < all_leaves.length; i++) {
+              const leaf = all_leaves[i];
+              if (leaf.is_collapsed()) {
+                continue;
+              }
+              first_node_with_data = leaf;
+              break;
+            }
+
+            let is_first = false;
+            if (first_node_with_data) {
+              is_first = first_node_with_data.node_name() === leaf.node_name();
+            }
+            const g2c = genes_2_xcoords(data_per_species[sp][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state, fam_data_obj, is_first);
+            return g2c;
           })
         )
         .display(tnt.board.track.feature.composite()
@@ -299,39 +320,20 @@ function iHam() {
     iHamVis = tnt()
       .tree(tree)
       .board(board)
-      .track(track)
-      .on('drag', function () {
-        remove_top_level();
-      });
+      .track(track);
 
     iHamVis(div);
-    update_nodes(tree.root());
-    set_widths();
+    // update_nodes(tree.root());
+    // set_widths();
   };
 
   apijs(theme)
     .getset(config);
 
-  function remove_top_level() {
-    // remove all headers not belonging to top level
-    const tracks = board.tracks();
-    let found_first = false;
-    tracks.forEach(track => {
-      const header = track.g.select('.tnt_elem_hog_groups').node();
-      if (header && found_first) {
-        track.g.selectAll('.tnt_elem_hog_groups').remove();
-      }
-      if (header) {
-        found_first = true;
-      }
-    })
-  }
-
-  function update_board() {
+  // function update_board() {
     // update the board
-    board.update();
-    remove_top_level();
-  }
+  // board.update();
+  // }
 
   function set_widths() {
     if (board) {
@@ -348,7 +350,8 @@ function iHam() {
     }
 
     if (board) {
-      update_board();
+      // update_board();
+      board.update();
     }
   }
 
@@ -380,7 +383,8 @@ function iHam() {
 
     genes_feature.colors(cb);
     board.width(board_width);
-    update_board();
+    // update_board();
+    board.update();
     return this;
   };
 

@@ -33,7 +33,7 @@ module.exports = {
           value: node.is_collapsed() ? "Expand node" : "Collapse node",
           link: function (n) {
             _tree_node_tooltip.close();
-            actions.on_collapse();
+            actions.on_collapse(n);
           },
           obj: node
         });

@@ -14,7 +14,7 @@ module.exports = function Hog_state() {
     that.removed_hogs = [];
 
 
-    const leaves = tree.root().get_all_leaves();
+    const leaves = tree.root().get_all_leaves(true);
 
     for (let i = 0; i < leaves.length; i++) {
 
@@ -46,10 +46,14 @@ module.exports = function Hog_state() {
     }
 
     let genes_so_far = 0;
-    for (let i = 0; i < that.hogs.length; i++) {
-      that.hogs[i].hog_start = genes_so_far;
-      that.hogs[i].protid = fam_data[that.hogs[i].genes[0]].protid;
-      genes_so_far += that.hogs[i].max_in_hog;
+    if (that.hogs) {
+      for (let i = 0; i < that.hogs.length; i++) {
+        that.hogs[i].hog_start = genes_so_far;
+        if (fam_data[that.hogs[i].genes]) {
+          that.hogs[i].protid = fam_data[that.hogs[i].genes[0]].protid;
+        }
+        genes_so_far += that.hogs[i].max_in_hog;
+      }
     }
 
     return that.removed_hogs;
