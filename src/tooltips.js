@@ -116,7 +116,6 @@ module.exports = {
   },
   hog_header_tooltip: {
     display: function (hog, taxa_name, div) {
-      console.log(hog);
       const obj = {};
       obj.header = hog.name;
       obj.rows = [];
