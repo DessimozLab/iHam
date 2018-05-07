@@ -8233,8 +8233,6 @@ function iHam() {
   var theme = function theme(div) {
     var data = parse_orthoxml(config.newick, config.orthoxml);
     var data_per_species = data.per_species;
-    console.log("data per species...");
-    console.log(data_per_species);
     var tree_obj = data.tree;
     var fam_data_obj = {};
     config.fam_data.forEach(function (gene) {
@@ -8348,7 +8346,6 @@ function iHam() {
           node.toggle();
           // update_nodes(node);
           iHamVis.update();
-          board.update();
         },
         on_freeze: function on_freeze(action) {
           if (action === "unfreeze") {
@@ -8388,7 +8385,6 @@ function iHam() {
         // in case the branch is collapsed we still draw empty hogs columns
         if (leaf.is_collapsed()) {
           var random_collapse_leaf_name = leaf.get_all_leaves(true)[0].node_name();
-          console.log('random_collapse_leaf_name: ' + random_collapse_leaf_name);
 
           if (data_per_species[random_collapse_leaf_name] !== undefined) {
             var genes2Xcoords = genes_2_xcoords(data_per_species[random_collapse_leaf_name][current_opened_taxa_name], maxs[current_opened_taxa_name], current_hog_state, fam_data_obj, false);
