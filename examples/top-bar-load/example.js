@@ -1,7 +1,7 @@
 (
   function (div) {
 
-    var newick = axios.get('/examples/speciestree.nwk')
+    var newick = axios.get('https://omabrowser.org/All/speciestree.nwk')
       .then(function (resp) {
         return resp.data;
       });
@@ -9,7 +9,7 @@
       .then(function (resp) {
         return resp.data;
       });
-    var fam_data = axios.get('https://omabrowser.org/oma/hogdata/NOX1_HUMAN/json')
+    var fam_data = axios.get('https://omabrowser.org/oma/hogdata/NOX1_HUMAN/json', { responseType: 'arraybuffer' })
       .then(function(resp) {
         return resp.data;
       });
@@ -27,12 +27,18 @@
           })
           .orthoxml(resps[0])
           .newick(resps[1])
-          // .data_per_species(data.per_species)
-          // .tree_obj(data.tree)
           .fam_data(fam_data)
-          .tree_width(500)
-          .board_width(800)
+          .tree_width(330)
+          .board_width(530)
           .query_gene({id:3965})
+          .on("updating", function() {
+            d3.select("#updating")
+              .style("display", 'block');
+          })
+          .on("updated", function () {
+            d3.select("#updating")
+              .style("display", "none");
+          })
           .on("hogs_removed", function(what) {
             if (what.length) {
               d3.select(".alert_remove")

@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Test</title>
+
+    <!-- Axios -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- D3 -->
     <script src="https://d3js.org/d3.v3.js"></script>
 
     <!-- Bootstrap CDN -->
@@ -37,6 +41,12 @@
     <style>
         body {
             font-family: 'Roboto', sans-serif;
+        }
+
+        #updating {
+            position: absolute;
+            left: 20px;
+            display: none;
         }
 
         .alert_remove {
@@ -107,6 +117,11 @@
         </div>
     </div>
 </div>
+
+<div id="updating">
+    Updating...
+</div>
+
 
 <div class="alert alert-info text-center alert_remove"
      role="alert"
