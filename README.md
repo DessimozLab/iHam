@@ -10,15 +10,32 @@ It can be installed using _yarn_ or _npm_:
     $ npm install --save iham
     $ yarn add iham
 
+And build using
+
+    $ npm run build && npm run build-css
+
 It is also possible to link directly to the latest release:
 
 
     <link rel="stylesheet" href="https://emepyc.github.io/iHam/iHam.css" />
     <script href="https://emepyc.github.io/iHam/iHam.js"></script>
 
+## Usage
+
+    var iham = iHam()
+        .newick(newick)
+        .orthoxml(orthoxml)
+        .fam_data(fam_data);
+    
+    var container = document.getElementById("container");
+    iham(document.getElementById(container);
+
+See below for a description of each method. The above snippet, assumes that the widget will be rendered in a `div` element with id `container`.
+
+
 ## Example
 
-[See example](http://bl.ocks.org/emepyc/ce259dd519f6a60d35d04c78b40ec425)
+[See this example](http://bl.ocks.org/emepyc/ce259dd519f6a60d35d04c78b40ec425).
 
 
 # Configuration
