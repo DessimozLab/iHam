@@ -17,8 +17,8 @@ And build using
 It is also possible to link directly to the latest release:
 
 
-    <link rel="stylesheet" href="https://emepyc.github.io/iHam/iHam.css" />
-    <script href="https://emepyc.github.io/iHam/iHam.js"></script>
+    <link rel="stylesheet" href="https://dessimozlab.github.io/iHam/iHam.css" />
+    <script href="https://dessimozlab.github.io/iHam/iHam.js"></script>
 
 ## Usage
 
