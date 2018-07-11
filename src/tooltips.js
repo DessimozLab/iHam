@@ -115,7 +115,7 @@ module.exports = {
     close: () => _gene_tooltip.close()
   },
   hog_header_tooltip: {
-    display: function (hog, taxa_name, div) {
+    display: function (hog, taxa_name, div, show_oma_link) { //  clement - add option to display oma links
       const obj = {};
       obj.header = hog.name;
       obj.rows = [];
@@ -125,12 +125,16 @@ module.exports = {
       obj.rows.push({
         value: `% species represented: ${hog.coverage.toFixed(2)} %` // clement -  change coverage for % species represented
       });
-      obj.rows.push({
-        value: `<a href="https://omabrowser.org/oma/hogs/${hog.protid}/${taxa_name.replace(" ", "%20")}/fasta" target="_blank">Sequences (Fasta)</a>`,
-      });
-      obj.rows.push({
-        value: `<a href="https://omabrowser.org/oma/hogs/${hog.protid}/${taxa_name.replace(" ", "%20")}/" target="_blank">HOGs tables</a>`,
-      });
+      if (show_oma_link) {
+
+        obj.rows.push({
+          value: `<a href="https://omabrowser.org/oma/hogs/${hog.protid}/${taxa_name.replace(" ", "%20")}/fasta" target="_blank">Sequences (Fasta)</a>`,
+        });
+        obj.rows.push({
+          value: `<a href="https://omabrowser.org/oma/hogs/${hog.protid}/${taxa_name.replace(" ", "%20")}/" target="_blank">HOGs tables</a>`,
+        });
+
+      }
 
       _hog_header_tooltip = tooltip.list()
         .width(120)

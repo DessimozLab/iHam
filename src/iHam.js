@@ -52,6 +52,7 @@ function iHam() {
 
     // Redirection url prefix for tooltip on genes
     // oma_info_url_template: '/cgi-bin/gateway.pl?f=DisplayEntry&amp;p1=',
+    show_oma_link: false, // clement - if not in oma, fasta/table links should be hidden.
 
     // text div id
     // current_level_id: 'current_level_text',
@@ -168,8 +169,12 @@ function iHam() {
         .text(node => {
           const limit = 30;
           const data = node.data();
-          if (node.is_collapsed()) {
-            return `[${node.n_hidden()} hidden taxa]`;
+          if (node.is_collapsed()) { // clement - collapsed taxa display '[Collapsed taxa]' + 'name' now. 16 is length of '[Coll...]' prefix.
+            if (data.name.length > limit - 16) {
+              const truncName_col = data.name.substr(0, limit - 19) + "...";
+              return `[Collapsed taxa] ${truncName_col.replace(/_/g, ' ')}`;
+            }
+            return `[Collapsed taxa] ${data.name}`;
           }
           if ((!config.show_internal_labels ||
             !state.highlight_condition(node)) &&
@@ -309,7 +314,7 @@ function iHam() {
           .add("hogs", hog_feature)
           .add('hog_groups', hog_group
             .on('click', function (hog) {
-              hog_header_tooltip.display.call(this, hog, current_opened_taxa_name, div);
+              hog_header_tooltip.display.call(this, hog, current_opened_taxa_name, div, config.show_oma_link); //  clement - show_oma_link parameters
             })
           )
         )
