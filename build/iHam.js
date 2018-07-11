@@ -8320,7 +8320,12 @@ function iHam() {
       var limit = 30;
       var data = node.data();
       if (node.is_collapsed()) {
-        return '[' + node.n_hidden() + ' hidden taxa]';
+        // clement - collapsed taxa display '[Collapsed taxa]' + 'name' now. 16 is length of '[Coll...]' prefix.
+        if (data.name.length > limit - 16) {
+          var truncName_col = data.name.substr(0, limit - 19) + "...";
+          return '[Collapsed taxa] ' + truncName_col.replace(/_/g, ' ');
+        }
+        return '[Collapsed taxa] ' + data.name;
       }
       if ((!config.show_internal_labels || !state.highlight_condition(node)) && data.children && data.children.length > 0) {
         return "";
