@@ -123,7 +123,7 @@ module.exports = {
         value: `Number of genes: ${hog.genes.length}`
       });
       obj.rows.push({
-        value: `Coverage: ${hog.coverage.toFixed(2)} %`
+        value: `% species represented: ${hog.coverage.toFixed(2)} %` // clement -  change coverage for % species represented
       });
       obj.rows.push({
         value: `<a href="https://omabrowser.org/oma/hogs/${hog.protid}/${taxa_name.replace(" ", "%20")}/fasta" target="_blank">Sequences (Fasta)</a>`,
