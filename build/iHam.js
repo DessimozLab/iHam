@@ -8218,6 +8218,7 @@ function iHam() {
 
     // Redirection url prefix for tooltip on genes
     // oma_info_url_template: '/cgi-bin/gateway.pl?f=DisplayEntry&amp;p1=',
+    show_oma_link: false,
 
     // text div id
     // current_level_id: 'current_level_text',
@@ -8320,7 +8321,6 @@ function iHam() {
       var limit = 30;
       var data = node.data();
       if (node.is_collapsed()) {
-        // clement - collapsed taxa display '[Collapsed taxa]' + 'name' now. 16 is length of '[Coll...]' prefix.
         if (data.name.length > limit - 16) {
           var truncName_col = data.name.substr(0, limit - 19) + "...";
           return '[Collapsed taxa] ' + truncName_col.replace(/_/g, ' ');
@@ -8436,7 +8436,7 @@ function iHam() {
           gene_tooltip.close();
         }
       })).add("hogs", hog_feature).add('hog_groups', hog_group.on('click', function (hog) {
-        hog_header_tooltip.display.call(this, hog, current_opened_taxa_name, div);
+        hog_header_tooltip.display.call(this, hog, current_opened_taxa_name, div, config.show_oma_link);
       })));
     }
 
@@ -8630,7 +8630,7 @@ module.exports = {
     }
   },
   hog_header_tooltip: {
-    display: function display(hog, taxa_name, div) {
+    display: function display(hog, taxa_name, div, show_oma_link) {
       var obj = {};
       obj.header = hog.name;
       obj.rows = [];
@@ -8638,14 +8638,17 @@ module.exports = {
         value: "Number of genes: " + hog.genes.length
       });
       obj.rows.push({
-        value: "Coverage: " + hog.coverage.toFixed(2) + " %"
+        value: "% species represented: " + hog.coverage.toFixed(2) + " %"
       });
-      obj.rows.push({
-        value: "<a href=\"https://omabrowser.org/oma/hogs/" + hog.protid + "/" + taxa_name.replace(" ", "%20") + "/fasta\" target=\"_blank\">Sequences (Fasta)</a>"
-      });
-      obj.rows.push({
-        value: "<a href=\"https://omabrowser.org/oma/hogs/" + hog.protid + "/" + taxa_name.replace(" ", "%20") + "/\" target=\"_blank\">HOGs tables</a>"
-      });
+      if (show_oma_link) {
+
+        obj.rows.push({
+          value: "<a href=\"https://omabrowser.org/oma/hogs/" + hog.protid + "/" + taxa_name.replace(" ", "%20") + "/fasta\" target=\"_blank\">Sequences (Fasta)</a>"
+        });
+        obj.rows.push({
+          value: "<a href=\"https://omabrowser.org/oma/hogs/" + hog.protid + "/" + taxa_name.replace(" ", "%20") + "/\" target=\"_blank\">HOGs tables</a>"
+        });
+      }
 
       _hog_header_tooltip = tooltip.list().width(120).id('hog_header_tooltip').container(div).call(this, obj);
     },

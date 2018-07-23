@@ -115,7 +115,7 @@ module.exports = {
     close: () => _gene_tooltip.close()
   },
   hog_header_tooltip: {
-    display: function (hog, taxa_name, div, show_oma_link) { //  clement - add option to display oma links
+    display: function (hog, taxa_name, div, show_oma_link) {
       const obj = {};
       obj.header = hog.name;
       obj.rows = [];
@@ -123,7 +123,7 @@ module.exports = {
         value: `Number of genes: ${hog.genes.length}`
       });
       obj.rows.push({
-        value: `% species represented: ${hog.coverage.toFixed(2)} %` // clement -  change coverage for % species represented
+        value: `% species represented: ${hog.coverage.toFixed(2)} %`
       });
       if (show_oma_link) {
 
