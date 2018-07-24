@@ -1,11 +1,15 @@
 # iHam
 
-iHam (“interactive HOG Analysis Method’) is an interactive javascript tool based on the [TnT library](tntvis.github.io/tnt) to visualise the evolutionary history of a specific gene family (HOGs). It is used in the [OMA browser](http://omabrowser.org) and merely requires as input HOGs in the standard OrthoXML format (Schmitt et al. 2011), the underlying species tree in newick format and gene family information in JSON format (see below for examples).
+iHam (“interactive HOG Analysis Method’) is an interactive javascript tool based on the [TnT library](tntvis.github.io/tnt) to visualise the evolutionary history of a specific gene family (HOGs). The viewer is composed of two panels: a species tree which lets the user select a node to focus on a particular taxonomic range of interest, and a matrix that organizes extant genes according to their membership in species (rows) and hierarchical orthologous groups (columns). The tree-guided matrix representation of HOGs facilitates: (i) to delineate orthologous groups at given taxonomic ranges, (ii) to identify duplication and loss events in the species tree, (iii) gauge the cumulative effect of duplication and losses on gene repertoires, and to (iv) identify likely mistakes in genome assembly, annotation, or orthology inference. Users can customize the view in different ways. They can color genes according to protein length or GC-content. Low-confidence HOGs can be masked. Irrelevant clades of species can be collapsed. iHam is a reusable web widget that can be easily embedded into a website, for instance it is used to display HOGs in OMA (http://omabrowser.org; Altenhoff et al. 2018). It merely requires as input HOGs in the standard OrthoXML format (Schmitt et al. 2011), the underlying species tree in newick format and gene family information in JSON format (see below for examples).
 
 
 ## Installation
 
-It can be installed using _yarn_ or _npm_:
+The iHam library can be directly load using the following link to the latest release: (easy embedding)
+  <link rel="stylesheet" href="https://dessimozlab.github.io/iHam/iHam.css" />
+  <script href="https://dessimozlab.github.io/iHam/iHam.js"></script>
+
+or can be installed using _yarn_ or _npm_: (for javascript developers)
 
     $ npm install --save iham
     $ yarn add iham
@@ -14,11 +18,21 @@ And build using
 
     $ npm run build && npm run build-css
 
-It is also possible to link directly to the latest release:
 
+## iHam dependencies
 
-    <link rel="stylesheet" href="https://dessimozlab.github.io/iHam/iHam.css" />
-    <script href="https://dessimozlab.github.io/iHam/iHam.js"></script>
+iHam requires the following javascript libraries loaded to run:
+
+    <!-- d3 -->
+    <script src="https://d3js.org/d3.v3.js"></script>
+
+    <!-- TnT -->
+    <link rel="stylesheet" href="http://tntvis.github.io/tnt/build/tnt.css" type="text/css"/>
+    <script src="http://tntvis.github.io/tnt/build/tnt.js" charset="utf-8"></script>
+
+    <!-- TnT Tooltip-->
+    <link rel="stylesheet" href="http://tntvis.github.io/tnt.tooltip/build/tnt.tooltip.css" type="text/css"/>
+    <script src="http://tntvis.github.io/tnt.tooltip/build/tnt.tooltip.min.js" charset="utf-8"></script>
 
 ## Usage
 
@@ -35,7 +49,8 @@ See below for a description of each method. The above snippet, assumes that the 
 
 ## Example
 
-[See this example](http://bl.ocks.org/emepyc/ce259dd519f6a60d35d04c78b40ec425).
+We provide the following example to demonstrate how to embed an iHam session [See this example](http://bl.ocks.org/emepyc/ce259dd519f6a60d35d04c78b40ec425).
+We built for this example a custom options bar that demonstrate how to use iHam options and events API to display supplementary information (e.g. gene coloring based on sequence length) and add new features (e.g. hide low coverage HOGs).
 
 
 # Configuration
