@@ -7,11 +7,11 @@ iHam (“interactive HOG Analysis Method’) is an interactive javascript tool b
 
 The iHam library can be directly load using the following link to the latest release:
 
-  <!-- Load the javascript -->
-  <script href="https://dessimozlab.github.io/iHam/iHam.js"></script>
+    <!-- Load the javascript -->
+    <script href="https://dessimozlab.github.io/iHam/iHam.js"></script>
 
-  <!-- Load the stylesheet -->
-  <link rel="stylesheet" href="https://dessimozlab.github.io/iHam/iHam.css"/>
+    <!-- Load the stylesheet -->
+    <link rel="stylesheet" href="https://dessimozlab.github.io/iHam/iHam.css"/>
 
 ## For developers: installing iHam as javascript library
 
