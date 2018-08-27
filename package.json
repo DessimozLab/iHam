@@ -8,8 +8,9 @@
     "example": "examples"
   },
   "dependencies": {
+    "@babel/core": "^7.0.0-0",
     "axios": "^0.18.0",
-    "iham-parsers": "0.0.6",
+    "iham-parsers": "^0.1.0",
     "mkdirp": "^0.5.1",
     "npm-watch": "^0.3.0",
     "path": "^0.12.7",
