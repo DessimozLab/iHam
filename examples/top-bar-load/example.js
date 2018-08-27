@@ -9,7 +9,7 @@
       .then(function (resp) {
         return resp.data;
       });
-    var fam_data = axios.get('https://omabrowser.org/oma/hogdata/NOX1_HUMAN/json', { responseType: 'arraybuffer' })
+    var fam_data = axios.get('https://omabrowser.org/oma/hogdata/NOX1_HUMAN/json')
       .then(function(resp) {
         return resp.data;
       });
