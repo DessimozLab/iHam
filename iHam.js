@@ -10,7 +10,7 @@ module.exports = require("./index.js");
 //export default iHam;
 module.exports = require('./src/iHam.js');
 
-},{"./src/iHam.js":39}],3:[function(require,module,exports){
+},{"./src/iHam.js":43}],3:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -166,6 +166,303 @@ function fromByteArray (uint8) {
 },{}],4:[function(require,module,exports){
 
 },{}],5:[function(require,module,exports){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+'use strict';
+
+/*<replacement>*/
+
+var Buffer = require('safe-buffer').Buffer;
+/*</replacement>*/
+
+var isEncoding = Buffer.isEncoding || function (encoding) {
+  encoding = '' + encoding;
+  switch (encoding && encoding.toLowerCase()) {
+    case 'hex':case 'utf8':case 'utf-8':case 'ascii':case 'binary':case 'base64':case 'ucs2':case 'ucs-2':case 'utf16le':case 'utf-16le':case 'raw':
+      return true;
+    default:
+      return false;
+  }
+};
+
+function _normalizeEncoding(enc) {
+  if (!enc) return 'utf8';
+  var retried;
+  while (true) {
+    switch (enc) {
+      case 'utf8':
+      case 'utf-8':
+        return 'utf8';
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return 'utf16le';
+      case 'latin1':
+      case 'binary':
+        return 'latin1';
+      case 'base64':
+      case 'ascii':
+      case 'hex':
+        return enc;
+      default:
+        if (retried) return; // undefined
+        enc = ('' + enc).toLowerCase();
+        retried = true;
+    }
+  }
+};
+
+// Do not cache `Buffer.isEncoding` when checking encoding names as some
+// modules monkey-patch it to support additional encodings
+function normalizeEncoding(enc) {
+  var nenc = _normalizeEncoding(enc);
+  if (typeof nenc !== 'string' && (Buffer.isEncoding === isEncoding || !isEncoding(enc))) throw new Error('Unknown encoding: ' + enc);
+  return nenc || enc;
+}
+
+// StringDecoder provides an interface for efficiently splitting a series of
+// buffers into a series of JS strings without breaking apart multi-byte
+// characters.
+exports.StringDecoder = StringDecoder;
+function StringDecoder(encoding) {
+  this.encoding = normalizeEncoding(encoding);
+  var nb;
+  switch (this.encoding) {
+    case 'utf16le':
+      this.text = utf16Text;
+      this.end = utf16End;
+      nb = 4;
+      break;
+    case 'utf8':
+      this.fillLast = utf8FillLast;
+      nb = 4;
+      break;
+    case 'base64':
+      this.text = base64Text;
+      this.end = base64End;
+      nb = 3;
+      break;
+    default:
+      this.write = simpleWrite;
+      this.end = simpleEnd;
+      return;
+  }
+  this.lastNeed = 0;
+  this.lastTotal = 0;
+  this.lastChar = Buffer.allocUnsafe(nb);
+}
+
+StringDecoder.prototype.write = function (buf) {
+  if (buf.length === 0) return '';
+  var r;
+  var i;
+  if (this.lastNeed) {
+    r = this.fillLast(buf);
+    if (r === undefined) return '';
+    i = this.lastNeed;
+    this.lastNeed = 0;
+  } else {
+    i = 0;
+  }
+  if (i < buf.length) return r ? r + this.text(buf, i) : this.text(buf, i);
+  return r || '';
+};
+
+StringDecoder.prototype.end = utf8End;
+
+// Returns only complete characters in a Buffer
+StringDecoder.prototype.text = utf8Text;
+
+// Attempts to complete a partial non-UTF-8 character using bytes from a Buffer
+StringDecoder.prototype.fillLast = function (buf) {
+  if (this.lastNeed <= buf.length) {
+    buf.copy(this.lastChar, this.lastTotal - this.lastNeed, 0, this.lastNeed);
+    return this.lastChar.toString(this.encoding, 0, this.lastTotal);
+  }
+  buf.copy(this.lastChar, this.lastTotal - this.lastNeed, 0, buf.length);
+  this.lastNeed -= buf.length;
+};
+
+// Checks the type of a UTF-8 byte, whether it's ASCII, a leading byte, or a
+// continuation byte. If an invalid byte is detected, -2 is returned.
+function utf8CheckByte(byte) {
+  if (byte <= 0x7F) return 0;else if (byte >> 5 === 0x06) return 2;else if (byte >> 4 === 0x0E) return 3;else if (byte >> 3 === 0x1E) return 4;
+  return byte >> 6 === 0x02 ? -1 : -2;
+}
+
+// Checks at most 3 bytes at the end of a Buffer in order to detect an
+// incomplete multi-byte UTF-8 character. The total number of bytes (2, 3, or 4)
+// needed to complete the UTF-8 character (if applicable) are returned.
+function utf8CheckIncomplete(self, buf, i) {
+  var j = buf.length - 1;
+  if (j < i) return 0;
+  var nb = utf8CheckByte(buf[j]);
+  if (nb >= 0) {
+    if (nb > 0) self.lastNeed = nb - 1;
+    return nb;
+  }
+  if (--j < i || nb === -2) return 0;
+  nb = utf8CheckByte(buf[j]);
+  if (nb >= 0) {
+    if (nb > 0) self.lastNeed = nb - 2;
+    return nb;
+  }
+  if (--j < i || nb === -2) return 0;
+  nb = utf8CheckByte(buf[j]);
+  if (nb >= 0) {
+    if (nb > 0) {
+      if (nb === 2) nb = 0;else self.lastNeed = nb - 3;
+    }
+    return nb;
+  }
+  return 0;
+}
+
+// Validates as many continuation bytes for a multi-byte UTF-8 character as
+// needed or are available. If we see a non-continuation byte where we expect
+// one, we "replace" the validated continuation bytes we've seen so far with
+// a single UTF-8 replacement character ('\ufffd'), to match v8's UTF-8 decoding
+// behavior. The continuation byte check is included three times in the case
+// where all of the continuation bytes for a character exist in the same buffer.
+// It is also done this way as a slight performance increase instead of using a
+// loop.
+function utf8CheckExtraBytes(self, buf, p) {
+  if ((buf[0] & 0xC0) !== 0x80) {
+    self.lastNeed = 0;
+    return '\ufffd';
+  }
+  if (self.lastNeed > 1 && buf.length > 1) {
+    if ((buf[1] & 0xC0) !== 0x80) {
+      self.lastNeed = 1;
+      return '\ufffd';
+    }
+    if (self.lastNeed > 2 && buf.length > 2) {
+      if ((buf[2] & 0xC0) !== 0x80) {
+        self.lastNeed = 2;
+        return '\ufffd';
+      }
+    }
+  }
+}
+
+// Attempts to complete a multi-byte UTF-8 character using bytes from a Buffer.
+function utf8FillLast(buf) {
+  var p = this.lastTotal - this.lastNeed;
+  var r = utf8CheckExtraBytes(this, buf, p);
+  if (r !== undefined) return r;
+  if (this.lastNeed <= buf.length) {
+    buf.copy(this.lastChar, p, 0, this.lastNeed);
+    return this.lastChar.toString(this.encoding, 0, this.lastTotal);
+  }
+  buf.copy(this.lastChar, p, 0, buf.length);
+  this.lastNeed -= buf.length;
+}
+
+// Returns all complete UTF-8 characters in a Buffer. If the Buffer ended on a
+// partial character, the character's bytes are buffered until the required
+// number of bytes are available.
+function utf8Text(buf, i) {
+  var total = utf8CheckIncomplete(this, buf, i);
+  if (!this.lastNeed) return buf.toString('utf8', i);
+  this.lastTotal = total;
+  var end = buf.length - (total - this.lastNeed);
+  buf.copy(this.lastChar, 0, end);
+  return buf.toString('utf8', i, end);
+}
+
+// For UTF-8, a replacement character is added when ending on a partial
+// character.
+function utf8End(buf) {
+  var r = buf && buf.length ? this.write(buf) : '';
+  if (this.lastNeed) return r + '\ufffd';
+  return r;
+}
+
+// UTF-16LE typically needs two bytes per character, but even if we have an even
+// number of bytes available, we need to check if we end on a leading/high
+// surrogate. In that case, we need to wait for the next two bytes in order to
+// decode the last character properly.
+function utf16Text(buf, i) {
+  if ((buf.length - i) % 2 === 0) {
+    var r = buf.toString('utf16le', i);
+    if (r) {
+      var c = r.charCodeAt(r.length - 1);
+      if (c >= 0xD800 && c <= 0xDBFF) {
+        this.lastNeed = 2;
+        this.lastTotal = 4;
+        this.lastChar[0] = buf[buf.length - 2];
+        this.lastChar[1] = buf[buf.length - 1];
+        return r.slice(0, -1);
+      }
+    }
+    return r;
+  }
+  this.lastNeed = 1;
+  this.lastTotal = 2;
+  this.lastChar[0] = buf[buf.length - 1];
+  return buf.toString('utf16le', i, buf.length - 1);
+}
+
+// For UTF-16LE we do not explicitly append special replacement characters if we
+// end on a partial character, we simply let v8 handle that.
+function utf16End(buf) {
+  var r = buf && buf.length ? this.write(buf) : '';
+  if (this.lastNeed) {
+    var end = this.lastTotal - this.lastNeed;
+    return r + this.lastChar.toString('utf16le', 0, end);
+  }
+  return r;
+}
+
+function base64Text(buf, i) {
+  var n = (buf.length - i) % 3;
+  if (n === 0) return buf.toString('base64', i);
+  this.lastNeed = 3 - n;
+  this.lastTotal = 3;
+  if (n === 1) {
+    this.lastChar[0] = buf[buf.length - 1];
+  } else {
+    this.lastChar[0] = buf[buf.length - 2];
+    this.lastChar[1] = buf[buf.length - 1];
+  }
+  return buf.toString('base64', i, buf.length - n);
+}
+
+function base64End(buf) {
+  var r = buf && buf.length ? this.write(buf) : '';
+  if (this.lastNeed) return r + this.lastChar.toString('base64', 0, 3 - this.lastNeed);
+  return r;
+}
+
+// Pass bytes on through for single-byte encodings (e.g. ascii, latin1, hex)
+function simpleWrite(buf) {
+  return buf.toString(this.encoding);
+}
+
+function simpleEnd(buf) {
+  return buf && buf.length ? this.write(buf) : '';
+}
+},{"safe-buffer":34}],6:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -222,26 +519,24 @@ function typedArraySupport () {
 }
 
 Object.defineProperty(Buffer.prototype, 'parent', {
+  enumerable: true,
   get: function () {
-    if (!(this instanceof Buffer)) {
-      return undefined
-    }
+    if (!Buffer.isBuffer(this)) return undefined
     return this.buffer
   }
 })
 
 Object.defineProperty(Buffer.prototype, 'offset', {
+  enumerable: true,
   get: function () {
-    if (!(this instanceof Buffer)) {
-      return undefined
-    }
+    if (!Buffer.isBuffer(this)) return undefined
     return this.byteOffset
   }
 })
 
 function createBuffer (length) {
   if (length > K_MAX_LENGTH) {
-    throw new RangeError('Invalid typed array length')
+    throw new RangeError('The value "' + length + '" is invalid for option "size"')
   }
   // Return an augmented `Uint8Array` instance
   var buf = new Uint8Array(length)
@@ -263,8 +558,8 @@ function Buffer (arg, encodingOrOffset, length) {
   // Common case.
   if (typeof arg === 'number') {
     if (typeof encodingOrOffset === 'string') {
-      throw new Error(
-        'If encoding is specified then the first argument must be a string'
+      throw new TypeError(
+        'The "string" argument must be of type string. Received type number'
       )
     }
     return allocUnsafe(arg)
@@ -273,7 +568,7 @@ function Buffer (arg, encodingOrOffset, length) {
 }
 
 // Fix subarray() in ES2016. See: https://github.com/feross/buffer/pull/97
-if (typeof Symbol !== 'undefined' && Symbol.species &&
+if (typeof Symbol !== 'undefined' && Symbol.species != null &&
     Buffer[Symbol.species] === Buffer) {
   Object.defineProperty(Buffer, Symbol.species, {
     value: null,
@@ -286,19 +581,51 @@ if (typeof Symbol !== 'undefined' && Symbol.species &&
 Buffer.poolSize = 8192 // not used by this implementation
 
 function from (value, encodingOrOffset, length) {
-  if (typeof value === 'number') {
-    throw new TypeError('"value" argument must not be a number')
-  }
-
-  if (isArrayBuffer(value) || (value && isArrayBuffer(value.buffer))) {
-    return fromArrayBuffer(value, encodingOrOffset, length)
-  }
-
   if (typeof value === 'string') {
     return fromString(value, encodingOrOffset)
   }
 
-  return fromObject(value)
+  if (ArrayBuffer.isView(value)) {
+    return fromArrayLike(value)
+  }
+
+  if (value == null) {
+    throw TypeError(
+      'The first argument must be one of type string, Buffer, ArrayBuffer, Array, ' +
+      'or Array-like Object. Received type ' + (typeof value)
+    )
+  }
+
+  if (isInstance(value, ArrayBuffer) ||
+      (value && isInstance(value.buffer, ArrayBuffer))) {
+    return fromArrayBuffer(value, encodingOrOffset, length)
+  }
+
+  if (typeof value === 'number') {
+    throw new TypeError(
+      'The "value" argument must not be of type number. Received type number'
+    )
+  }
+
+  var valueOf = value.valueOf && value.valueOf()
+  if (valueOf != null && valueOf !== value) {
+    return Buffer.from(valueOf, encodingOrOffset, length)
+  }
+
+  var b = fromObject(value)
+  if (b) return b
+
+  if (typeof Symbol !== 'undefined' && Symbol.toPrimitive != null &&
+      typeof value[Symbol.toPrimitive] === 'function') {
+    return Buffer.from(
+      value[Symbol.toPrimitive]('string'), encodingOrOffset, length
+    )
+  }
+
+  throw new TypeError(
+    'The first argument must be one of type string, Buffer, ArrayBuffer, Array, ' +
+    'or Array-like Object. Received type ' + (typeof value)
+  )
 }
 
 /**
@@ -322,7 +649,7 @@ function assertSize (size) {
   if (typeof size !== 'number') {
     throw new TypeError('"size" argument must be of type number')
   } else if (size < 0) {
-    throw new RangeError('"size" argument must not be negative')
+    throw new RangeError('The value "' + size + '" is invalid for option "size"')
   }
 }
 
@@ -437,20 +764,16 @@ function fromObject (obj) {
     return buf
   }
 
-  if (obj) {
-    if (ArrayBuffer.isView(obj) || 'length' in obj) {
-      if (typeof obj.length !== 'number' || numberIsNaN(obj.length)) {
-        return createBuffer(0)
-      }
-      return fromArrayLike(obj)
+  if (obj.length !== undefined) {
+    if (typeof obj.length !== 'number' || numberIsNaN(obj.length)) {
+      return createBuffer(0)
     }
-
-    if (obj.type === 'Buffer' && Array.isArray(obj.data)) {
-      return fromArrayLike(obj.data)
-    }
+    return fromArrayLike(obj)
   }
 
-  throw new TypeError('The first argument must be one of type string, Buffer, ArrayBuffer, Array, or Array-like Object.')
+  if (obj.type === 'Buffer' && Array.isArray(obj.data)) {
+    return fromArrayLike(obj.data)
+  }
 }
 
 function checked (length) {
@@ -471,12 +794,17 @@ function SlowBuffer (length) {
 }
 
 Buffer.isBuffer = function isBuffer (b) {
-  return b != null && b._isBuffer === true
+  return b != null && b._isBuffer === true &&
+    b !== Buffer.prototype // so Buffer.isBuffer(Buffer.prototype) will be false
 }
 
 Buffer.compare = function compare (a, b) {
+  if (isInstance(a, Uint8Array)) a = Buffer.from(a, a.offset, a.byteLength)
+  if (isInstance(b, Uint8Array)) b = Buffer.from(b, b.offset, b.byteLength)
   if (!Buffer.isBuffer(a) || !Buffer.isBuffer(b)) {
-    throw new TypeError('Arguments must be Buffers')
+    throw new TypeError(
+      'The "buf1", "buf2" arguments must be one of type Buffer or Uint8Array'
+    )
   }
 
   if (a === b) return 0
@@ -537,7 +865,7 @@ Buffer.concat = function concat (list, length) {
   var pos = 0
   for (i = 0; i < list.length; ++i) {
     var buf = list[i]
-    if (ArrayBuffer.isView(buf)) {
+    if (isInstance(buf, Uint8Array)) {
       buf = Buffer.from(buf)
     }
     if (!Buffer.isBuffer(buf)) {
@@ -553,15 +881,19 @@ function byteLength (string, encoding) {
   if (Buffer.isBuffer(string)) {
     return string.length
   }
-  if (ArrayBuffer.isView(string) || isArrayBuffer(string)) {
+  if (ArrayBuffer.isView(string) || isInstance(string, ArrayBuffer)) {
     return string.byteLength
   }
   if (typeof string !== 'string') {
-    string = '' + string
+    throw new TypeError(
+      'The "string" argument must be one of type string, Buffer, or ArrayBuffer. ' +
+      'Received type ' + typeof string
+    )
   }
 
   var len = string.length
-  if (len === 0) return 0
+  var mustMatch = (arguments.length > 2 && arguments[2] === true)
+  if (!mustMatch && len === 0) return 0
 
   // Use a for loop to avoid recursion
   var loweredCase = false
@@ -573,7 +905,6 @@ function byteLength (string, encoding) {
         return len
       case 'utf8':
       case 'utf-8':
-      case undefined:
         return utf8ToBytes(string).length
       case 'ucs2':
       case 'ucs-2':
@@ -585,7 +916,9 @@ function byteLength (string, encoding) {
       case 'base64':
         return base64ToBytes(string).length
       default:
-        if (loweredCase) return utf8ToBytes(string).length // assume utf8
+        if (loweredCase) {
+          return mustMatch ? -1 : utf8ToBytes(string).length // assume utf8
+        }
         encoding = ('' + encoding).toLowerCase()
         loweredCase = true
     }
@@ -732,16 +1065,20 @@ Buffer.prototype.equals = function equals (b) {
 Buffer.prototype.inspect = function inspect () {
   var str = ''
   var max = exports.INSPECT_MAX_BYTES
-  if (this.length > 0) {
-    str = this.toString('hex', 0, max).match(/.{2}/g).join(' ')
-    if (this.length > max) str += ' ... '
-  }
+  str = this.toString('hex', 0, max).replace(/(.{2})/g, '$1 ').trim()
+  if (this.length > max) str += ' ... '
   return '<Buffer ' + str + '>'
 }
 
 Buffer.prototype.compare = function compare (target, start, end, thisStart, thisEnd) {
+  if (isInstance(target, Uint8Array)) {
+    target = Buffer.from(target, target.offset, target.byteLength)
+  }
   if (!Buffer.isBuffer(target)) {
-    throw new TypeError('Argument must be a Buffer')
+    throw new TypeError(
+      'The "target" argument must be one of type Buffer or Uint8Array. ' +
+      'Received type ' + (typeof target)
+    )
   }
 
   if (start === undefined) {
@@ -820,7 +1157,7 @@ function bidirectionalIndexOf (buffer, val, byteOffset, encoding, dir) {
   } else if (byteOffset < -0x80000000) {
     byteOffset = -0x80000000
   }
-  byteOffset = +byteOffset  // Coerce to Number.
+  byteOffset = +byteOffset // Coerce to Number.
   if (numberIsNaN(byteOffset)) {
     // byteOffset: it it's undefined, null, NaN, "foo", etc, search whole buffer
     byteOffset = dir ? 0 : (buffer.length - 1)
@@ -1072,8 +1409,8 @@ function utf8Slice (buf, start, end) {
     var codePoint = null
     var bytesPerSequence = (firstByte > 0xEF) ? 4
       : (firstByte > 0xDF) ? 3
-      : (firstByte > 0xBF) ? 2
-      : 1
+        : (firstByte > 0xBF) ? 2
+          : 1
 
     if (i + bytesPerSequence <= end) {
       var secondByte, thirdByte, fourthByte, tempCodePoint
@@ -1736,7 +2073,7 @@ Buffer.prototype.fill = function fill (val, start, end, encoding) {
   } else {
     var bytes = Buffer.isBuffer(val)
       ? val
-      : new Buffer(val, encoding)
+      : Buffer.from(val, encoding)
     var len = bytes.length
     if (len === 0) {
       throw new TypeError('The value "' + val +
@@ -1891,19 +2228,20 @@ function blitBuffer (src, dst, offset, length) {
   return i
 }
 
-// ArrayBuffers from another context (i.e. an iframe) do not pass the `instanceof` check
-// but they should be treated as valid. See: https://github.com/feross/buffer/issues/166
-function isArrayBuffer (obj) {
-  return obj instanceof ArrayBuffer ||
-    (obj != null && obj.constructor != null && obj.constructor.name === 'ArrayBuffer' &&
-      typeof obj.byteLength === 'number')
+// ArrayBuffer or Uint8Array objects from other contexts (i.e. iframes) do not pass
+// the `instanceof` check but they should be treated as of that type.
+// See: https://github.com/feross/buffer/issues/166
+function isInstance (obj, type) {
+  return obj instanceof type ||
+    (obj != null && obj.constructor != null && obj.constructor.name != null &&
+      obj.constructor.name === type.name)
 }
-
 function numberIsNaN (obj) {
+  // For IE11 support
   return obj !== obj // eslint-disable-line no-self-compare
 }
 
-},{"base64-js":3,"ieee754":8}],6:[function(require,module,exports){
+},{"base64-js":3,"ieee754":9}],7:[function(require,module,exports){
 (function (Buffer){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -2014,7 +2352,7 @@ function objectToString(o) {
 }
 
 }).call(this,{"isBuffer":require("../../is-buffer/index.js")})
-},{"../../is-buffer/index.js":13}],7:[function(require,module,exports){
+},{"../../is-buffer/index.js":16}],8:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -2445,24 +2783,28 @@ EventEmitter.prototype.removeAllListeners =
       return this;
     };
 
-EventEmitter.prototype.listeners = function listeners(type) {
-  var evlistener;
-  var ret;
-  var events = this._events;
+function _listeners(target, type, unwrap) {
+  var events = target._events;
 
   if (!events)
-    ret = [];
-  else {
-    evlistener = events[type];
-    if (!evlistener)
-      ret = [];
-    else if (typeof evlistener === 'function')
-      ret = [evlistener.listener || evlistener];
-    else
-      ret = unwrapListeners(evlistener);
-  }
+    return [];
 
-  return ret;
+  var evlistener = events[type];
+  if (!evlistener)
+    return [];
+
+  if (typeof evlistener === 'function')
+    return unwrap ? [evlistener.listener || evlistener] : [evlistener];
+
+  return unwrap ? unwrapListeners(evlistener) : arrayClone(evlistener, evlistener.length);
+}
+
+EventEmitter.prototype.listeners = function listeners(type) {
+  return _listeners(this, type, true);
+};
+
+EventEmitter.prototype.rawListeners = function rawListeners(type) {
+  return _listeners(this, type, false);
 };
 
 EventEmitter.listenerCount = function(emitter, type) {
@@ -2535,7 +2877,7 @@ function functionBindPolyfill(context) {
   };
 }
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = (nBytes * 8) - mLen - 1
@@ -2621,13 +2963,15 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 // module.exports = require("./src/xmlconverter.js");
 
 
 // TODO: we do not need to export both. parse_orthoxml can do everything on its own
 module.exports.parse_newick = require("./src/newick.js");
 module.exports.parse_orthoxml = require("./src/xmlconverter.js");
+module.exports.tree_tool = require('./src/tree_utils.js');
+module.exports.parse_phyloxml = require('./src/phyloxml.js');
 
 /*function loadNewComponent(action) {
     define(['',''], function (hogvis, newick) {
@@ -2646,7 +2990,7 @@ loadNewComponent(function(component) {
    component.methodA
 }); */
 
-},{"./src/newick.js":10,"./src/xmlconverter.js":11}],10:[function(require,module,exports){
+},{"./src/newick.js":11,"./src/phyloxml.js":12,"./src/tree_utils.js":13,"./src/xmlconverter.js":14}],11:[function(require,module,exports){
 /**
  * Newick format parser in JavaScript.
  *
@@ -2755,7 +3099,1465 @@ module.exports = {
             }
         }
         return tree;
-    },
+    }
+};
+},{}],12:[function(require,module,exports){
+(function (process,global){
+/**
+ *  Copyright (C) 2017 Christian M. Zmasek
+ *  Copyright (C) 2017 J. Craig Venter Institute
+ *  All rights reserved
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ *  Created by czmasek on 7/7/2016.
+ */
+
+/**
+ *
+ * Version 0.912 20171013
+ *
+ * This requires sax-js from https://github.com/isaacs/sax-js
+ *
+ * Usage
+ * -----
+ *
+ * Synchronous parsing of phyloXML-formatted string
+ * ------------------------------------------------
+ *
+ * var px = require('./phyloxml').phyloXml;
+ *
+ * var phys = px.parse(phyloxmlText, {trim: true, normalize: true});
+ *
+ * console.log(px.toPhyloXML(phys[0], 6));
+ *
+ *
+ *
+ * Asynchronous parsing of phyloXML-formatted stream
+ * -------------------------------------------------
+ *
+ * var fs = require('fs');
+ * var px = require('./phyloxml').phyloXml;
+ *
+ * var stream = fs.createReadStream(xmlFile, {encoding: 'utf8'});
+ *
+ * px.parseAsync(stream, {trim: true, normalize: true});
+ *
+ *
+ *
+ */
+(function phyloXml() {
+
+    "use strict";
+
+    var sax = require('sax');
+    // --------------------------------------------------------------
+    // phyloXML constants
+    // --------------------------------------------------------------
+
+    // Accession
+    var ACCESSION = 'accession';
+    var ACCESSION_SOURCE_ATTR = 'source';
+    var ACCESSION_COMMENT_ATTR = 'comment';
+
+    // Annotation
+    var ANNOTATION = 'annotation';
+    var ANNOTATION_REF_ATTR = 'ref';
+    var ANNOTATION_SOURCE_ATTR = 'source';
+    var ANNOTATION_EVIDENCE_ATTR = 'evidence';
+    var ANNOTATION_TYPE_ATTR = 'type';
+    var ANNOTATION_DESC = 'desc';
+
+    // Clade
+    var CLADE = 'clade';
+    var CLADE_BRANCH_LENGTH = 'branch_length';
+    var CLADE_ID_SOURCE_ATTR = 'id_source';
+    var CLADE_COLLAPSE_ATTR = 'collapse';
+    var CLADE_NAME = 'name';
+    var CLADE_WIDTH = 'width';
+
+    // Clade Relation
+    var CLADE_RELATION = 'clade_relation';
+    var CLADE_RELATION_DISTANCE_ATTR = 'distance';
+    var CLADE_RELATION_ID_REF_0_ATTR = 'id_ref_0';
+    var CLADE_RELATION_ID_REF_1_ATTR = 'id_ref_1';
+    var CLADE_RELATION_TYPE_ATTR = 'type';
+
+    // Sequence Relation
+    var SEQUENCE_RELATION = 'sequence_relation';
+    var SEQUENCE_RELATION_DISTANCE_ATTR = 'distance';
+    var SEQUENCE_RELATION_ID_REF_0_ATTR = 'id_ref_0';
+    var SEQUENCE_RELATION_ID_REF_1_ATTR = 'id_ref_1';
+    var SEQUENCE_RELATION_TYPE_ATTR = 'type';
+
+    // Color
+    var COLOR = 'color';
+    var COLOR_RED = 'red';
+    var COLOR_GREEN = 'green';
+    var COLOR_BLUE = 'blue';
+    var COLOR_ALPHA = 'alpha';
+
+    // Confidence
+    var CONFIDENCE = 'confidence';
+    var CONFIDENCE_TYPE_ATTR = 'type';
+    var CONFIDENCE_STDDEV_ATTR = 'stddev';
+    var CONFIDENCES = 'confidences';
+
+    // Cross References
+    var CROSS_REFERENCES = 'cross_references';
+
+    // Date
+    var DATE = 'date';
+    var DATE_UNIT_ATTR = 'unit';
+    var DATE_DESC = 'desc';
+    var DATE_VALUE = 'value';
+    var DATE_MINIMUM = 'minimum';
+    var DATE_MAXIMUM = 'maximum';
+
+    // Distribution
+    var DISTRIBUTION = 'distribution';
+    var DISTRIBUTION_DESC = 'desc';
+
+    // Domain Architecture
+    var DOMAIN_ARCHITECTURE = 'domain_architecture';
+    var DOMAIN_ARCHITECTURE_LENGTH_ATTR = 'length';
+
+    // Events
+    var EVENTS = 'events';
+    var EVENTS_TYPE = 'type';
+    var EVENTS_DUPLICATIONS = 'duplications';
+    var EVENTS_SPECIATIONS = 'speciations';
+    var EVENTS_LOSSES = 'losses';
+
+    // Id
+    var ID = 'id';
+    var ID_PROVIDER_ATTR = 'provider';
+
+    // Mol Seq
+    var MOLSEQ = 'mol_seq';
+    var MOLSEQ_IS_ALIGNED_ATTR = 'is_aligned';
+
+    // Phylogeny
+    var PHYLOGENY = 'phylogeny';
+
+    // Phyloxml
+    var PHYLOXML = 'phyloxml';
+
+    // Point
+    var POINT = 'point';
+    var POINT_ALT_UNIT_ATTR = 'alt_unit';
+    var POINT_GEODETIC_DATUM_ATTR = 'geodetic_datum';
+    var POINT_LAT = 'lat';
+    var POINT_LONG = 'long';
+    var POINT_ALT = 'alt';
+
+    // Property
+    var PROPERTY = 'property';
+    var PROPERTY_REF_ATTR = 'ref';
+    var PROPERTY_ID_REF_ATTR = 'id_ref';
+    var PROPERTY_UNIT_ATTR = 'unit';
+    var PROPERTY_DATATYPE_ATTR = 'datatype';
+    var PROPERTY_APPLIES_TO_ATTR = 'applies_to';
+    var PROPERTIES = 'properties';
+
+    // Protein Domain
+    var PROTEINDOMAIN = 'domain';
+    var PROTEINDOMAIN_FROM_ATTR = 'from';
+    var PROTEINDOMAIN_TO_ATTR = 'to';
+    var PROTEINDOMAIN_CONFIDENCE_ATTR = 'confidence';
+    var PROTEINDOMAIN_ID_ATTR = 'id';
+
+    // Reference
+    var REFERENCE = 'reference';
+    var REFERENCE_DOI_ATTR = 'doi';
+    var REFERENCE_DESC = 'desc';
+
+    // Sequence
+    var SEQUENCE = 'sequence';
+    var SEQUENCE_ID_SOURCE_ATTR = 'id_source';
+    var SEQUENCE_ID_REF_ATTR = 'id_ref';
+    var SEQUENCE_TYPE_ATTR = 'type';
+    var SEQUENCE_SYMBOL = 'symbol';
+    var SEQUENCE_NAME = 'name';
+    var SEQUENCE_GENE_NAME = 'gene_name';
+    var SEQUENCE_LOCATION = 'location';
+    var SEQUENCES = 'sequences';
+
+    // Taxonomy
+    var TAXONOMY = 'taxonomy';
+    var TAXONOMY_ID_SOURCE_ATTR = 'id_source';
+    var TAXONOMY_CODE = 'code';
+    var TAXONOMY_SCIENTIFIC_NAME = 'scientific_name';
+    var TAXONOMY_AUTHORITY = 'authority';
+    var TAXONOMY_COMMON_NAME = 'common_name';
+    var TAXONOMY_SYNONYM = 'synonym';
+    var TAXONOMY_RANK = 'rank';
+    var TAXONOMIES = 'taxonomies';
+    var TAXONOMY_SYNONYMS = 'synonyms';
+
+    // Uri
+    var URI = 'uri';
+    var URI_TYPE_ATTR = 'type';
+    var URI_DESC_ATTR = 'desc';
+
+    // Phylogeny
+    var PHYLOGENY_ROOTED_ATTR = 'rooted';
+    var PHYLOGENY_REROOTABLE_ATTR = 'rerootable';
+    var PHYLOGENY_BRANCH_LENGTH_UNIT_ATTR = 'branch_length_unit';
+    var PHYLOGENY_TYPE_ATTR = 'type';
+    var PHYLOGENY_NAME = 'name';
+    var PHYLOGENY_DESCRIPTION = 'description';
+    var PHYLOGENY_DATE = 'date';
+
+    // Simple_Characteristics (to be deprecated!)
+    var X_SIMPLE_CHARACTERISTICS = 'Simple_Characteristics';
+    var X_SIMPLE_CHARACTERISTIC_COUNTRY = 'Country';
+    var X_SIMPLE_CHARACTERISTIC_YEAR = 'Year';
+    var X_SIMPLE_CHARACTERISTIC_HOST = 'Host';
+    var X_SIMPLE_CHARACTERISTIC_HA = 'HA';
+    var X_SIMPLE_CHARACTERISTIC_NA = 'NA';
+
+    // appType (special for Virus BRC)
+    var APPTYPE = 'flu_type';
+
+    // Unknown source, id, confidence type:
+    var UNKNOWN = 'unknown';
+
+    // --------------------------------------------------------------
+    // Instance variables
+    // --------------------------------------------------------------
+    var _phylogenies = null;
+    var _phylogeny = null;
+    var _cladeStack = null;
+    var _tagStack = null;
+    var _objectStack = null;
+
+    // --------------------------------------------------------------
+    // Others
+    // --------------------------------------------------------------
+    var PROPERTY_REF_RE = /[a-zA-Z0-9_]+:\S+/;
+    var PROPERTY_UNIT_RE = /[a-zA-Z0-9_]+:\S+/;
+    var PROPERTY_DATATYPE_RE = /xsd:\S+/;
+
+    // --------------------------------------------------------------
+    // Functions for object creation
+    // --------------------------------------------------------------
+    function newAccession(tag) {
+        var parent = _tagStack.get(1);
+        if (!(parent === SEQUENCE || parent === CROSS_REFERENCES)) {
+            throw new PhyloXmlError("found accession outside of sequence or cross-references");
+        }
+        var acc = {};
+        acc.value = null;
+        acc.source = getAttribute(ACCESSION_SOURCE_ATTR, tag.attributes);
+        acc.comment = getAttribute(ACCESSION_COMMENT_ATTR, tag.attributes);
+        if (!acc.source) {
+            acc.source = UNKNOWN;
+        }
+        if (parent === SEQUENCE) {
+            getCurrentObject().accession = acc;
+        }
+        else {
+            addToArrayInCurrentObjectUnnamed(acc);
+        }
+        _objectStack.push(acc);
+    }
+
+    function newAnnotation(tag) {
+        var parent = _tagStack.get(1);
+        if (parent != SEQUENCE) {
+            throw new PhyloXmlError("found annotation outside of sequence");
+        }
+        var ann = {};
+        ann.evidence = getAttribute(ANNOTATION_EVIDENCE_ATTR, tag.attributes);
+        ann.ref = getAttribute(ANNOTATION_REF_ATTR, tag.attributes);
+        ann.source = getAttribute(ANNOTATION_SOURCE_ATTR, tag.attributes);
+        ann.type = getAttribute(ANNOTATION_TYPE_ATTR, tag.attributes);
+        addToArrayInCurrentObject('annotations', ann);
+        _objectStack.push(ann);
+    }
+
+    function newBranchColor() {
+        var parent = _tagStack.get(1);
+        if (parent != CLADE) {
+            throw new PhyloXmlError("found branch color outside of clade");
+        }
+        var col = {};
+        col.red = 0;
+        col.green = 0;
+        col.blue = 0;
+        getCurrentObject().color = col;
+        _objectStack.push(col);
+    }
+
+    function newClade(tag) {
+        var newClade = {};
+        newClade.branch_length = getAttributeAsFloat(CLADE_BRANCH_LENGTH, tag.attributes);
+        newClade.collapse = getAttributeAsBoolean(CLADE_COLLAPSE_ATTR, tag.attributes);
+        if (CLADE_ID_SOURCE_ATTR in tag.attributes) {
+            newClade.id_source = tag.attributes[CLADE_ID_SOURCE_ATTR];
+        }
+        if (_phylogeny === null) {
+            var phylogeny_data = _objectStack.pop();
+            if (!_objectStack.isEmpty()) {
+                throw new PhyloXmlError('severe phyloXML format error');
+            }
+            _phylogeny = phylogeny_data;
+            _phylogeny.children = [newClade];
+        }
+        else {
+            var currClade = getCurrentClade();
+            if (currClade.children === undefined) {
+                currClade.children = [newClade];
+            }
+            else {
+                currClade.children.push(newClade);
+            }
+        }
+        _cladeStack.push(newClade);
+        _objectStack.push(newClade);
+    }
+
+    function newCladeRelation(tag) {
+        var cr = {};
+        cr.distance = getAttributeAsFloat(CLADE_RELATION_DISTANCE_ATTR, tag.attributes);
+        cr.id_ref_0 = getAttribute(CLADE_RELATION_ID_REF_0_ATTR, tag.attributes);
+        cr.id_ref_1 = getAttribute(CLADE_RELATION_ID_REF_1_ATTR, tag.attributes);
+        cr.type = getAttribute(CLADE_RELATION_TYPE_ATTR, tag.attributes);
+        addToArrayInCurrentObject('clade_relations', cr);
+        _objectStack.push(cr);
+    }
+
+    function newSequenceRelation(tag) {
+        var sr = {};
+        sr.distance = getAttributeAsFloat(SEQUENCE_RELATION_DISTANCE_ATTR, tag.attributes);
+        sr.id_ref_0 = getAttribute(SEQUENCE_RELATION_ID_REF_0_ATTR, tag.attributes);
+        sr.id_ref_1 = getAttribute(SEQUENCE_RELATION_ID_REF_1_ATTR, tag.attributes);
+        sr.type = getAttribute(SEQUENCE_RELATION_TYPE_ATTR, tag.attributes);
+        addToArrayInCurrentObject('sequence_relations', sr);
+        _objectStack.push(sr);
+    }
+
+    function newConfidence(tag) {
+        var conf = {};
+        conf.value = null;
+        conf.type = getAttribute(CONFIDENCE_TYPE_ATTR, tag.attributes);
+        conf.stddev = getAttributeAsFloat(CONFIDENCE_STDDEV_ATTR, tag.attributes);
+        var parent = _tagStack.get(1);
+        if (parent === CLADE || parent === PHYLOGENY) {
+            addToArrayInCurrentObject(CONFIDENCES, conf);
+        }
+        else if (parent === ANNOTATION || parent === EVENTS || parent === CLADE_RELATION || parent === SEQUENCE_RELATION) {
+            getCurrentObject().confidence = conf;
+        }
+        _objectStack.push(conf);
+    }
+
+    function newCrossReferences() {
+        var parent = _tagStack.get(1);
+        if (parent != SEQUENCE) {
+            throw new PhyloXmlError("found cross-reference outside of sequence");
+        }
+        var xrefs = [];
+        getCurrentObject().cross_references = xrefs;
+        _objectStack.push(xrefs);
+    }
+
+    function newDate(tag) {
+        var date = {};
+        date.unit = getAttribute(DATE_UNIT_ATTR, tag.attributes);
+        getCurrentObject().date = date;
+        _objectStack.push(date);
+    }
+
+    function newDistribution(tag) {
+        var dist = {};
+        dist.desc = null;
+        dist.unit = getAttribute(DATE_UNIT_ATTR, tag.attributes);
+        addToArrayInCurrentObject('distributions', dist);
+        _objectStack.push(dist);
+    }
+
+    function newDomainArchitecture(tag) {
+        var da = {};
+        da.domains = null;
+        da.length = getAttributeAsInt(DOMAIN_ARCHITECTURE_LENGTH_ATTR, tag.attributes);
+        getCurrentObject().domain_architecture = da;
+        _objectStack.push(da);
+    }
+
+    function newEvents() {
+        var events = {};
+        getCurrentObject().events = events;
+        _objectStack.push(events);
+    }
+
+    function newId(tag) {
+        var i = {};
+        i.value = null;
+        i.provider = getAttribute(ID_PROVIDER_ATTR, tag.attributes);
+        getCurrentObject().id = i;
+        _objectStack.push(i);
+    }
+
+    function newMolecularSequence(tag) {
+        var mol_seq = {};
+        mol_seq.is_aligned = getAttributeAsBoolean(MOLSEQ_IS_ALIGNED_ATTR, tag.attributes);
+        getCurrentObject().mol_seq = mol_seq;
+        _objectStack.push(mol_seq);
+    }
+
+    function newPoint(tag) {
+        var p = {};
+        p.alt_unit = getAttribute(POINT_ALT_UNIT_ATTR, tag.attributes);
+        p.geodetic_datum = getAttribute(POINT_GEODETIC_DATUM_ATTR, tag.attributes);
+        var parent = _tagStack.get(1);
+        if (parent === DISTRIBUTION) {
+            addToArrayInCurrentObject('points', p);
+        }
+        _objectStack.push(p);
+    }
+
+    function newProperty(tag) {
+        var prop = {};
+        prop.ref = getAttribute(PROPERTY_REF_ATTR, tag.attributes);
+        prop.unit = getAttribute(PROPERTY_UNIT_ATTR, tag.attributes);
+        prop.datatype = getAttribute(PROPERTY_DATATYPE_ATTR, tag.attributes);
+        prop.applies_to = getAttribute(PROPERTY_APPLIES_TO_ATTR, tag.attributes);
+        prop.id_ref = getAttribute(PROPERTY_ID_REF_ATTR, tag.attributes);
+
+        if (!prop.ref) {
+            throw new PhyloXmlError('property ref is missing');
+        }
+        if (!prop.datatype) {
+            throw new PhyloXmlError('property data-type is missing');
+        }
+        if (!prop.applies_to) {
+            throw new PhyloXmlError('property applies-to is missing');
+        }
+        if (!PROPERTY_REF_RE.test(prop.ref)) {
+            throw new PhyloXmlError('property ref is ill-formatted: ' + prop.ref);
+        }
+        if (!PROPERTY_DATATYPE_RE.test(prop.datatype)) {
+            throw new PhyloXmlError('property data-type is ill-formatted: ' + prop.datatype);
+        }
+        if (prop.unit && !PROPERTY_UNIT_RE.test(prop.unit)) {
+            throw new PhyloXmlError('property unit is ill-formatted: ' + prop.unit);
+        }
+
+        addToArrayInCurrentObject(PROPERTIES, prop);
+        _objectStack.push(prop);
+    }
+
+    function newProteinDomain(tag) {
+        var pd = {};
+        pd.name = null;
+        pd.from = getAttributeAsInt(PROTEINDOMAIN_FROM_ATTR, tag.attributes);
+        pd.to = getAttributeAsInt(PROTEINDOMAIN_TO_ATTR, tag.attributes);
+        pd.confidence = getAttributeAsFloat(PROTEINDOMAIN_CONFIDENCE_ATTR, tag.attributes);
+        pd.id = getAttribute(PROTEINDOMAIN_ID_ATTR, tag.attributes);
+        addToArrayInCurrentObject('domains', pd);
+        _objectStack.push(pd);
+    }
+
+    function newReference(tag) {
+        var reference = {};
+        reference.doi = getAttribute(REFERENCE_DOI_ATTR, tag.attributes);
+        addToArrayInCurrentObject('references', reference);
+        _objectStack.push(reference);
+    }
+
+    function newSequence(tag) {
+        var seq = {};
+        seq.type = getAttribute(SEQUENCE_TYPE_ATTR, tag.attributes);
+        seq.id_source = getAttribute(SEQUENCE_ID_SOURCE_ATTR, tag.attributes);
+        seq.id_ref = getAttribute(SEQUENCE_ID_REF_ATTR, tag.attributes);
+        addToArrayInCurrentObject(SEQUENCES, seq);
+        _objectStack.push(seq);
+    }
+
+    function newTaxonomy(tag) {
+        var tax = {};
+        tax.id_source = getAttribute(TAXONOMY_ID_SOURCE_ATTR, tag.attributes);
+        addToArrayInCurrentObject(TAXONOMIES, tax);
+        _objectStack.push(tax);
+    }
+
+    function newUri(tag) {
+        var uri = {};
+        uri.value = null;
+        uri.desc = getAttribute(URI_DESC_ATTR, tag.attributes);
+        uri.type = getAttribute(URI_TYPE_ATTR, tag.attributes);
+        addToArrayInCurrentObject('uris', uri);
+        _objectStack.push(uri);
+    }
+
+    function newPhylogeny(tag) {
+        var phy = {};
+        phy.rooted = getAttributeAsBoolean(PHYLOGENY_ROOTED_ATTR, tag.attributes);
+        if (phy.rooted === undefined) {
+            phy.rooted = true;
+        }
+        phy.rerootable = getAttributeAsBoolean(PHYLOGENY_REROOTABLE_ATTR, tag.attributes);
+        if (phy.rerootable === undefined) {
+            phy.rerootable = true;
+        }
+        phy.branch_length_unit = getAttribute(PHYLOGENY_BRANCH_LENGTH_UNIT_ATTR, tag.attributes);
+        phy.type = getAttribute(PHYLOGENY_TYPE_ATTR, tag.attributes);
+        _objectStack.push(phy);
+    }
+
+    function newSimpleCharacteristics() {
+        //To be deprecated.
+        var sc = {};
+        getCurrentObject().simple_characteristics = sc;
+        _objectStack.push(sc);
+    }
+
+
+    // --------------------------------------------------------------
+    // Functions for processing text
+    // --------------------------------------------------------------
+
+    function inAccession(text) {
+        getCurrentObject().value = text;
+    }
+
+    function inAnnotation(text) {
+        if (getCurrentTag() === ANNOTATION_DESC) {
+            getCurrentObject().desc = text;
+        }
+    }
+
+    function inAppType(text) {
+        if (getCurrentTag() === APPTYPE) {
+            getCurrentObject().desc = text;
+        }
+    }
+
+    function inBranchColor(text) {
+        if (getCurrentTag() === COLOR_RED) {
+            getCurrentObject().red = parseIntNumber(text);
+        }
+        else if (getCurrentTag() === COLOR_GREEN) {
+            getCurrentObject().green = parseIntNumber(text);
+        }
+        else if (getCurrentTag() === COLOR_BLUE) {
+            getCurrentObject().blue = parseIntNumber(text);
+        }
+        if (getCurrentTag() === COLOR_ALPHA) {
+            getCurrentObject().alpha = parseIntNumber(text);
+        }
+    }
+
+    function inClade(text) {
+        if (getCurrentTag() === CLADE_NAME) {
+            getCurrentClade().name = text;
+        }
+        else if (getCurrentTag() === CLADE_BRANCH_LENGTH) {
+            getCurrentClade().branch_length = parseFloatNumber(text);
+        }
+        else if (getCurrentTag() === CLADE_WIDTH) {
+            getCurrentClade().width = parseFloatNumber(text);
+        }
+    }
+
+    function inConfidence(text) {
+        getCurrentObject().value = parseFloatNumber(text);
+    }
+
+    function inDate(text) {
+        if (getCurrentTag() === DATE_DESC) {
+            getCurrentObject().desc = text;
+        }
+        else if (getCurrentTag() === DATE_VALUE) {
+            getCurrentObject().value = parseFloatNumber(text);
+        }
+        else if (getCurrentTag() === DATE_MINIMUM) {
+            getCurrentObject().minimum = parseFloatNumber(text);
+        }
+        else if (getCurrentTag() === DATE_MAXIMUM) {
+            getCurrentObject().maximum = parseFloatNumber(text);
+        }
+    }
+
+    function inDistribution(text) {
+        if (getCurrentTag() === DISTRIBUTION_DESC) {
+            getCurrentObject().desc = text;
+        }
+    }
+
+    function inEvents(text) {
+        if (getCurrentTag() === EVENTS_TYPE) {
+            getCurrentObject().type = text;
+        }
+        else if (getCurrentTag() === EVENTS_DUPLICATIONS) {
+            getCurrentObject().duplications = parseIntNumber(text);
+        }
+        else if (getCurrentTag() === EVENTS_SPECIATIONS) {
+            getCurrentObject().speciations = parseIntNumber(text);
+        }
+        else if (getCurrentTag() === EVENTS_LOSSES) {
+            getCurrentObject().losses = parseIntNumber(text);
+        }
+    }
+
+    function inId(text) {
+        getCurrentObject().value = text;
+    }
+
+    function inMolecularSequence(text) {
+        getCurrentObject().value = text;
+    }
+
+    function inPoint(text) {
+        if (getCurrentTag() === POINT_LAT) {
+            getCurrentObject().lat = text;
+        }
+        else if (getCurrentTag() === POINT_LONG) {
+            getCurrentObject().long = text;
+        }
+        else if (getCurrentTag() === POINT_ALT) {
+            getCurrentObject().alt = text;
+        }
+    }
+
+    function inProperty(text) {
+        getCurrentObject().value = text;
+    }
+
+    function inProteinDomain(text) {
+        getCurrentObject().name = text;
+    }
+
+    function inPhylogeny(text) {
+        if (getCurrentTag() === PHYLOGENY_NAME) {
+            getCurrentObject().name = text;
+        }
+        else if (getCurrentTag() === PHYLOGENY_DESCRIPTION) {
+            getCurrentObject().description = text;
+        }
+        else if (getCurrentTag() === PHYLOGENY_DATE) {
+            getCurrentObject().date = text;
+        }
+    }
+
+    function inReference(text) {
+        if (getCurrentTag() === REFERENCE_DESC) {
+            getCurrentObject().desc = text;
+        }
+    }
+
+    function inSequence(text) {
+        if (getCurrentTag() === SEQUENCE_SYMBOL) {
+            getCurrentObject().symbol = text;
+        }
+        else if (getCurrentTag() === SEQUENCE_NAME) {
+            getCurrentObject().name = text;
+        }
+        else if (getCurrentTag() === SEQUENCE_GENE_NAME) {
+            getCurrentObject().gene_name = text;
+        }
+        else if (getCurrentTag() === SEQUENCE_LOCATION) {
+            getCurrentObject().location = text;
+        }
+    }
+
+    function inTaxonomy(text) {
+        if (getCurrentTag() === TAXONOMY_CODE) {
+            getCurrentObject().code = text;
+        }
+        else if (getCurrentTag() === TAXONOMY_SCIENTIFIC_NAME) {
+            getCurrentObject().scientific_name = text;
+        }
+        else if (getCurrentTag() === TAXONOMY_AUTHORITY) {
+            getCurrentObject().authority = text;
+        }
+        else if (getCurrentTag() === TAXONOMY_COMMON_NAME) {
+            getCurrentObject().common_name = text;
+        }
+        else if (getCurrentTag() === TAXONOMY_SYNONYM) {
+            addToArrayInCurrentObject(TAXONOMY_SYNONYMS, text);
+        }
+        else if (getCurrentTag() === TAXONOMY_RANK) {
+            getCurrentObject().rank = text;
+        }
+    }
+
+    function inUri(text) {
+        getCurrentObject().value = text;
+    }
+
+    function inSimpleCharacteristics(text) {
+        //To be deprecated.
+        if (getCurrentTag() === X_SIMPLE_CHARACTERISTIC_COUNTRY) {
+            getCurrentObject().country = text;
+        }
+        else if (getCurrentTag() === X_SIMPLE_CHARACTERISTIC_HOST) {
+            getCurrentObject().host = text;
+        }
+        else if (getCurrentTag() === X_SIMPLE_CHARACTERISTIC_YEAR) {
+            getCurrentObject().year = text;
+        }
+        else if (getCurrentTag() === X_SIMPLE_CHARACTERISTIC_HA) {
+            getCurrentObject().ha = text;
+        }
+        else if (getCurrentTag() === X_SIMPLE_CHARACTERISTIC_NA) {
+            getCurrentObject().na = text;
+        }
+    }
+
+    // --------------------------------------------------------------
+    // Functions for SAX parser
+    // --------------------------------------------------------------
+    function phyloxmlOnopentag(tag) {
+        _tagStack.push(tag.name);
+        switch (tag.name) {
+            case CLADE:
+                newClade(tag);
+                break;
+            case ACCESSION:
+                newAccession(tag);
+                break;
+            case ANNOTATION:
+                newAnnotation(tag);
+                break;
+            case CLADE_RELATION:
+                if (_tagStack.get(1) === PHYLOGENY) {
+                    newCladeRelation(tag);
+                }
+                break;
+            case COLOR:
+                newBranchColor();
+                break;
+            case CONFIDENCE:
+                newConfidence(tag);
+                break;
+            case CROSS_REFERENCES:
+                newCrossReferences();
+                break;
+            case DATE:
+                if (_tagStack.get(1) === CLADE) {
+                    newDate(tag);
+                }
+                break;
+            case DISTRIBUTION:
+                newDistribution(tag);
+                break;
+            case DOMAIN_ARCHITECTURE:
+                newDomainArchitecture(tag);
+                break;
+            case EVENTS:
+                newEvents();
+                break;
+            case ID:
+                newId(tag);
+                break;
+            case MOLSEQ:
+                newMolecularSequence(tag);
+                break;
+            case POINT:
+                newPoint(tag);
+                break;
+            case PROTEINDOMAIN:
+                newProteinDomain(tag);
+                break;
+            case PHYLOGENY:
+                newPhylogeny(tag);
+                break;
+            case PROPERTY:
+                newProperty(tag);
+                break;
+            case REFERENCE:
+                newReference(tag);
+                break;
+            case SEQUENCE:
+                newSequence(tag);
+                break;
+            case SEQUENCE_RELATION:
+                if (_tagStack.get(1) === PHYLOGENY) {
+                    newSequenceRelation(tag);
+                }
+                break;
+            case TAXONOMY:
+                newTaxonomy(tag);
+                break;
+            case URI:
+                newUri(tag);
+                break;
+            case X_SIMPLE_CHARACTERISTICS:
+                //To be deprecated.
+                newSimpleCharacteristics();
+                break;
+            default:
+        }
+    }
+
+    function phyloxmlOnclosetag(tag) {
+        if (tag === CLADE) {
+            _tagStack.pop();
+            _objectStack.pop();
+            _cladeStack.pop();
+        }
+        else if (
+            tag === ACCESSION
+            || tag === ANNOTATION
+            || ( tag === CLADE_RELATION && (_tagStack.get(1) === PHYLOGENY) )
+            || tag === COLOR
+            || tag === CONFIDENCE
+            || tag === CROSS_REFERENCES
+            || ( tag === DATE && (_tagStack.get(1) === CLADE) )
+            || tag === DISTRIBUTION
+            || tag === TAXONOMY
+            || tag === ID
+            || tag === EVENTS
+            || tag === MOLSEQ
+            || tag === REFERENCE
+            || tag === DOMAIN_ARCHITECTURE
+            || tag === PROTEINDOMAIN
+            || tag === SEQUENCE
+            || ( tag === SEQUENCE_RELATION && (_tagStack.get(1) === PHYLOGENY) )
+            || tag === PROPERTY
+            || tag === POINT
+            || tag === URI
+            || tag === X_SIMPLE_CHARACTERISTICS) {
+            _tagStack.pop();
+            _objectStack.pop();
+        }
+        else if (!(tag === PHYLOGENY || tag === PHYLOXML)) {
+            _tagStack.pop();
+        }
+        else if (tag === PHYLOGENY) {
+            phyloxmlOnClosetagSanityCheck();
+            _phylogenies.push(_phylogeny);
+            startNewPhylogeny();
+        }
+    }
+
+    function phyloxmlOntext(text) {
+        var parentTag = _tagStack.get(1);
+        var currentTag = _tagStack.peek();
+        if (parentTag === CLADE) {
+            inClade(text);
+        }
+        else if (parentTag === ANNOTATION) {
+            inAnnotation(text);
+        }
+        else if (parentTag === COLOR) {
+            inBranchColor(text);
+        }
+        else if (parentTag === DATE) {
+            inDate(text);
+        }
+        else if (parentTag === DISTRIBUTION) {
+            inDistribution(text);
+        }
+        else if (parentTag === EVENTS) {
+            inEvents(text);
+        }
+        else if (parentTag === REFERENCE) {
+            inReference(text);
+        }
+        else if (parentTag === PHYLOGENY) {
+            inPhylogeny(text);
+        }
+        else if (parentTag === POINT) {
+            inPoint(text);
+        }
+        else if (parentTag === SEQUENCE) {
+            inSequence(text);
+        }
+        else if (parentTag === TAXONOMY) {
+            inTaxonomy(text);
+        }
+        if (currentTag === ACCESSION) {
+            inAccession(text);
+        }
+        else if (currentTag === APPTYPE) {
+            inAppType(text);
+        }
+        else if (currentTag === CONFIDENCE) {
+            inConfidence(text);
+        }
+        else if (currentTag === ID) {
+            inId(text);
+        }
+        else if (currentTag === MOLSEQ) {
+            inMolecularSequence(text);
+        }
+        else if (currentTag === PROTEINDOMAIN) {
+            inProteinDomain(text);
+        }
+        else if (currentTag === PROPERTY) {
+            inProperty(text);
+        }
+        else if (currentTag === URI) {
+            inUri(text);
+        }
+        else if (parentTag === X_SIMPLE_CHARACTERISTICS) {
+            inSimpleCharacteristics(text);
+        }
+    }
+
+    function phyloxmlOnerror(error) {
+        throw error;
+    }
+
+    function addPhyloxmlParserEvents(sax_parser) {
+        sax_parser.onopentag = phyloxmlOnopentag;
+        sax_parser.onclosetag = phyloxmlOnclosetag;
+        sax_parser.ontext = phyloxmlOntext;
+        sax_parser.onerror = phyloxmlOnerror;
+        // Ignoring: oncdata, oncomment, ondoctype
+    }
+
+    // --------------------------------------------------------------
+    // Helper functions
+    // --------------------------------------------------------------
+    function getCurrentClade() {
+        return _cladeStack.peek();
+    }
+
+    function getCurrentTag() {
+        return _tagStack.peek();
+    }
+
+    function getCurrentObject() {
+        return _objectStack.peek();
+    }
+
+    function getAttribute(attribute_name, attributes) {
+        if (attribute_name in attributes) {
+            return attributes[attribute_name];
+        }
+        return undefined;
+    }
+
+    function getAttributeAsInt(attribute_name, attributes) {
+        if (attribute_name in attributes) {
+            return parseIntNumber(attributes[attribute_name]);
+        }
+        return undefined;
+    }
+
+    function getAttributeAsFloat(attribute_name, attributes) {
+        if (attribute_name in attributes) {
+            return parseFloatNumber(attributes[attribute_name]);
+        }
+        return undefined;
+    }
+
+    function getAttributeAsBoolean(attribute_name, attributes) {
+        if (attribute_name in attributes) {
+            return parseBoolean(attributes[attribute_name]);
+        }
+        return undefined;
+    }
+
+    function addToArrayInCurrentObject(name, value) {
+        var parent = null;
+        if (getCurrentObject()) {
+            parent = getCurrentObject();
+        }
+        else {
+            parent = _phylogeny;
+        }
+        var ary = parent[name];
+        if (ary) {
+            ary.push(value);
+        }
+        else {
+            parent[name] = [value];
+        }
+    }
+
+    function addToArrayInCurrentObjectUnnamed(value) {
+        var obj = getCurrentObject();
+        obj.push(value);
+    }
+
+    function parseFloatNumber(text) {
+        var f = parseFloat(text);
+        if (isNaN(f)) {
+            throw new PhyloXmlError("could not parse floating point number from '" + text + "'");
+        }
+        return f;
+    }
+
+    function parseIntNumber(text) {
+        var i = parseInt(text);
+        if (isNaN(i)) {
+            throw new PhyloXmlError("could not parse integer number from '" + text + "'");
+        }
+        return i;
+    }
+
+    function parseBoolean(text) {
+        if (text === 'true') {
+            return true;
+        }
+        else if (text === 'false') {
+            return false;
+        }
+        else {
+            throw new PhyloXmlError("could not parse boolean from '" + text + "'");
+        }
+    }
+
+    function startNewPhylogeny() {
+        _phylogeny = null;
+        _cladeStack = new Stack();
+        _tagStack = new Stack();
+        _objectStack = new Stack();
+    }
+
+    function phyloxmlOnClosetagSanityCheck() {
+        if (!(_cladeStack.isEmpty() && _objectStack.isEmpty() )) {
+            throw new PhyloXmlError('severe phyloXML format error');
+        }
+    }
+
+    function finalSanityCheck() {
+        if (!_tagStack.isEmpty()) {
+            throw new PhyloXmlError('severe phyloXML format error');
+        }
+    }
+
+    // --------------------------------------------------------------
+    // Stack
+    // --------------------------------------------------------------
+    function Stack() {
+        this._stack = [];
+        this.pop = function () {
+            var p = this._stack.pop();
+            if (p === undefined) {
+                throw new Error('severe phyloXML format error');
+            }
+            return p;
+        };
+        this.push = function (item) {
+            this._stack.push(item);
+        };
+        this.peek = function () {
+            return this._stack[this._stack.length - 1];
+        };
+        this.get = function (i) {
+            return this._stack[this._stack.length - (1 + i)];
+        };
+        this.length = function () {
+            return this._stack.length;
+        };
+        this.isEmpty = function () {
+            return this._stack.length < 1;
+        };
+    }
+
+    // --------------------------------------------------------------
+    // phyloXML error
+    // --------------------------------------------------------------
+    function PhyloXmlError(message) {
+        this.name = 'phyloXmlError';
+        this.message = message || 'phyloXML format error';
+    }
+
+    PhyloXmlError.prototype = Object.create(Error.prototype);
+
+    // --------------------------------------------------------------
+    // To phyloXML
+    // --------------------------------------------------------------
+    phyloXml.toPhyloXML_ = function (phy, dec) {
+        var x = '';
+        var ind = '';
+        openPhyloXml();
+        openPhylogeny(phy, [PHYLOGENY_ROOTED_ATTR, PHYLOGENY_REROOTABLE_ATTR,
+            PHYLOGENY_BRANCH_LENGTH_UNIT_ATTR, PHYLOGENY_TYPE_ATTR]);
+        addSingleElement(PHYLOGENY_NAME, phy.name);
+        addSingleElement(PHYLOGENY_DESCRIPTION, phy.description);
+        addSingleElement(PHYLOGENY_DATE, phy.date);
+        if (phy.children && phy.children.length === 1) {
+            toPhyloXMLhelper(phy.children[0]);
+        }
+        closePhylogeny();
+        closePhyloXml();
+        return x;
+
+        function toPhyloXMLhelper(node) {
+            var l;
+            var i;
+
+            openClade(node, [CLADE_ID_SOURCE_ATTR, CLADE_COLLAPSE_ATTR]);
+
+            addSingleElement(CLADE_NAME, node.name);
+
+            if (node[CLADE_BRANCH_LENGTH]) {
+                addSingleElement(CLADE_BRANCH_LENGTH, (dec && dec > 0) ? roundNumber(node[CLADE_BRANCH_LENGTH], dec) : node[CLADE_BRANCH_LENGTH]);
+            }
+
+            if (node[CONFIDENCES] && node[CONFIDENCES].length > 0) {
+                l = node[CONFIDENCES].length;
+                for (i = 0; i < l; ++i) {
+                    var conf = node[CONFIDENCES][i];
+                    if (!conf[CONFIDENCE_TYPE_ATTR]) {
+                        conf[CONFIDENCE_TYPE_ATTR] = UNKNOWN;
+                    }
+                    addSingleElement(CONFIDENCE, conf.value, conf,
+                        [CONFIDENCE_TYPE_ATTR, CONFIDENCE_STDDEV_ATTR]);
+                }
+            }
+
+            addSingleElement(CLADE_WIDTH, node[CLADE_WIDTH]);
+
+            if (node[COLOR]) {
+                var col = node[COLOR];
+                open(COLOR);
+                addSingleElement(COLOR_RED, col[COLOR_RED]);
+                addSingleElement(COLOR_GREEN, col[COLOR_GREEN]);
+                addSingleElement(COLOR_BLUE, col[COLOR_BLUE]);
+                addSingleElement(COLOR_ALPHA, col[COLOR_ALPHA]);
+                close(COLOR);
+            }
+
+            if (node[TAXONOMIES] && node[TAXONOMIES].length > 0) {
+                l = node[TAXONOMIES].length;
+                for (i = 0; i < l; ++i) {
+                    var tax = node[TAXONOMIES][i];
+                    open(TAXONOMY, tax, [TAXONOMY_ID_SOURCE_ATTR]);
+                    if (tax[ID]) {
+                        if (!tax[ID][ID_PROVIDER_ATTR]) {
+                            tax[ID][ID_PROVIDER_ATTR] = UNKNOWN;
+                        }
+                        addSingleElement(ID, tax[ID].value, tax[ID],
+                            [ID_PROVIDER_ATTR]);
+                    }
+                    addSingleElement(TAXONOMY_CODE, tax[TAXONOMY_CODE]);
+                    addSingleElement(TAXONOMY_SCIENTIFIC_NAME, tax[TAXONOMY_SCIENTIFIC_NAME]);
+                    addSingleElement(TAXONOMY_AUTHORITY, tax[TAXONOMY_AUTHORITY]);
+                    addSingleElement(TAXONOMY_COMMON_NAME, tax[TAXONOMY_COMMON_NAME]);
+                    if (tax[TAXONOMY_SYNONYMS] && tax[TAXONOMY_SYNONYMS].length > 0) {
+                        var ll = tax[TAXONOMY_SYNONYMS].length;
+                        for (var ii = 0; ii < ll; ++ii) {
+                            addSingleElement(TAXONOMY_SYNONYM, tax[TAXONOMY_SYNONYMS][ii]);
+                        }
+                    }
+                    addSingleElement(TAXONOMY_RANK, tax[TAXONOMY_RANK]);
+                    close(TAXONOMY);
+                }
+            }
+
+            if (node[SEQUENCES] && node[SEQUENCES].length > 0) {
+                l = node[SEQUENCES].length;
+                for (i = 0; i < l; ++i) {
+                    var seq = node[SEQUENCES][i];
+                    open(SEQUENCE, seq, [SEQUENCE_TYPE_ATTR, SEQUENCE_ID_SOURCE_ATTR, SEQUENCE_ID_REF_ATTR]);
+                    addSingleElement(SEQUENCE_SYMBOL, seq[SEQUENCE_SYMBOL]);
+                    if (seq[ACCESSION]) {
+                        if (!seq[ACCESSION][ACCESSION_SOURCE_ATTR]) {
+                            seq[ACCESSION][ACCESSION_SOURCE_ATTR] = UNKNOWN;
+                        }
+                        addSingleElement(ACCESSION, seq[ACCESSION].value, seq[ACCESSION],
+                            [ACCESSION_SOURCE_ATTR, ACCESSION_COMMENT_ATTR]);
+                    }
+                    addSingleElement(SEQUENCE_NAME, seq[SEQUENCE_NAME]);
+                    addSingleElement(SEQUENCE_GENE_NAME, seq[SEQUENCE_GENE_NAME]);
+                    addSingleElement(SEQUENCE_LOCATION, seq[SEQUENCE_LOCATION]);
+                    if (seq[MOLSEQ]) {
+                        addSingleElement(MOLSEQ, seq[MOLSEQ].value, seq[MOLSEQ],
+                            [MOLSEQ_IS_ALIGNED_ATTR]);
+                    }
+                    close(SEQUENCE);
+                }
+            }
+
+            if (node[EVENTS]) {
+                var ev = node[EVENTS];
+                open(EVENTS);
+                addSingleElement(EVENTS_TYPE, ev[EVENTS_TYPE]);
+                addSingleElement(EVENTS_DUPLICATIONS, ev[EVENTS_DUPLICATIONS]);
+                addSingleElement(EVENTS_SPECIATIONS, ev[EVENTS_SPECIATIONS]);
+                addSingleElement(EVENTS_LOSSES, ev[EVENTS_LOSSES]);
+                if (ev[CONFIDENCE]) {
+                    var evconf = ev[CONFIDENCE];
+                    addSingleElement(CONFIDENCE, evconf.value, evconf,
+                        [CONFIDENCE_TYPE_ATTR, CONFIDENCE_STDDEV_ATTR]);
+                }
+                close(EVENTS);
+            }
+
+            if (node[PROPERTIES] && node[PROPERTIES].length > 0) {
+                l = node[PROPERTIES].length;
+                for (i = 0; i < l; ++i) {
+                    var prop = node[PROPERTIES][i];
+                    if (!prop[PROPERTY_APPLIES_TO_ATTR]) {
+                        throw new PhyloXmlError("property applies-to is missing");
+                    }
+                    if (!prop[PROPERTY_DATATYPE_ATTR]) {
+                        throw new PhyloXmlError("property data-type is missing");
+                    }
+                    if (!prop[PROPERTY_REF_ATTR]) {
+                        throw new PhyloXmlError("property ref is missing");
+                    }
+                    addSingleElement(PROPERTY, prop.value, prop, [PROPERTY_REF_ATTR,
+                        PROPERTY_UNIT_ATTR, PROPERTY_DATATYPE_ATTR, PROPERTY_APPLIES_TO_ATTR,
+                        PROPERTY_ID_REF_ATTR]);
+                }
+            }
+
+            if (node.children) {
+                l = node.children.length;
+                for (i = 0; i < l; ++i) {
+                    toPhyloXMLhelper(node.children[i]);
+                }
+            }
+            else if (node._children) {
+                l = node._children.length;
+                for (i = 0; i < l; ++i) {
+                    toPhyloXMLhelper(node._children[i]);
+                }
+            }
+
+            closeClade();
+
+        } // toPhyloXMLhelper
+
+        function addSingleElement(elemName, elemValue, object, attributeNames) {
+            if ((elemValue !== null) && (elemValue !== undefined)) {
+                if (typeof elemValue === 'string' || elemValue instanceof String) {
+                    elemValue = elemValue.trim();
+                    if (elemValue.length > 0) {
+                        if ((elemValue.indexOf('&') > -1) || ( elemValue.indexOf('<') > -1) || ( elemValue.indexOf('>') > -1)
+                            || (elemValue.indexOf('"') > -1) || ( elemValue.indexOf("'") > -1)) {
+                            elemValue = replaceUnsafeChars(elemValue);
+                        }
+                    }
+                    else {
+                        return;
+                    }
+                }
+                x += ( ind + '<' + elemName);
+                if (object && attributeNames && attributeNames.length > 0) {
+                    addAttributes(object, attributeNames);
+                }
+                x += ( '>' + elemValue + '</' + elemName + '>\n');
+            }
+        }
+
+        function open(elemName, object, attributeNames) {
+            if (object && attributeNames && attributeNames.length > 0) {
+                x += ( ind + '<' + elemName);
+                addAttributes(object, attributeNames);
+                x += '>\n';
+            }
+            else {
+                x += (ind + '<' + elemName + '>\n' );
+            }
+            ind = ind + ' ';
+        }
+
+        function close(elemName) {
+            reduceInd();
+            x += ( ind + '</' + elemName + '>\n' );
+        }
+
+        function openClade(object, attributeNames) {
+            if (object && attributeNames && attributeNames.length > 0) {
+                x += ind + '<clade';
+                addAttributes(object, attributeNames);
+                x += '>\n';
+            }
+            else {
+                x += ind + '<clade>\n';
+            }
+            ind = ind + ' ';
+        }
+
+        function closeClade() {
+            reduceInd();
+            x += ind + '</clade>\n';
+        }
+
+        function openPhylogeny(object, attributeNames) {
+            if (object[PHYLOGENY_ROOTED_ATTR] === undefined ||
+                object[PHYLOGENY_ROOTED_ATTR] === null) {
+                object[PHYLOGENY_ROOTED_ATTR] = true;
+            }
+            if (object[PHYLOGENY_REROOTABLE_ATTR] === undefined ||
+                object[PHYLOGENY_REROOTABLE_ATTR] === null) {
+                object[PHYLOGENY_REROOTABLE_ATTR] = true;
+            }
+            if (object && attributeNames && attributeNames.length > 0) {
+                x += ' <phylogeny';
+                addAttributes(object, attributeNames);
+                x += '>\n';
+            }
+            else {
+                x += ' <phylogeny>\n';
+            }
+            ind = '  ';
+        }
+
+        function closePhylogeny() {
+            ind = ' ';
+            x += ' </phylogeny>\n';
+        }
+
+        function openPhyloXml() {
+            ind = '';
+            x += '<?xml version="1.0" encoding="UTF-8"?>\n';
+            x += '<phyloxml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.phyloxml.org http://www.phyloxml.org/1.20/phyloxml.xsd" xmlns="http://www.phyloxml.org">\n';
+        }
+
+        function closePhyloXml() {
+            x += '</phyloxml>\n';
+        }
+
+        function addAttributes(object, attributeNames) {
+            var l = attributeNames.length;
+            for (var i = 0; i < l; ++i) {
+                var attributeName = attributeNames[i];
+                if (attributeName && ( object[attributeName] !== undefined && object[attributeName] !== null )) {
+                    x += (' ' + attributeName + '="' + object[attributeName] + '"' );
+                }
+            }
+        }
+
+        function roundNumber(num, dec) {
+            return Math.round(num * Math.pow(10, dec)) / Math.pow(10, dec);
+        }
+
+        function replaceUnsafeChars(str) {
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&apos;");
+        }
+
+        function reduceInd() {
+            var l = ind.length;
+            ind = '';
+            for (var i = 0; i <= l - 2; ++i) {
+                ind += ' ';
+            }
+        }
+
+    }; // toPhyloXML_
+
+
+    // --------------------------------------------------------------
+    // Main functions
+    // --------------------------------------------------------------
+
+    /**
+     * To parse phyloXML formatted trees from a stream asynchronously.
+     *
+     * @param stream - The stream to be parsed.
+     * @param parseOptions - Options dict for the SAX parser.
+     *                       (example: {trim: true, normalize: true}).
+     */
+    phyloXml.parseAsync = function (stream, parseOptions) {
+        _phylogenies = [];
+        startNewPhylogeny();
+        var sax_parser = sax.createStream(true, parseOptions);
+        addPhyloxmlParserEvents(sax_parser);
+        stream.pipe(sax_parser);
+
+        sax_parser.on('end', function () {
+            finalSanityCheck();
+            var len = _phylogenies.length;
+            console.log("parsed " + len + " trees");
+            // for (var i = 0; i < len; ++i) {
+            //    do something, for example:
+            //    var str = JSON.stringify(_phylogenies[i], null, 2);
+            //}
+        });
+
+        process.stdout.on('drain', function () {
+            stream.resume();
+        });
+    };
+
+    /**
+     * To parse a phyloXML formatted source.
+     *
+     * @param source - The source.
+     * @param parseOptions - Options dict for the SAX parser
+     *                       (example: {trim: true, normalize: true}).
+     * @returns {*} - Array of phylogentic tree objects.
+     */
+    phyloXml.parse = function (source, parseOptions) {
+        source && ( source = source.toString().trim());
+
+        if (!source) {
+            throw new Error('phyloXML source is empty');
+        }
+
+        _phylogenies = [];
+        startNewPhylogeny();
+        var sax_parser = sax.parser(true, parseOptions);
+        addPhyloxmlParserEvents(sax_parser);
+
+        sax_parser.onend = function () {
+            finalSanityCheck();
+        };
+
+        sax_parser.write(source).close();
+        return _phylogenies;
+    };
+
+
+    /**
+     * To convert a phylogentic tree object to a phyloXML formatted string.
+     *
+     * @param phy - A phylogentic tree object.
+     * @param decPointsMax - Maximal number of decimal points for branch lengths (optional).
+     * @returns A phyloXML formatted string.
+     */
+    phyloXml.toPhyloXML = function (phy, decPointsMax) {
+        return phyloXml.toPhyloXML_(phy, decPointsMax);
+    };
+
+    // --------------------------------------------------------------
+    // For exporting
+    // --------------------------------------------------------------
+    if (typeof module !== 'undefined' && module.exports && !global.xmldocAssumeBrowser)
+        module.exports.phyloXml = phyloXml;
+    else if (typeof window !== "undefined")
+        window.phyloXml = phyloXml;
+    else
+        this.phyloXml = phyloXml;
+})();
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"_process":18,"sax":35}],13:[function(require,module,exports){
+/**
+ * Collection of functions operating on a tree
+ *
+ * Copyright (c) Adrian Altenhoff 2017
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ */
+
+module.exports = {
     extractParentRelations : function(tree) {
         var uprels = {};
         var rec_trav = function(node){
@@ -2776,7 +4578,11 @@ module.exports = {
             if (node.children !== undefined){
                 var rec_res = node.children.map(rec_trav);
                 rec_res.sort(function(a,b){
-                    return a.cnts - b.cnts;
+                    if (a.cnts !== b.cnts) {
+                        return a.cnts - b.cnts;
+                    } else {
+                        return a.data.name.localeCompare(b.data.name);
+                    }
                 });
                 tot_children = rec_res.map(x => x.cnts).reduce((a, b) => a + b, 0);
                 node.children = rec_res.map(x => x.data);
@@ -2786,11 +4592,46 @@ module.exports = {
             return {cnts: tot_children, data: node};
         };
         return rec_trav(tree).data;
+    },
+
+    extractTree: function (xmltree) {
+        if (xmltree && (xmltree.constructor === Array) && (xmltree[0].rooted !== undefined)){
+            return xmltree[0].children[0];
+        } else { return xmltree; }
+    },
+
+    add_nodenames_from_taxonomy_if_needed: function(tree){
+        var rec_trav = function(node){
+            if ((node.name === undefined) && (node.taxonomies !== undefined)){
+                node.name = node.taxonomies[0].scientific_name;
+            }
+            if (node.children !== undefined){
+                node.children.map(rec_trav);
+            }
+        };
+        rec_trav(tree);
+        return tree;
+    },
+
+    same_trees: function(t1, t2){
+        var rec_trav = function(n1, n2){
+            if (n1.name !== n2.name) return false;
+            if (!n1.children && !n2.children) return true;  // identical leaves
+            if ((!n1.children && n2.children) || (n1.children && !n2.children) ||
+                (n1.children.length !== n2.children.length)) return false; // one leaf, the other not, or different nr children
+            let sames = n1.children.map(function(e, i){
+                return rec_trav(e, n2.children[i]);
+            });
+            return sames.every(x => x);
+        };
+        return rec_trav(t1, t2);
     }
 };
-},{}],11:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 var sax = require('sax');
 var newick = require("./newick.js");
+var phyloxml = require("./phyloxml.js");
+var tree_tool = require("./tree_utils.js");
 
 var LevelIndexCreator = function(){
     this.levels = {};
@@ -2827,7 +4668,13 @@ var Converter = module.exports = function(tree, source, saxOptions) {
 
     var parsed_tree = function(){
         if (typeof(tree) === "string"){
-            return newick.parse(tree);
+            if (tree.startsWith('<?xml') || tree.startsWith("<phyloxml")){
+                var xmltree = phyloxml.phyloXml.parse(tree);
+                return tree_tool.add_nodenames_from_taxonomy_if_needed(tree_tool.extractTree(xmltree));
+            } else {
+                // assume it is newick
+                return newick.parse(tree);
+            }
         } else {
             return tree;
         }
@@ -2908,7 +4755,7 @@ var Converter = module.exports = function(tree, source, saxOptions) {
             var sp = trimSpeciesTree();
             //console.log(sp);
             sptree = sp;
-            _sptree_parent_relations = newick.extractParentRelations(sp);
+            _sptree_parent_relations = tree_tool.extractParentRelations(sp);
         }
     };
 
@@ -3018,12 +4865,12 @@ var Converter = module.exports = function(tree, source, saxOptions) {
     create_remaining_empty_hogs_at_all_levels();
     return {
         per_species: per_species,
-        tree: newick.ladderize(sptree),
+        tree: tree_tool.ladderize(sptree),
         xrefs: xrefs
     };
 };
 
-},{"./newick.js":10,"sax":31}],12:[function(require,module,exports){
+},{"./newick.js":11,"./phyloxml.js":12,"./tree_utils.js":13,"sax":35}],15:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -3048,7 +4895,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],13:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 /*!
  * Determine if an object is a Buffer
  *
@@ -3071,14 +4918,7 @@ function isSlowBuffer (obj) {
   return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
 }
 
-},{}],14:[function(require,module,exports){
-var toString = {}.toString;
-
-module.exports = Array.isArray || function (arr) {
-  return toString.call(arr) == '[object Array]';
-};
-
-},{}],15:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -3126,7 +4966,7 @@ function nextTick(fn, arg1, arg2, arg3) {
 
 
 }).call(this,require('_process'))
-},{"_process":16}],16:[function(require,module,exports){
+},{"_process":18}],18:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -3312,10 +5152,10 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 module.exports = require('./lib/_stream_duplex.js');
 
-},{"./lib/_stream_duplex.js":18}],18:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":20}],20:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -3370,13 +5210,10 @@ var Writable = require('./_stream_writable');
 
 util.inherits(Duplex, Readable);
 
-{
-  // avoid scope creep, the keys array can then be collected
-  var keys = objectKeys(Writable.prototype);
-  for (var v = 0; v < keys.length; v++) {
-    var method = keys[v];
-    if (!Duplex.prototype[method]) Duplex.prototype[method] = Writable.prototype[method];
-  }
+var keys = objectKeys(Writable.prototype);
+for (var v = 0; v < keys.length; v++) {
+  var method = keys[v];
+  if (!Duplex.prototype[method]) Duplex.prototype[method] = Writable.prototype[method];
 }
 
 function Duplex(options) {
@@ -3394,16 +5231,6 @@ function Duplex(options) {
 
   this.once('end', onend);
 }
-
-Object.defineProperty(Duplex.prototype, 'writableHighWaterMark', {
-  // making it explicit this property is not enumerable
-  // because otherwise some prototype manipulation in
-  // userland will fail
-  enumerable: false,
-  get: function () {
-    return this._writableState.highWaterMark;
-  }
-});
 
 // the no-half-open enforcer
 function onend() {
@@ -3447,7 +5274,13 @@ Duplex.prototype._destroy = function (err, cb) {
 
   pna.nextTick(cb, err);
 };
-},{"./_stream_readable":20,"./_stream_writable":22,"core-util-is":6,"inherits":12,"process-nextick-args":15}],19:[function(require,module,exports){
+
+function forEach(xs, f) {
+  for (var i = 0, l = xs.length; i < l; i++) {
+    f(xs[i], i);
+  }
+}
+},{"./_stream_readable":22,"./_stream_writable":24,"core-util-is":7,"inherits":15,"process-nextick-args":17}],21:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -3495,7 +5328,7 @@ function PassThrough(options) {
 PassThrough.prototype._transform = function (chunk, encoding, cb) {
   cb(null, chunk);
 };
-},{"./_stream_transform":21,"core-util-is":6,"inherits":12}],20:[function(require,module,exports){
+},{"./_stream_transform":23,"core-util-is":7,"inherits":15}],22:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -4375,16 +6208,6 @@ Readable.prototype.wrap = function (stream) {
   return this;
 };
 
-Object.defineProperty(Readable.prototype, 'readableHighWaterMark', {
-  // making it explicit this property is not enumerable
-  // because otherwise some prototype manipulation in
-  // userland will fail
-  enumerable: false,
-  get: function () {
-    return this._readableState.highWaterMark;
-  }
-});
-
 // exposed for testing purposes only.
 Readable._fromList = fromList;
 
@@ -4510,6 +6333,12 @@ function endReadableNT(state, stream) {
   }
 }
 
+function forEach(xs, f) {
+  for (var i = 0, l = xs.length; i < l; i++) {
+    f(xs[i], i);
+  }
+}
+
 function indexOf(xs, x) {
   for (var i = 0, l = xs.length; i < l; i++) {
     if (xs[i] === x) return i;
@@ -4517,7 +6346,7 @@ function indexOf(xs, x) {
   return -1;
 }
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./_stream_duplex":18,"./internal/streams/BufferList":23,"./internal/streams/destroy":24,"./internal/streams/stream":25,"_process":16,"core-util-is":6,"events":7,"inherits":12,"isarray":14,"process-nextick-args":15,"safe-buffer":30,"string_decoder/":33,"util":4}],21:[function(require,module,exports){
+},{"./_stream_duplex":20,"./internal/streams/BufferList":25,"./internal/streams/destroy":26,"./internal/streams/stream":27,"_process":18,"core-util-is":7,"events":8,"inherits":15,"isarray":28,"process-nextick-args":17,"safe-buffer":34,"string_decoder/":29,"util":4}],23:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -4732,8 +6561,8 @@ function done(stream, er, data) {
 
   return stream.push(null);
 }
-},{"./_stream_duplex":18,"core-util-is":6,"inherits":12}],22:[function(require,module,exports){
-(function (process,global){
+},{"./_stream_duplex":20,"core-util-is":7,"inherits":15}],24:[function(require,module,exports){
+(function (process,global,setImmediate){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -5104,16 +6933,6 @@ function decodeChunk(state, chunk, encoding) {
   return chunk;
 }
 
-Object.defineProperty(Writable.prototype, 'writableHighWaterMark', {
-  // making it explicit this property is not enumerable
-  // because otherwise some prototype manipulation in
-  // userland will fail
-  enumerable: false,
-  get: function () {
-    return this._writableState.highWaterMark;
-  }
-});
-
 // if we're already writing something, then just put this
 // in the queue, and wait our turn.  Otherwise, call _write
 // If we return false, then we need a drain event, so set that flag.
@@ -5421,8 +7240,8 @@ Writable.prototype._destroy = function (err, cb) {
   this.end();
   cb(err);
 };
-}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./_stream_duplex":18,"./internal/streams/destroy":24,"./internal/streams/stream":25,"_process":16,"core-util-is":6,"inherits":12,"process-nextick-args":15,"safe-buffer":30,"util-deprecate":36}],23:[function(require,module,exports){
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("timers").setImmediate)
+},{"./_stream_duplex":20,"./internal/streams/destroy":26,"./internal/streams/stream":27,"_process":18,"core-util-is":7,"inherits":15,"process-nextick-args":17,"safe-buffer":34,"timers":37,"util-deprecate":40}],25:[function(require,module,exports){
 'use strict';
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -5502,7 +7321,7 @@ if (util && util.inspect && util.inspect.custom) {
     return this.constructor.name + ' ' + obj;
   };
 }
-},{"safe-buffer":30,"util":4}],24:[function(require,module,exports){
+},{"safe-buffer":34,"util":4}],26:[function(require,module,exports){
 'use strict';
 
 /*<replacement>*/
@@ -5577,13 +7396,293 @@ module.exports = {
   destroy: destroy,
   undestroy: undestroy
 };
-},{"process-nextick-args":15}],25:[function(require,module,exports){
+},{"process-nextick-args":17}],27:[function(require,module,exports){
 module.exports = require('events').EventEmitter;
 
-},{"events":7}],26:[function(require,module,exports){
+},{"events":8}],28:[function(require,module,exports){
+var toString = {}.toString;
+
+module.exports = Array.isArray || function (arr) {
+  return toString.call(arr) == '[object Array]';
+};
+
+},{}],29:[function(require,module,exports){
+'use strict';
+
+var Buffer = require('safe-buffer').Buffer;
+
+var isEncoding = Buffer.isEncoding || function (encoding) {
+  encoding = '' + encoding;
+  switch (encoding && encoding.toLowerCase()) {
+    case 'hex':case 'utf8':case 'utf-8':case 'ascii':case 'binary':case 'base64':case 'ucs2':case 'ucs-2':case 'utf16le':case 'utf-16le':case 'raw':
+      return true;
+    default:
+      return false;
+  }
+};
+
+function _normalizeEncoding(enc) {
+  if (!enc) return 'utf8';
+  var retried;
+  while (true) {
+    switch (enc) {
+      case 'utf8':
+      case 'utf-8':
+        return 'utf8';
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return 'utf16le';
+      case 'latin1':
+      case 'binary':
+        return 'latin1';
+      case 'base64':
+      case 'ascii':
+      case 'hex':
+        return enc;
+      default:
+        if (retried) return; // undefined
+        enc = ('' + enc).toLowerCase();
+        retried = true;
+    }
+  }
+};
+
+// Do not cache `Buffer.isEncoding` when checking encoding names as some
+// modules monkey-patch it to support additional encodings
+function normalizeEncoding(enc) {
+  var nenc = _normalizeEncoding(enc);
+  if (typeof nenc !== 'string' && (Buffer.isEncoding === isEncoding || !isEncoding(enc))) throw new Error('Unknown encoding: ' + enc);
+  return nenc || enc;
+}
+
+// StringDecoder provides an interface for efficiently splitting a series of
+// buffers into a series of JS strings without breaking apart multi-byte
+// characters.
+exports.StringDecoder = StringDecoder;
+function StringDecoder(encoding) {
+  this.encoding = normalizeEncoding(encoding);
+  var nb;
+  switch (this.encoding) {
+    case 'utf16le':
+      this.text = utf16Text;
+      this.end = utf16End;
+      nb = 4;
+      break;
+    case 'utf8':
+      this.fillLast = utf8FillLast;
+      nb = 4;
+      break;
+    case 'base64':
+      this.text = base64Text;
+      this.end = base64End;
+      nb = 3;
+      break;
+    default:
+      this.write = simpleWrite;
+      this.end = simpleEnd;
+      return;
+  }
+  this.lastNeed = 0;
+  this.lastTotal = 0;
+  this.lastChar = Buffer.allocUnsafe(nb);
+}
+
+StringDecoder.prototype.write = function (buf) {
+  if (buf.length === 0) return '';
+  var r;
+  var i;
+  if (this.lastNeed) {
+    r = this.fillLast(buf);
+    if (r === undefined) return '';
+    i = this.lastNeed;
+    this.lastNeed = 0;
+  } else {
+    i = 0;
+  }
+  if (i < buf.length) return r ? r + this.text(buf, i) : this.text(buf, i);
+  return r || '';
+};
+
+StringDecoder.prototype.end = utf8End;
+
+// Returns only complete characters in a Buffer
+StringDecoder.prototype.text = utf8Text;
+
+// Attempts to complete a partial non-UTF-8 character using bytes from a Buffer
+StringDecoder.prototype.fillLast = function (buf) {
+  if (this.lastNeed <= buf.length) {
+    buf.copy(this.lastChar, this.lastTotal - this.lastNeed, 0, this.lastNeed);
+    return this.lastChar.toString(this.encoding, 0, this.lastTotal);
+  }
+  buf.copy(this.lastChar, this.lastTotal - this.lastNeed, 0, buf.length);
+  this.lastNeed -= buf.length;
+};
+
+// Checks the type of a UTF-8 byte, whether it's ASCII, a leading byte, or a
+// continuation byte.
+function utf8CheckByte(byte) {
+  if (byte <= 0x7F) return 0;else if (byte >> 5 === 0x06) return 2;else if (byte >> 4 === 0x0E) return 3;else if (byte >> 3 === 0x1E) return 4;
+  return -1;
+}
+
+// Checks at most 3 bytes at the end of a Buffer in order to detect an
+// incomplete multi-byte UTF-8 character. The total number of bytes (2, 3, or 4)
+// needed to complete the UTF-8 character (if applicable) are returned.
+function utf8CheckIncomplete(self, buf, i) {
+  var j = buf.length - 1;
+  if (j < i) return 0;
+  var nb = utf8CheckByte(buf[j]);
+  if (nb >= 0) {
+    if (nb > 0) self.lastNeed = nb - 1;
+    return nb;
+  }
+  if (--j < i) return 0;
+  nb = utf8CheckByte(buf[j]);
+  if (nb >= 0) {
+    if (nb > 0) self.lastNeed = nb - 2;
+    return nb;
+  }
+  if (--j < i) return 0;
+  nb = utf8CheckByte(buf[j]);
+  if (nb >= 0) {
+    if (nb > 0) {
+      if (nb === 2) nb = 0;else self.lastNeed = nb - 3;
+    }
+    return nb;
+  }
+  return 0;
+}
+
+// Validates as many continuation bytes for a multi-byte UTF-8 character as
+// needed or are available. If we see a non-continuation byte where we expect
+// one, we "replace" the validated continuation bytes we've seen so far with
+// UTF-8 replacement characters ('\ufffd'), to match v8's UTF-8 decoding
+// behavior. The continuation byte check is included three times in the case
+// where all of the continuation bytes for a character exist in the same buffer.
+// It is also done this way as a slight performance increase instead of using a
+// loop.
+function utf8CheckExtraBytes(self, buf, p) {
+  if ((buf[0] & 0xC0) !== 0x80) {
+    self.lastNeed = 0;
+    return '\ufffd'.repeat(p);
+  }
+  if (self.lastNeed > 1 && buf.length > 1) {
+    if ((buf[1] & 0xC0) !== 0x80) {
+      self.lastNeed = 1;
+      return '\ufffd'.repeat(p + 1);
+    }
+    if (self.lastNeed > 2 && buf.length > 2) {
+      if ((buf[2] & 0xC0) !== 0x80) {
+        self.lastNeed = 2;
+        return '\ufffd'.repeat(p + 2);
+      }
+    }
+  }
+}
+
+// Attempts to complete a multi-byte UTF-8 character using bytes from a Buffer.
+function utf8FillLast(buf) {
+  var p = this.lastTotal - this.lastNeed;
+  var r = utf8CheckExtraBytes(this, buf, p);
+  if (r !== undefined) return r;
+  if (this.lastNeed <= buf.length) {
+    buf.copy(this.lastChar, p, 0, this.lastNeed);
+    return this.lastChar.toString(this.encoding, 0, this.lastTotal);
+  }
+  buf.copy(this.lastChar, p, 0, buf.length);
+  this.lastNeed -= buf.length;
+}
+
+// Returns all complete UTF-8 characters in a Buffer. If the Buffer ended on a
+// partial character, the character's bytes are buffered until the required
+// number of bytes are available.
+function utf8Text(buf, i) {
+  var total = utf8CheckIncomplete(this, buf, i);
+  if (!this.lastNeed) return buf.toString('utf8', i);
+  this.lastTotal = total;
+  var end = buf.length - (total - this.lastNeed);
+  buf.copy(this.lastChar, 0, end);
+  return buf.toString('utf8', i, end);
+}
+
+// For UTF-8, a replacement character for each buffered byte of a (partial)
+// character needs to be added to the output.
+function utf8End(buf) {
+  var r = buf && buf.length ? this.write(buf) : '';
+  if (this.lastNeed) return r + '\ufffd'.repeat(this.lastTotal - this.lastNeed);
+  return r;
+}
+
+// UTF-16LE typically needs two bytes per character, but even if we have an even
+// number of bytes available, we need to check if we end on a leading/high
+// surrogate. In that case, we need to wait for the next two bytes in order to
+// decode the last character properly.
+function utf16Text(buf, i) {
+  if ((buf.length - i) % 2 === 0) {
+    var r = buf.toString('utf16le', i);
+    if (r) {
+      var c = r.charCodeAt(r.length - 1);
+      if (c >= 0xD800 && c <= 0xDBFF) {
+        this.lastNeed = 2;
+        this.lastTotal = 4;
+        this.lastChar[0] = buf[buf.length - 2];
+        this.lastChar[1] = buf[buf.length - 1];
+        return r.slice(0, -1);
+      }
+    }
+    return r;
+  }
+  this.lastNeed = 1;
+  this.lastTotal = 2;
+  this.lastChar[0] = buf[buf.length - 1];
+  return buf.toString('utf16le', i, buf.length - 1);
+}
+
+// For UTF-16LE we do not explicitly append special replacement characters if we
+// end on a partial character, we simply let v8 handle that.
+function utf16End(buf) {
+  var r = buf && buf.length ? this.write(buf) : '';
+  if (this.lastNeed) {
+    var end = this.lastTotal - this.lastNeed;
+    return r + this.lastChar.toString('utf16le', 0, end);
+  }
+  return r;
+}
+
+function base64Text(buf, i) {
+  var n = (buf.length - i) % 3;
+  if (n === 0) return buf.toString('base64', i);
+  this.lastNeed = 3 - n;
+  this.lastTotal = 3;
+  if (n === 1) {
+    this.lastChar[0] = buf[buf.length - 1];
+  } else {
+    this.lastChar[0] = buf[buf.length - 2];
+    this.lastChar[1] = buf[buf.length - 1];
+  }
+  return buf.toString('base64', i, buf.length - n);
+}
+
+function base64End(buf) {
+  var r = buf && buf.length ? this.write(buf) : '';
+  if (this.lastNeed) return r + this.lastChar.toString('base64', 0, 3 - this.lastNeed);
+  return r;
+}
+
+// Pass bytes on through for single-byte encodings (e.g. ascii, latin1, hex)
+function simpleWrite(buf) {
+  return buf.toString(this.encoding);
+}
+
+function simpleEnd(buf) {
+  return buf && buf.length ? this.write(buf) : '';
+}
+},{"safe-buffer":34}],30:[function(require,module,exports){
 module.exports = require('./readable').PassThrough
 
-},{"./readable":27}],27:[function(require,module,exports){
+},{"./readable":31}],31:[function(require,module,exports){
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = exports;
 exports.Readable = exports;
@@ -5592,13 +7691,13 @@ exports.Duplex = require('./lib/_stream_duplex.js');
 exports.Transform = require('./lib/_stream_transform.js');
 exports.PassThrough = require('./lib/_stream_passthrough.js');
 
-},{"./lib/_stream_duplex.js":18,"./lib/_stream_passthrough.js":19,"./lib/_stream_readable.js":20,"./lib/_stream_transform.js":21,"./lib/_stream_writable.js":22}],28:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":20,"./lib/_stream_passthrough.js":21,"./lib/_stream_readable.js":22,"./lib/_stream_transform.js":23,"./lib/_stream_writable.js":24}],32:[function(require,module,exports){
 module.exports = require('./readable').Transform
 
-},{"./readable":27}],29:[function(require,module,exports){
+},{"./readable":31}],33:[function(require,module,exports){
 module.exports = require('./lib/_stream_writable.js');
 
-},{"./lib/_stream_writable.js":22}],30:[function(require,module,exports){
+},{"./lib/_stream_writable.js":24}],34:[function(require,module,exports){
 /* eslint-disable node/no-deprecated-api */
 var buffer = require('buffer')
 var Buffer = buffer.Buffer
@@ -5662,7 +7761,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
   return buffer.SlowBuffer(size)
 }
 
-},{"buffer":5}],31:[function(require,module,exports){
+},{"buffer":6}],35:[function(require,module,exports){
 (function (Buffer){
 ;(function (sax) { // wrapper for non-node envs
   sax.parser = function (strict, opt) { return new SAXParser(strict, opt) }
@@ -7231,7 +9330,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
 })(typeof exports === 'undefined' ? this.sax = {} : exports)
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":5,"stream":32,"string_decoder":33}],32:[function(require,module,exports){
+},{"buffer":6,"stream":36,"string_decoder":5}],36:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -7360,307 +9459,89 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"events":7,"inherits":12,"readable-stream/duplex.js":17,"readable-stream/passthrough.js":26,"readable-stream/readable.js":27,"readable-stream/transform.js":28,"readable-stream/writable.js":29}],33:[function(require,module,exports){
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
+},{"events":8,"inherits":15,"readable-stream/duplex.js":19,"readable-stream/passthrough.js":30,"readable-stream/readable.js":31,"readable-stream/transform.js":32,"readable-stream/writable.js":33}],37:[function(require,module,exports){
+(function (setImmediate,clearImmediate){
+var nextTick = require('process/browser.js').nextTick;
+var apply = Function.prototype.apply;
+var slice = Array.prototype.slice;
+var immediateIds = {};
+var nextImmediateId = 0;
 
-'use strict';
+// DOM APIs, for completeness
 
-/*<replacement>*/
+exports.setTimeout = function() {
+  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
+};
+exports.setInterval = function() {
+  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
+};
+exports.clearTimeout =
+exports.clearInterval = function(timeout) { timeout.close(); };
 
-var Buffer = require('safe-buffer').Buffer;
-/*</replacement>*/
+function Timeout(id, clearFn) {
+  this._id = id;
+  this._clearFn = clearFn;
+}
+Timeout.prototype.unref = Timeout.prototype.ref = function() {};
+Timeout.prototype.close = function() {
+  this._clearFn.call(window, this._id);
+};
 
-var isEncoding = Buffer.isEncoding || function (encoding) {
-  encoding = '' + encoding;
-  switch (encoding && encoding.toLowerCase()) {
-    case 'hex':case 'utf8':case 'utf-8':case 'ascii':case 'binary':case 'base64':case 'ucs2':case 'ucs-2':case 'utf16le':case 'utf-16le':case 'raw':
-      return true;
-    default:
-      return false;
+// Does not start the time, just sets up the members needed.
+exports.enroll = function(item, msecs) {
+  clearTimeout(item._idleTimeoutId);
+  item._idleTimeout = msecs;
+};
+
+exports.unenroll = function(item) {
+  clearTimeout(item._idleTimeoutId);
+  item._idleTimeout = -1;
+};
+
+exports._unrefActive = exports.active = function(item) {
+  clearTimeout(item._idleTimeoutId);
+
+  var msecs = item._idleTimeout;
+  if (msecs >= 0) {
+    item._idleTimeoutId = setTimeout(function onTimeout() {
+      if (item._onTimeout)
+        item._onTimeout();
+    }, msecs);
   }
 };
 
-function _normalizeEncoding(enc) {
-  if (!enc) return 'utf8';
-  var retried;
-  while (true) {
-    switch (enc) {
-      case 'utf8':
-      case 'utf-8':
-        return 'utf8';
-      case 'ucs2':
-      case 'ucs-2':
-      case 'utf16le':
-      case 'utf-16le':
-        return 'utf16le';
-      case 'latin1':
-      case 'binary':
-        return 'latin1';
-      case 'base64':
-      case 'ascii':
-      case 'hex':
-        return enc;
-      default:
-        if (retried) return; // undefined
-        enc = ('' + enc).toLowerCase();
-        retried = true;
-    }
-  }
-};
+// That's not how node.js implements it but the exposed api is the same.
+exports.setImmediate = typeof setImmediate === "function" ? setImmediate : function(fn) {
+  var id = nextImmediateId++;
+  var args = arguments.length < 2 ? false : slice.call(arguments, 1);
 
-// Do not cache `Buffer.isEncoding` when checking encoding names as some
-// modules monkey-patch it to support additional encodings
-function normalizeEncoding(enc) {
-  var nenc = _normalizeEncoding(enc);
-  if (typeof nenc !== 'string' && (Buffer.isEncoding === isEncoding || !isEncoding(enc))) throw new Error('Unknown encoding: ' + enc);
-  return nenc || enc;
-}
+  immediateIds[id] = true;
 
-// StringDecoder provides an interface for efficiently splitting a series of
-// buffers into a series of JS strings without breaking apart multi-byte
-// characters.
-exports.StringDecoder = StringDecoder;
-function StringDecoder(encoding) {
-  this.encoding = normalizeEncoding(encoding);
-  var nb;
-  switch (this.encoding) {
-    case 'utf16le':
-      this.text = utf16Text;
-      this.end = utf16End;
-      nb = 4;
-      break;
-    case 'utf8':
-      this.fillLast = utf8FillLast;
-      nb = 4;
-      break;
-    case 'base64':
-      this.text = base64Text;
-      this.end = base64End;
-      nb = 3;
-      break;
-    default:
-      this.write = simpleWrite;
-      this.end = simpleEnd;
-      return;
-  }
-  this.lastNeed = 0;
-  this.lastTotal = 0;
-  this.lastChar = Buffer.allocUnsafe(nb);
-}
-
-StringDecoder.prototype.write = function (buf) {
-  if (buf.length === 0) return '';
-  var r;
-  var i;
-  if (this.lastNeed) {
-    r = this.fillLast(buf);
-    if (r === undefined) return '';
-    i = this.lastNeed;
-    this.lastNeed = 0;
-  } else {
-    i = 0;
-  }
-  if (i < buf.length) return r ? r + this.text(buf, i) : this.text(buf, i);
-  return r || '';
-};
-
-StringDecoder.prototype.end = utf8End;
-
-// Returns only complete characters in a Buffer
-StringDecoder.prototype.text = utf8Text;
-
-// Attempts to complete a partial non-UTF-8 character using bytes from a Buffer
-StringDecoder.prototype.fillLast = function (buf) {
-  if (this.lastNeed <= buf.length) {
-    buf.copy(this.lastChar, this.lastTotal - this.lastNeed, 0, this.lastNeed);
-    return this.lastChar.toString(this.encoding, 0, this.lastTotal);
-  }
-  buf.copy(this.lastChar, this.lastTotal - this.lastNeed, 0, buf.length);
-  this.lastNeed -= buf.length;
-};
-
-// Checks the type of a UTF-8 byte, whether it's ASCII, a leading byte, or a
-// continuation byte. If an invalid byte is detected, -2 is returned.
-function utf8CheckByte(byte) {
-  if (byte <= 0x7F) return 0;else if (byte >> 5 === 0x06) return 2;else if (byte >> 4 === 0x0E) return 3;else if (byte >> 3 === 0x1E) return 4;
-  return byte >> 6 === 0x02 ? -1 : -2;
-}
-
-// Checks at most 3 bytes at the end of a Buffer in order to detect an
-// incomplete multi-byte UTF-8 character. The total number of bytes (2, 3, or 4)
-// needed to complete the UTF-8 character (if applicable) are returned.
-function utf8CheckIncomplete(self, buf, i) {
-  var j = buf.length - 1;
-  if (j < i) return 0;
-  var nb = utf8CheckByte(buf[j]);
-  if (nb >= 0) {
-    if (nb > 0) self.lastNeed = nb - 1;
-    return nb;
-  }
-  if (--j < i || nb === -2) return 0;
-  nb = utf8CheckByte(buf[j]);
-  if (nb >= 0) {
-    if (nb > 0) self.lastNeed = nb - 2;
-    return nb;
-  }
-  if (--j < i || nb === -2) return 0;
-  nb = utf8CheckByte(buf[j]);
-  if (nb >= 0) {
-    if (nb > 0) {
-      if (nb === 2) nb = 0;else self.lastNeed = nb - 3;
-    }
-    return nb;
-  }
-  return 0;
-}
-
-// Validates as many continuation bytes for a multi-byte UTF-8 character as
-// needed or are available. If we see a non-continuation byte where we expect
-// one, we "replace" the validated continuation bytes we've seen so far with
-// a single UTF-8 replacement character ('\ufffd'), to match v8's UTF-8 decoding
-// behavior. The continuation byte check is included three times in the case
-// where all of the continuation bytes for a character exist in the same buffer.
-// It is also done this way as a slight performance increase instead of using a
-// loop.
-function utf8CheckExtraBytes(self, buf, p) {
-  if ((buf[0] & 0xC0) !== 0x80) {
-    self.lastNeed = 0;
-    return '\ufffd';
-  }
-  if (self.lastNeed > 1 && buf.length > 1) {
-    if ((buf[1] & 0xC0) !== 0x80) {
-      self.lastNeed = 1;
-      return '\ufffd';
-    }
-    if (self.lastNeed > 2 && buf.length > 2) {
-      if ((buf[2] & 0xC0) !== 0x80) {
-        self.lastNeed = 2;
-        return '\ufffd';
+  nextTick(function onNextTick() {
+    if (immediateIds[id]) {
+      // fn.call() is faster so we optimize for the common use-case
+      // @see http://jsperf.com/call-apply-segu
+      if (args) {
+        fn.apply(null, args);
+      } else {
+        fn.call(null);
       }
+      // Prevent ids from leaking
+      exports.clearImmediate(id);
     }
-  }
-}
+  });
 
-// Attempts to complete a multi-byte UTF-8 character using bytes from a Buffer.
-function utf8FillLast(buf) {
-  var p = this.lastTotal - this.lastNeed;
-  var r = utf8CheckExtraBytes(this, buf, p);
-  if (r !== undefined) return r;
-  if (this.lastNeed <= buf.length) {
-    buf.copy(this.lastChar, p, 0, this.lastNeed);
-    return this.lastChar.toString(this.encoding, 0, this.lastTotal);
-  }
-  buf.copy(this.lastChar, p, 0, buf.length);
-  this.lastNeed -= buf.length;
-}
+  return id;
+};
 
-// Returns all complete UTF-8 characters in a Buffer. If the Buffer ended on a
-// partial character, the character's bytes are buffered until the required
-// number of bytes are available.
-function utf8Text(buf, i) {
-  var total = utf8CheckIncomplete(this, buf, i);
-  if (!this.lastNeed) return buf.toString('utf8', i);
-  this.lastTotal = total;
-  var end = buf.length - (total - this.lastNeed);
-  buf.copy(this.lastChar, 0, end);
-  return buf.toString('utf8', i, end);
-}
-
-// For UTF-8, a replacement character is added when ending on a partial
-// character.
-function utf8End(buf) {
-  var r = buf && buf.length ? this.write(buf) : '';
-  if (this.lastNeed) return r + '\ufffd';
-  return r;
-}
-
-// UTF-16LE typically needs two bytes per character, but even if we have an even
-// number of bytes available, we need to check if we end on a leading/high
-// surrogate. In that case, we need to wait for the next two bytes in order to
-// decode the last character properly.
-function utf16Text(buf, i) {
-  if ((buf.length - i) % 2 === 0) {
-    var r = buf.toString('utf16le', i);
-    if (r) {
-      var c = r.charCodeAt(r.length - 1);
-      if (c >= 0xD800 && c <= 0xDBFF) {
-        this.lastNeed = 2;
-        this.lastTotal = 4;
-        this.lastChar[0] = buf[buf.length - 2];
-        this.lastChar[1] = buf[buf.length - 1];
-        return r.slice(0, -1);
-      }
-    }
-    return r;
-  }
-  this.lastNeed = 1;
-  this.lastTotal = 2;
-  this.lastChar[0] = buf[buf.length - 1];
-  return buf.toString('utf16le', i, buf.length - 1);
-}
-
-// For UTF-16LE we do not explicitly append special replacement characters if we
-// end on a partial character, we simply let v8 handle that.
-function utf16End(buf) {
-  var r = buf && buf.length ? this.write(buf) : '';
-  if (this.lastNeed) {
-    var end = this.lastTotal - this.lastNeed;
-    return r + this.lastChar.toString('utf16le', 0, end);
-  }
-  return r;
-}
-
-function base64Text(buf, i) {
-  var n = (buf.length - i) % 3;
-  if (n === 0) return buf.toString('base64', i);
-  this.lastNeed = 3 - n;
-  this.lastTotal = 3;
-  if (n === 1) {
-    this.lastChar[0] = buf[buf.length - 1];
-  } else {
-    this.lastChar[0] = buf[buf.length - 2];
-    this.lastChar[1] = buf[buf.length - 1];
-  }
-  return buf.toString('base64', i, buf.length - n);
-}
-
-function base64End(buf) {
-  var r = buf && buf.length ? this.write(buf) : '';
-  if (this.lastNeed) return r + this.lastChar.toString('base64', 0, 3 - this.lastNeed);
-  return r;
-}
-
-// Pass bytes on through for single-byte encodings (e.g. ascii, latin1, hex)
-function simpleWrite(buf) {
-  return buf.toString(this.encoding);
-}
-
-function simpleEnd(buf) {
-  return buf && buf.length ? this.write(buf) : '';
-}
-},{"safe-buffer":30}],34:[function(require,module,exports){
+exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate : function(id) {
+  delete immediateIds[id];
+};
+}).call(this,require("timers").setImmediate,require("timers").clearImmediate)
+},{"process/browser.js":18,"timers":37}],38:[function(require,module,exports){
 module.exports = require("./src/api.js");
 
-},{"./src/api.js":35}],35:[function(require,module,exports){
+},{"./src/api.js":39}],39:[function(require,module,exports){
 var api = function (who) {
 
     var _methods = function () {
@@ -7846,7 +9727,7 @@ var api = function (who) {
 };
 
 module.exports = exports = api;
-},{}],36:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 (function (global){
 
 /**
@@ -7917,7 +9798,7 @@ function config (name) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],37:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 "use strict";
 
 // hog feature
@@ -7958,8 +9839,6 @@ module.exports = {
       return x + (xnext - x + width) / 2 + ~~(padding / 2) - 1;
     }).attr("x2", function (d) {
       var width = d3.min([x_scale(dom1 / d.max), height]);
-      // var x = x_scale((dom1/d.max) * d.max_in_hog);
-      // var xnext = x_scale((dom1/d.max) * (d.max_in_hog + 1));
       var x = width * (d.max_in_hog - 1);
       var xnext = width * d.max_in_hog;
 
@@ -7972,10 +9851,6 @@ module.exports = {
     var color = function color() {
       return "grey";
     };
-
-    // if (!color) {
-    //   color = () => "grey";
-    // }
 
     feature.colors = function (c) {
       if (!arguments.length) {
@@ -8031,13 +9906,13 @@ module.exports = {
       var width = d3.min([x_scale(dom1 / g.max), height]);
       var posx = g.hog_start * width + g.max_in_hog * width / 2;
       return "translate(" + posx + ", 0)";
-    }).attr('class', function (d) {
+    }).style('cursor', 'pointer').attr('class', function (d) {
       return d.name;
     });
 
-    g.append('circle').attr('cx', 0).attr('cy', -6).attr('r', 2).attr('fill', 'black');
-    g.append('circle').attr('cx', 0).attr('cy', -12).attr('r', 2).attr('fill', 'black');
-    g.append('circle').attr('cx', 0).attr('cy', -18).attr('r', 2).attr('fill', 'black');
+    g.append('circle').attr('cx', 0).attr('cy', -12).attr('r', 6).attr('stroke', '#95a5a6').style('cursor', 'pointer').style('fill', 'none');
+
+    g.append('text').attr('x', 0).attr('y', -11).attr('text-anchor', 'middle').attr('alignment-baseline', 'middle').style('fill', '#95a5a6').style('font-size', '9px').style('cursor', 'pointer').text('?');
   }).distribute(function (elems, x_scale) {
     var track = this;
     var padding = ~~(track.height() - track.height() * 0.8) / 2;
@@ -8052,7 +9927,7 @@ module.exports = {
   })
 };
 
-},{}],38:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 'use strict';
 
 module.exports = function Hog_state() {
@@ -8144,7 +10019,7 @@ module.exports = function Hog_state() {
   };
 };
 
-},{}],39:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 'use strict';
 
 /* global d3 */
@@ -8514,7 +10389,7 @@ function iHam() {
 
 module.exports = iHam;
 
-},{"./features":37,"./hog_state":38,"./tooltips":40,"./utils.js":41,"./xcoords":42,"iham-parsers":9,"tnt.api":34}],40:[function(require,module,exports){
+},{"./features":41,"./hog_state":42,"./tooltips":44,"./utils.js":45,"./xcoords":46,"iham-parsers":10,"tnt.api":38}],44:[function(require,module,exports){
 "use strict";
 
 var _mouse_over_node = void 0;
@@ -8650,7 +10525,7 @@ module.exports = {
   }
 };
 
-},{}],41:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -8694,7 +10569,7 @@ module.exports = {
   }
 };
 
-},{}],42:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 "use strict";
 
 module.exports = function (arr, maxs, current_hog_state, fam_data, is_first) {
