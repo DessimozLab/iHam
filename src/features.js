@@ -51,8 +51,6 @@ module.exports = {
         })
         .attr("x2", function (d) {
           const width = d3.min([x_scale(dom1 / d.max), height]);
-          // var x = x_scale((dom1/d.max) * d.max_in_hog);
-          // var xnext = x_scale((dom1/d.max) * (d.max_in_hog + 1));
           const x = width * (d.max_in_hog - 1);
           const xnext = width * d.max_in_hog;
 
@@ -63,10 +61,6 @@ module.exports = {
     const feature = tnt.board.track.feature();
 
     let color = () => "grey";
-
-    // if (!color) {
-    //   color = () => "grey";
-    // }
 
     feature.colors = function (c) {
       if (!arguments.length) {
@@ -139,27 +133,28 @@ module.exports = {
           const posx = (g.hog_start * width) + (g.max_in_hog * width) / 2;
           return `translate(${posx}, 0)`;
         })
+        .style('cursor', 'pointer')
         .attr('class', d => d.name);
 
       g
         .append('circle')
         .attr('cx', 0)
-        .attr('cy', -6)
-        .attr('r', 2)
-        .attr('fill', 'black');
-      g
-        .append('circle')
-        .attr('cx', 0)
         .attr('cy', -12)
-        .attr('r', 2)
-        .attr('fill', 'black');
-      g
-        .append('circle')
-        .attr('cx', 0)
-        .attr('cy', -18)
-        .attr('r', 2)
-        .attr('fill', 'black');
+        .attr('r', 6)
+        .attr('stroke', '#95a5a6')
+        .style('cursor', 'pointer')
+        .style('fill', 'none');
 
+      g
+        .append('text')
+        .attr('x', 0)
+        .attr('y', -11)
+        .attr('text-anchor', 'middle')
+        .attr('alignment-baseline', 'middle')
+        .style('fill', '#95a5a6')
+        .style('font-size', '9px')
+        .style('cursor', 'pointer')
+        .text('?');
     })
     .distribute(function (elems, x_scale) {
       const track = this;
