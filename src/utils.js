@@ -1,17 +1,4 @@
 module.exports = {
-  compute_size_annotations: function (maxs, tot_width, taxa_name) {
-    if (taxa_name === 'LUCA') {
-      return ~~(tot_width * 0.6)
-    }
-
-    let max_number_square = 0;
-    const arrayLength = maxs[taxa_name].length;
-    for (let i = 0; i < arrayLength; i++) {
-      max_number_square += maxs[taxa_name][i];
-    }
-
-    return max_number_square;
-  },
   get_maxs: function (data) {
     const maxs = {};
     let i;

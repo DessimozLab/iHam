@@ -1,12 +1,12 @@
 /* global d3 */
 
 const apijs = require('tnt.api');
-const {compute_size_annotations, get_maxs} = require('./utils.js');
+const {get_maxs} = require('./utils.js');
 const hog_state = require('./hog_state');
 const {hog_feature, hog_gene_feature, hog_group} = require('./features');
 const {parse_orthoxml} = require('iham-parsers');
 const genes_2_xcoords = require('./xcoords');
-const {gene_tooltip, mouse_over_node, tree_node_tooltip, hog_header_tooltip} = require('./tooltips');
+const {gene_tooltip, tree_node_tooltip, hog_header_tooltip} = require('./tooltips');
 
 const dispatch = d3.dispatch("node_selected", "hogs_removed", "click", "updating", "updated");
 
@@ -30,9 +30,6 @@ function iHam() {
   let tree_width = 200;
   let board_width = 800;
 
-  const min_width_tree_container = 100;
-  const min_width_annot_container = 100;
-
   let gene_color;
   let update_nodes;
 
@@ -40,8 +37,6 @@ function iHam() {
   const config = {
     gene_tooltips_on: "click",
     query_gene: {},
-    // data_per_species: null, // TODO: this should be called simply data?
-    // tree_obj: null,
     fam_data: null,
     orthoxml: null,
     newick: null,
@@ -50,17 +45,8 @@ function iHam() {
     // display or not internal node label
     show_internal_labels: true,
 
-    // Redirection url prefix for tooltip on genes
-    // oma_info_url_template: '/cgi-bin/gateway.pl?f=DisplayEntry&amp;p1=',
-
-    // text div id
-    // current_level_id: 'current_level_text',
-    // post_init: () => {
-    // },
-
     frozen_node: null,
 
-    //
     label_height: 20,
   };
 
@@ -126,7 +112,6 @@ function iHam() {
       dispatch.updating.call(this);
 
       if (config.frozen_node) {
-        // board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
         const removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
         dispatch.hogs_removed.call(this, removed_hogs);
         board.width(board_width);
@@ -136,29 +121,24 @@ function iHam() {
         return;
       }
 
-      // setTimeout(function () {
-        curr_node = node;
-        dispatch.node_selected.call(this, node);
-        current_opened_node = node;
-        current_opened_taxa_name = node.node_name();
-        // board.width(compute_size_annotations(maxs, tot_width, node.node_name()));
-        const removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
-        dispatch.hogs_removed.call(this, removed_hogs);
-        board.width(board_width);
-        // update_board();
-        board.update();
+      curr_node = node;
+      dispatch.node_selected.call(this, node);
+      current_opened_node = node;
+      current_opened_taxa_name = node.node_name();
+      const removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
+      dispatch.hogs_removed.call(this, removed_hogs);
+      board.width(board_width);
+      board.update();
 
-        state.highlight_condition = n => node.id() === n.id();
-        tree.update_nodes();
-        dispatch.updated.call(this);
-      // }, 0);
+      state.highlight_condition = n => node.id() === n.id();
+      tree.update_nodes();
+      dispatch.updated.call(this);
     };
 
     // Tree
     tree = tnt.tree()
       .data(tree_obj)
       .layout(tnt.tree.layout.vertical()
-        // .width(Math.max(240, ~~(tot_width * 0.4)))
           .width(tree_width)
           .scale(false)
       )
@@ -219,10 +199,6 @@ function iHam() {
       })
       .on("mouseover", function (node) {
         update_nodes.call(this, node);
-        // mouse_over_node.display.call(this, node, div)
-      })
-      .on("mouseout", function () {
-        // mouse_over_node.close();
       })
       .node_display(node_display)
       .branch_color("black");
@@ -237,7 +213,6 @@ function iHam() {
       .zoom_in(1)
       .allow_drag(false)
       .to(2)
-      // .width(compute_size_annotations(maxs, tot_width, current_opened_taxa_name) * (config.label_height + 2));
       .width(board_width);
 
     // Board's track
@@ -323,17 +298,10 @@ function iHam() {
       .track(track);
 
     iHamVis(div);
-    // update_nodes(tree.root());
-    // set_widths();
   };
 
   apijs(theme)
     .getset(config);
-
-  // function update_board() {
-    // update the board
-  // board.update();
-  // }
 
   function set_widths() {
     if (board) {
@@ -350,7 +318,6 @@ function iHam() {
     }
 
     if (board) {
-      // update_board();
       board.update();
     }
   }
@@ -383,7 +350,6 @@ function iHam() {
 
     genes_feature.colors(cb);
     board.width(board_width);
-    // update_board();
     board.update();
     return this;
   };

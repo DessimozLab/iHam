@@ -5,22 +5,6 @@ let _hog_header_tooltip;
 
 
 module.exports = {
-  mouse_over_node: {
-    display: function (node, div) {
-      const obj = {
-        body: node.node_name()
-      };
-      _mouse_over_node = tooltip.plain()
-        .id('node_over_tooltip')
-        .width(140)
-        .show_closer(false)
-        .container(div)
-        .call(this, obj);
-    },
-    close: () => {
-      _mouse_over_node.close();
-    }
-  },
   tree_node_tooltip: {
     display: function (node, div, actions, frozen) { // actions: (on collapse / expand) and (on freeze)
       const obj = {};
