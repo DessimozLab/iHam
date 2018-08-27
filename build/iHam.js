@@ -10,7 +10,11 @@ module.exports = require("./index.js");
 //export default iHam;
 module.exports = require('./src/iHam.js');
 
+<<<<<<< HEAD
 },{"./src/iHam.js":43}],3:[function(require,module,exports){
+=======
+},{"./src/iHam.js":40}],3:[function(require,module,exports){
+>>>>>>> three-dots-fix
 'use strict'
 
 exports.byteLength = byteLength
@@ -186,6 +190,293 @@ function fromByteArray (uint8) {
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
+<<<<<<< HEAD
+=======
+
+'use strict';
+
+/*<replacement>*/
+
+var Buffer = require('safe-buffer').Buffer;
+/*</replacement>*/
+
+var isEncoding = Buffer.isEncoding || function (encoding) {
+  encoding = '' + encoding;
+  switch (encoding && encoding.toLowerCase()) {
+    case 'hex':case 'utf8':case 'utf-8':case 'ascii':case 'binary':case 'base64':case 'ucs2':case 'ucs-2':case 'utf16le':case 'utf-16le':case 'raw':
+      return true;
+    default:
+      return false;
+  }
+};
+
+function _normalizeEncoding(enc) {
+  if (!enc) return 'utf8';
+  var retried;
+  while (true) {
+    switch (enc) {
+      case 'utf8':
+      case 'utf-8':
+        return 'utf8';
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return 'utf16le';
+      case 'latin1':
+      case 'binary':
+        return 'latin1';
+      case 'base64':
+      case 'ascii':
+      case 'hex':
+        return enc;
+      default:
+        if (retried) return; // undefined
+        enc = ('' + enc).toLowerCase();
+        retried = true;
+    }
+  }
+};
+
+// Do not cache `Buffer.isEncoding` when checking encoding names as some
+// modules monkey-patch it to support additional encodings
+function normalizeEncoding(enc) {
+  var nenc = _normalizeEncoding(enc);
+  if (typeof nenc !== 'string' && (Buffer.isEncoding === isEncoding || !isEncoding(enc))) throw new Error('Unknown encoding: ' + enc);
+  return nenc || enc;
+}
+
+// StringDecoder provides an interface for efficiently splitting a series of
+// buffers into a series of JS strings without breaking apart multi-byte
+// characters.
+exports.StringDecoder = StringDecoder;
+function StringDecoder(encoding) {
+  this.encoding = normalizeEncoding(encoding);
+  var nb;
+  switch (this.encoding) {
+    case 'utf16le':
+      this.text = utf16Text;
+      this.end = utf16End;
+      nb = 4;
+      break;
+    case 'utf8':
+      this.fillLast = utf8FillLast;
+      nb = 4;
+      break;
+    case 'base64':
+      this.text = base64Text;
+      this.end = base64End;
+      nb = 3;
+      break;
+    default:
+      this.write = simpleWrite;
+      this.end = simpleEnd;
+      return;
+  }
+  this.lastNeed = 0;
+  this.lastTotal = 0;
+  this.lastChar = Buffer.allocUnsafe(nb);
+}
+
+StringDecoder.prototype.write = function (buf) {
+  if (buf.length === 0) return '';
+  var r;
+  var i;
+  if (this.lastNeed) {
+    r = this.fillLast(buf);
+    if (r === undefined) return '';
+    i = this.lastNeed;
+    this.lastNeed = 0;
+  } else {
+    i = 0;
+  }
+  if (i < buf.length) return r ? r + this.text(buf, i) : this.text(buf, i);
+  return r || '';
+};
+
+StringDecoder.prototype.end = utf8End;
+
+// Returns only complete characters in a Buffer
+StringDecoder.prototype.text = utf8Text;
+
+// Attempts to complete a partial non-UTF-8 character using bytes from a Buffer
+StringDecoder.prototype.fillLast = function (buf) {
+  if (this.lastNeed <= buf.length) {
+    buf.copy(this.lastChar, this.lastTotal - this.lastNeed, 0, this.lastNeed);
+    return this.lastChar.toString(this.encoding, 0, this.lastTotal);
+  }
+  buf.copy(this.lastChar, this.lastTotal - this.lastNeed, 0, buf.length);
+  this.lastNeed -= buf.length;
+};
+
+// Checks the type of a UTF-8 byte, whether it's ASCII, a leading byte, or a
+// continuation byte. If an invalid byte is detected, -2 is returned.
+function utf8CheckByte(byte) {
+  if (byte <= 0x7F) return 0;else if (byte >> 5 === 0x06) return 2;else if (byte >> 4 === 0x0E) return 3;else if (byte >> 3 === 0x1E) return 4;
+  return byte >> 6 === 0x02 ? -1 : -2;
+}
+
+// Checks at most 3 bytes at the end of a Buffer in order to detect an
+// incomplete multi-byte UTF-8 character. The total number of bytes (2, 3, or 4)
+// needed to complete the UTF-8 character (if applicable) are returned.
+function utf8CheckIncomplete(self, buf, i) {
+  var j = buf.length - 1;
+  if (j < i) return 0;
+  var nb = utf8CheckByte(buf[j]);
+  if (nb >= 0) {
+    if (nb > 0) self.lastNeed = nb - 1;
+    return nb;
+  }
+  if (--j < i || nb === -2) return 0;
+  nb = utf8CheckByte(buf[j]);
+  if (nb >= 0) {
+    if (nb > 0) self.lastNeed = nb - 2;
+    return nb;
+  }
+  if (--j < i || nb === -2) return 0;
+  nb = utf8CheckByte(buf[j]);
+  if (nb >= 0) {
+    if (nb > 0) {
+      if (nb === 2) nb = 0;else self.lastNeed = nb - 3;
+    }
+    return nb;
+  }
+  return 0;
+}
+
+// Validates as many continuation bytes for a multi-byte UTF-8 character as
+// needed or are available. If we see a non-continuation byte where we expect
+// one, we "replace" the validated continuation bytes we've seen so far with
+// a single UTF-8 replacement character ('\ufffd'), to match v8's UTF-8 decoding
+// behavior. The continuation byte check is included three times in the case
+// where all of the continuation bytes for a character exist in the same buffer.
+// It is also done this way as a slight performance increase instead of using a
+// loop.
+function utf8CheckExtraBytes(self, buf, p) {
+  if ((buf[0] & 0xC0) !== 0x80) {
+    self.lastNeed = 0;
+    return '\ufffd';
+  }
+  if (self.lastNeed > 1 && buf.length > 1) {
+    if ((buf[1] & 0xC0) !== 0x80) {
+      self.lastNeed = 1;
+      return '\ufffd';
+    }
+    if (self.lastNeed > 2 && buf.length > 2) {
+      if ((buf[2] & 0xC0) !== 0x80) {
+        self.lastNeed = 2;
+        return '\ufffd';
+      }
+    }
+  }
+}
+
+// Attempts to complete a multi-byte UTF-8 character using bytes from a Buffer.
+function utf8FillLast(buf) {
+  var p = this.lastTotal - this.lastNeed;
+  var r = utf8CheckExtraBytes(this, buf, p);
+  if (r !== undefined) return r;
+  if (this.lastNeed <= buf.length) {
+    buf.copy(this.lastChar, p, 0, this.lastNeed);
+    return this.lastChar.toString(this.encoding, 0, this.lastTotal);
+  }
+  buf.copy(this.lastChar, p, 0, buf.length);
+  this.lastNeed -= buf.length;
+}
+
+// Returns all complete UTF-8 characters in a Buffer. If the Buffer ended on a
+// partial character, the character's bytes are buffered until the required
+// number of bytes are available.
+function utf8Text(buf, i) {
+  var total = utf8CheckIncomplete(this, buf, i);
+  if (!this.lastNeed) return buf.toString('utf8', i);
+  this.lastTotal = total;
+  var end = buf.length - (total - this.lastNeed);
+  buf.copy(this.lastChar, 0, end);
+  return buf.toString('utf8', i, end);
+}
+
+// For UTF-8, a replacement character is added when ending on a partial
+// character.
+function utf8End(buf) {
+  var r = buf && buf.length ? this.write(buf) : '';
+  if (this.lastNeed) return r + '\ufffd';
+  return r;
+}
+
+// UTF-16LE typically needs two bytes per character, but even if we have an even
+// number of bytes available, we need to check if we end on a leading/high
+// surrogate. In that case, we need to wait for the next two bytes in order to
+// decode the last character properly.
+function utf16Text(buf, i) {
+  if ((buf.length - i) % 2 === 0) {
+    var r = buf.toString('utf16le', i);
+    if (r) {
+      var c = r.charCodeAt(r.length - 1);
+      if (c >= 0xD800 && c <= 0xDBFF) {
+        this.lastNeed = 2;
+        this.lastTotal = 4;
+        this.lastChar[0] = buf[buf.length - 2];
+        this.lastChar[1] = buf[buf.length - 1];
+        return r.slice(0, -1);
+      }
+    }
+    return r;
+  }
+  this.lastNeed = 1;
+  this.lastTotal = 2;
+  this.lastChar[0] = buf[buf.length - 1];
+  return buf.toString('utf16le', i, buf.length - 1);
+}
+
+// For UTF-16LE we do not explicitly append special replacement characters if we
+// end on a partial character, we simply let v8 handle that.
+function utf16End(buf) {
+  var r = buf && buf.length ? this.write(buf) : '';
+  if (this.lastNeed) {
+    var end = this.lastTotal - this.lastNeed;
+    return r + this.lastChar.toString('utf16le', 0, end);
+  }
+  return r;
+}
+
+function base64Text(buf, i) {
+  var n = (buf.length - i) % 3;
+  if (n === 0) return buf.toString('base64', i);
+  this.lastNeed = 3 - n;
+  this.lastTotal = 3;
+  if (n === 1) {
+    this.lastChar[0] = buf[buf.length - 1];
+  } else {
+    this.lastChar[0] = buf[buf.length - 2];
+    this.lastChar[1] = buf[buf.length - 1];
+  }
+  return buf.toString('base64', i, buf.length - n);
+}
+
+function base64End(buf) {
+  var r = buf && buf.length ? this.write(buf) : '';
+  if (this.lastNeed) return r + this.lastChar.toString('base64', 0, 3 - this.lastNeed);
+  return r;
+}
+
+// Pass bytes on through for single-byte encodings (e.g. ascii, latin1, hex)
+function simpleWrite(buf) {
+  return buf.toString(this.encoding);
+}
+
+function simpleEnd(buf) {
+  return buf && buf.length ? this.write(buf) : '';
+}
+},{"safe-buffer":32}],6:[function(require,module,exports){
+/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <https://feross.org>
+ * @license  MIT
+ */
+/* eslint-disable no-proto */
+>>>>>>> three-dots-fix
 
 'use strict';
 
@@ -2352,7 +2643,11 @@ function objectToString(o) {
 }
 
 }).call(this,{"isBuffer":require("../../is-buffer/index.js")})
+<<<<<<< HEAD
 },{"../../is-buffer/index.js":16}],8:[function(require,module,exports){
+=======
+},{"../../is-buffer/index.js":14}],8:[function(require,module,exports){
+>>>>>>> three-dots-fix
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -4331,6 +4626,7 @@ module.exports = {
 
         } // toPhyloXMLhelper
 
+<<<<<<< HEAD
         function addSingleElement(elemName, elemValue, object, attributeNames) {
             if ((elemValue !== null) && (elemValue !== undefined)) {
                 if (typeof elemValue === 'string' || elemValue instanceof String) {
@@ -4352,6 +4648,18 @@ module.exports = {
                 x += ( '>' + elemValue + '</' + elemName + '>\n');
             }
         }
+=======
+},{}],9:[function(require,module,exports){
+exports.read = function (buffer, offset, isLE, mLen, nBytes) {
+  var e, m
+  var eLen = (nBytes * 8) - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var nBits = -7
+  var i = isLE ? (nBytes - 1) : 0
+  var d = isLE ? -1 : 1
+  var s = buffer[offset + i]
+>>>>>>> three-dots-fix
 
         function open(elemName, object, attributeNames) {
             if (object && attributeNames && attributeNames.length > 0) {
@@ -4460,6 +4768,7 @@ module.exports = {
     // Main functions
     // --------------------------------------------------------------
 
+<<<<<<< HEAD
     /**
      * To parse phyloXML formatted trees from a stream asynchronously.
      *
@@ -4483,6 +4792,10 @@ module.exports = {
             //    var str = JSON.stringify(_phylogenies[i], null, 2);
             //}
         });
+=======
+},{}],10:[function(require,module,exports){
+// module.exports = require("./src/xmlconverter.js");
+>>>>>>> three-dots-fix
 
         process.stdout.on('drain', function () {
             stream.resume();
@@ -4529,6 +4842,7 @@ module.exports = {
         return phyloXml.toPhyloXML_(phy, decPointsMax);
     };
 
+<<<<<<< HEAD
     // --------------------------------------------------------------
     // For exporting
     // --------------------------------------------------------------
@@ -4541,6 +4855,9 @@ module.exports = {
 })();
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"_process":18,"sax":35}],13:[function(require,module,exports){
+=======
+},{"./src/newick.js":11,"./src/xmlconverter.js":12}],11:[function(require,module,exports){
+>>>>>>> three-dots-fix
 /**
  * Collection of functions operating on a tree
  *
@@ -4627,7 +4944,11 @@ module.exports = {
         return rec_trav(t1, t2);
     }
 };
+<<<<<<< HEAD
 },{}],14:[function(require,module,exports){
+=======
+},{}],12:[function(require,module,exports){
+>>>>>>> three-dots-fix
 var sax = require('sax');
 var newick = require("./newick.js");
 var phyloxml = require("./phyloxml.js");
@@ -4870,7 +5191,11 @@ var Converter = module.exports = function(tree, source, saxOptions) {
     };
 };
 
+<<<<<<< HEAD
 },{"./newick.js":11,"./phyloxml.js":12,"./tree_utils.js":13,"sax":35}],15:[function(require,module,exports){
+=======
+},{"./newick.js":11,"sax":33}],13:[function(require,module,exports){
+>>>>>>> three-dots-fix
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -4895,7 +5220,11 @@ if (typeof Object.create === 'function') {
   }
 }
 
+<<<<<<< HEAD
 },{}],16:[function(require,module,exports){
+=======
+},{}],14:[function(require,module,exports){
+>>>>>>> three-dots-fix
 /*!
  * Determine if an object is a Buffer
  *
@@ -4918,7 +5247,11 @@ function isSlowBuffer (obj) {
   return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
 }
 
+<<<<<<< HEAD
 },{}],17:[function(require,module,exports){
+=======
+},{}],15:[function(require,module,exports){
+>>>>>>> three-dots-fix
 (function (process){
 'use strict';
 
@@ -5280,7 +5613,11 @@ function forEach(xs, f) {
     f(xs[i], i);
   }
 }
+<<<<<<< HEAD
 },{"./_stream_readable":22,"./_stream_writable":24,"core-util-is":7,"inherits":15,"process-nextick-args":17}],21:[function(require,module,exports){
+=======
+},{"./_stream_readable":20,"./_stream_writable":22,"core-util-is":7,"inherits":13,"process-nextick-args":15}],19:[function(require,module,exports){
+>>>>>>> three-dots-fix
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -5328,7 +5665,11 @@ function PassThrough(options) {
 PassThrough.prototype._transform = function (chunk, encoding, cb) {
   cb(null, chunk);
 };
+<<<<<<< HEAD
 },{"./_stream_transform":23,"core-util-is":7,"inherits":15}],22:[function(require,module,exports){
+=======
+},{"./_stream_transform":21,"core-util-is":7,"inherits":13}],20:[function(require,module,exports){
+>>>>>>> three-dots-fix
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -6346,7 +6687,11 @@ function indexOf(xs, x) {
   return -1;
 }
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+<<<<<<< HEAD
 },{"./_stream_duplex":20,"./internal/streams/BufferList":25,"./internal/streams/destroy":26,"./internal/streams/stream":27,"_process":18,"core-util-is":7,"events":8,"inherits":15,"isarray":28,"process-nextick-args":17,"safe-buffer":34,"string_decoder/":29,"util":4}],23:[function(require,module,exports){
+=======
+},{"./_stream_duplex":18,"./internal/streams/BufferList":23,"./internal/streams/destroy":24,"./internal/streams/stream":25,"_process":16,"core-util-is":7,"events":8,"inherits":13,"isarray":26,"process-nextick-args":15,"safe-buffer":32,"string_decoder/":27,"util":4}],21:[function(require,module,exports){
+>>>>>>> three-dots-fix
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -6561,8 +6906,13 @@ function done(stream, er, data) {
 
   return stream.push(null);
 }
+<<<<<<< HEAD
 },{"./_stream_duplex":20,"core-util-is":7,"inherits":15}],24:[function(require,module,exports){
 (function (process,global,setImmediate){
+=======
+},{"./_stream_duplex":18,"core-util-is":7,"inherits":13}],22:[function(require,module,exports){
+(function (process,global){
+>>>>>>> three-dots-fix
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -7240,8 +7590,13 @@ Writable.prototype._destroy = function (err, cb) {
   this.end();
   cb(err);
 };
+<<<<<<< HEAD
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("timers").setImmediate)
 },{"./_stream_duplex":20,"./internal/streams/destroy":26,"./internal/streams/stream":27,"_process":18,"core-util-is":7,"inherits":15,"process-nextick-args":17,"safe-buffer":34,"timers":37,"util-deprecate":40}],25:[function(require,module,exports){
+=======
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./_stream_duplex":18,"./internal/streams/destroy":24,"./internal/streams/stream":25,"_process":16,"core-util-is":7,"inherits":13,"process-nextick-args":15,"safe-buffer":32,"util-deprecate":37}],23:[function(require,module,exports){
+>>>>>>> three-dots-fix
 'use strict';
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -7321,7 +7676,11 @@ if (util && util.inspect && util.inspect.custom) {
     return this.constructor.name + ' ' + obj;
   };
 }
+<<<<<<< HEAD
 },{"safe-buffer":34,"util":4}],26:[function(require,module,exports){
+=======
+},{"safe-buffer":32,"util":4}],24:[function(require,module,exports){
+>>>>>>> three-dots-fix
 'use strict';
 
 /*<replacement>*/
@@ -7388,6 +7747,284 @@ function undestroy() {
   }
 }
 
+function emitErrorNT(self, err) {
+  self.emit('error', err);
+}
+
+module.exports = {
+  destroy: destroy,
+  undestroy: undestroy
+};
+},{"process-nextick-args":15}],25:[function(require,module,exports){
+module.exports = require('events').EventEmitter;
+
+},{"events":8}],26:[function(require,module,exports){
+var toString = {}.toString;
+
+module.exports = Array.isArray || function (arr) {
+  return toString.call(arr) == '[object Array]';
+};
+
+},{}],27:[function(require,module,exports){
+'use strict';
+
+var Buffer = require('safe-buffer').Buffer;
+
+var isEncoding = Buffer.isEncoding || function (encoding) {
+  encoding = '' + encoding;
+  switch (encoding && encoding.toLowerCase()) {
+    case 'hex':case 'utf8':case 'utf-8':case 'ascii':case 'binary':case 'base64':case 'ucs2':case 'ucs-2':case 'utf16le':case 'utf-16le':case 'raw':
+      return true;
+    default:
+      return false;
+  }
+};
+
+function _normalizeEncoding(enc) {
+  if (!enc) return 'utf8';
+  var retried;
+  while (true) {
+    switch (enc) {
+      case 'utf8':
+      case 'utf-8':
+        return 'utf8';
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return 'utf16le';
+      case 'latin1':
+      case 'binary':
+        return 'latin1';
+      case 'base64':
+      case 'ascii':
+      case 'hex':
+        return enc;
+      default:
+        if (retried) return; // undefined
+        enc = ('' + enc).toLowerCase();
+        retried = true;
+    }
+  }
+};
+
+// Do not cache `Buffer.isEncoding` when checking encoding names as some
+// modules monkey-patch it to support additional encodings
+function normalizeEncoding(enc) {
+  var nenc = _normalizeEncoding(enc);
+  if (typeof nenc !== 'string' && (Buffer.isEncoding === isEncoding || !isEncoding(enc))) throw new Error('Unknown encoding: ' + enc);
+  return nenc || enc;
+}
+
+// StringDecoder provides an interface for efficiently splitting a series of
+// buffers into a series of JS strings without breaking apart multi-byte
+// characters.
+exports.StringDecoder = StringDecoder;
+function StringDecoder(encoding) {
+  this.encoding = normalizeEncoding(encoding);
+  var nb;
+  switch (this.encoding) {
+    case 'utf16le':
+      this.text = utf16Text;
+      this.end = utf16End;
+      nb = 4;
+      break;
+    case 'utf8':
+      this.fillLast = utf8FillLast;
+      nb = 4;
+      break;
+    case 'base64':
+      this.text = base64Text;
+      this.end = base64End;
+      nb = 3;
+      break;
+    default:
+      this.write = simpleWrite;
+      this.end = simpleEnd;
+      return;
+  }
+  this.lastNeed = 0;
+  this.lastTotal = 0;
+  this.lastChar = Buffer.allocUnsafe(nb);
+}
+
+StringDecoder.prototype.write = function (buf) {
+  if (buf.length === 0) return '';
+  var r;
+  var i;
+  if (this.lastNeed) {
+    r = this.fillLast(buf);
+    if (r === undefined) return '';
+    i = this.lastNeed;
+    this.lastNeed = 0;
+  } else {
+    i = 0;
+  }
+  if (i < buf.length) return r ? r + this.text(buf, i) : this.text(buf, i);
+  return r || '';
+};
+
+StringDecoder.prototype.end = utf8End;
+
+// Returns only complete characters in a Buffer
+StringDecoder.prototype.text = utf8Text;
+
+// Attempts to complete a partial non-UTF-8 character using bytes from a Buffer
+StringDecoder.prototype.fillLast = function (buf) {
+  if (this.lastNeed <= buf.length) {
+    buf.copy(this.lastChar, this.lastTotal - this.lastNeed, 0, this.lastNeed);
+    return this.lastChar.toString(this.encoding, 0, this.lastTotal);
+  }
+  buf.copy(this.lastChar, this.lastTotal - this.lastNeed, 0, buf.length);
+  this.lastNeed -= buf.length;
+};
+
+// Checks the type of a UTF-8 byte, whether it's ASCII, a leading byte, or a
+// continuation byte.
+function utf8CheckByte(byte) {
+  if (byte <= 0x7F) return 0;else if (byte >> 5 === 0x06) return 2;else if (byte >> 4 === 0x0E) return 3;else if (byte >> 3 === 0x1E) return 4;
+  return -1;
+}
+
+// Checks at most 3 bytes at the end of a Buffer in order to detect an
+// incomplete multi-byte UTF-8 character. The total number of bytes (2, 3, or 4)
+// needed to complete the UTF-8 character (if applicable) are returned.
+function utf8CheckIncomplete(self, buf, i) {
+  var j = buf.length - 1;
+  if (j < i) return 0;
+  var nb = utf8CheckByte(buf[j]);
+  if (nb >= 0) {
+    if (nb > 0) self.lastNeed = nb - 1;
+    return nb;
+  }
+  if (--j < i) return 0;
+  nb = utf8CheckByte(buf[j]);
+  if (nb >= 0) {
+    if (nb > 0) self.lastNeed = nb - 2;
+    return nb;
+  }
+  if (--j < i) return 0;
+  nb = utf8CheckByte(buf[j]);
+  if (nb >= 0) {
+    if (nb > 0) {
+      if (nb === 2) nb = 0;else self.lastNeed = nb - 3;
+    }
+    return nb;
+  }
+  return 0;
+}
+
+// Validates as many continuation bytes for a multi-byte UTF-8 character as
+// needed or are available. If we see a non-continuation byte where we expect
+// one, we "replace" the validated continuation bytes we've seen so far with
+// UTF-8 replacement characters ('\ufffd'), to match v8's UTF-8 decoding
+// behavior. The continuation byte check is included three times in the case
+// where all of the continuation bytes for a character exist in the same buffer.
+// It is also done this way as a slight performance increase instead of using a
+// loop.
+function utf8CheckExtraBytes(self, buf, p) {
+  if ((buf[0] & 0xC0) !== 0x80) {
+    self.lastNeed = 0;
+    return '\ufffd'.repeat(p);
+  }
+  if (self.lastNeed > 1 && buf.length > 1) {
+    if ((buf[1] & 0xC0) !== 0x80) {
+      self.lastNeed = 1;
+      return '\ufffd'.repeat(p + 1);
+    }
+    if (self.lastNeed > 2 && buf.length > 2) {
+      if ((buf[2] & 0xC0) !== 0x80) {
+        self.lastNeed = 2;
+        return '\ufffd'.repeat(p + 2);
+      }
+    }
+  }
+}
+
+// Attempts to complete a multi-byte UTF-8 character using bytes from a Buffer.
+function utf8FillLast(buf) {
+  var p = this.lastTotal - this.lastNeed;
+  var r = utf8CheckExtraBytes(this, buf, p);
+  if (r !== undefined) return r;
+  if (this.lastNeed <= buf.length) {
+    buf.copy(this.lastChar, p, 0, this.lastNeed);
+    return this.lastChar.toString(this.encoding, 0, this.lastTotal);
+  }
+  buf.copy(this.lastChar, p, 0, buf.length);
+  this.lastNeed -= buf.length;
+}
+
+// Returns all complete UTF-8 characters in a Buffer. If the Buffer ended on a
+// partial character, the character's bytes are buffered until the required
+// number of bytes are available.
+function utf8Text(buf, i) {
+  var total = utf8CheckIncomplete(this, buf, i);
+  if (!this.lastNeed) return buf.toString('utf8', i);
+  this.lastTotal = total;
+  var end = buf.length - (total - this.lastNeed);
+  buf.copy(this.lastChar, 0, end);
+  return buf.toString('utf8', i, end);
+}
+
+// For UTF-8, a replacement character for each buffered byte of a (partial)
+// character needs to be added to the output.
+function utf8End(buf) {
+  var r = buf && buf.length ? this.write(buf) : '';
+  if (this.lastNeed) return r + '\ufffd'.repeat(this.lastTotal - this.lastNeed);
+  return r;
+}
+
+// UTF-16LE typically needs two bytes per character, but even if we have an even
+// number of bytes available, we need to check if we end on a leading/high
+// surrogate. In that case, we need to wait for the next two bytes in order to
+// decode the last character properly.
+function utf16Text(buf, i) {
+  if ((buf.length - i) % 2 === 0) {
+    var r = buf.toString('utf16le', i);
+    if (r) {
+      var c = r.charCodeAt(r.length - 1);
+      if (c >= 0xD800 && c <= 0xDBFF) {
+        this.lastNeed = 2;
+        this.lastTotal = 4;
+        this.lastChar[0] = buf[buf.length - 2];
+        this.lastChar[1] = buf[buf.length - 1];
+        return r.slice(0, -1);
+      }
+    }
+    return r;
+  }
+  this.lastNeed = 1;
+  this.lastTotal = 2;
+  this.lastChar[0] = buf[buf.length - 1];
+  return buf.toString('utf16le', i, buf.length - 1);
+}
+
+// For UTF-16LE we do not explicitly append special replacement characters if we
+// end on a partial character, we simply let v8 handle that.
+function utf16End(buf) {
+  var r = buf && buf.length ? this.write(buf) : '';
+  if (this.lastNeed) {
+    var end = this.lastTotal - this.lastNeed;
+    return r + this.lastChar.toString('utf16le', 0, end);
+  }
+  return r;
+}
+
+function base64Text(buf, i) {
+  var n = (buf.length - i) % 3;
+  if (n === 0) return buf.toString('base64', i);
+  this.lastNeed = 3 - n;
+  this.lastTotal = 3;
+  if (n === 1) {
+    this.lastChar[0] = buf[buf.length - 1];
+  } else {
+    this.lastChar[0] = buf[buf.length - 2];
+    this.lastChar[1] = buf[buf.length - 1];
+  }
+  return buf.toString('base64', i, buf.length - n);
+}
+
+<<<<<<< HEAD
 function emitErrorNT(self, err) {
   self.emit('error', err);
 }
@@ -7665,6 +8302,8 @@ function base64Text(buf, i) {
   return buf.toString('base64', i, buf.length - n);
 }
 
+=======
+>>>>>>> three-dots-fix
 function base64End(buf) {
   var r = buf && buf.length ? this.write(buf) : '';
   if (this.lastNeed) return r + this.lastChar.toString('base64', 0, 3 - this.lastNeed);
@@ -7679,10 +8318,17 @@ function simpleWrite(buf) {
 function simpleEnd(buf) {
   return buf && buf.length ? this.write(buf) : '';
 }
+<<<<<<< HEAD
 },{"safe-buffer":34}],30:[function(require,module,exports){
 module.exports = require('./readable').PassThrough
 
 },{"./readable":31}],31:[function(require,module,exports){
+=======
+},{"safe-buffer":32}],28:[function(require,module,exports){
+module.exports = require('./readable').PassThrough
+
+},{"./readable":29}],29:[function(require,module,exports){
+>>>>>>> three-dots-fix
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = exports;
 exports.Readable = exports;
@@ -7691,6 +8337,7 @@ exports.Duplex = require('./lib/_stream_duplex.js');
 exports.Transform = require('./lib/_stream_transform.js');
 exports.PassThrough = require('./lib/_stream_passthrough.js');
 
+<<<<<<< HEAD
 },{"./lib/_stream_duplex.js":20,"./lib/_stream_passthrough.js":21,"./lib/_stream_readable.js":22,"./lib/_stream_transform.js":23,"./lib/_stream_writable.js":24}],32:[function(require,module,exports){
 module.exports = require('./readable').Transform
 
@@ -7698,6 +8345,15 @@ module.exports = require('./readable').Transform
 module.exports = require('./lib/_stream_writable.js');
 
 },{"./lib/_stream_writable.js":24}],34:[function(require,module,exports){
+=======
+},{"./lib/_stream_duplex.js":18,"./lib/_stream_passthrough.js":19,"./lib/_stream_readable.js":20,"./lib/_stream_transform.js":21,"./lib/_stream_writable.js":22}],30:[function(require,module,exports){
+module.exports = require('./readable').Transform
+
+},{"./readable":29}],31:[function(require,module,exports){
+module.exports = require('./lib/_stream_writable.js');
+
+},{"./lib/_stream_writable.js":22}],32:[function(require,module,exports){
+>>>>>>> three-dots-fix
 /* eslint-disable node/no-deprecated-api */
 var buffer = require('buffer')
 var Buffer = buffer.Buffer
@@ -7761,7 +8417,11 @@ SafeBuffer.allocUnsafeSlow = function (size) {
   return buffer.SlowBuffer(size)
 }
 
+<<<<<<< HEAD
 },{"buffer":6}],35:[function(require,module,exports){
+=======
+},{"buffer":6}],33:[function(require,module,exports){
+>>>>>>> three-dots-fix
 (function (Buffer){
 ;(function (sax) { // wrapper for non-node envs
   sax.parser = function (strict, opt) { return new SAXParser(strict, opt) }
@@ -9330,7 +9990,11 @@ SafeBuffer.allocUnsafeSlow = function (size) {
 })(typeof exports === 'undefined' ? this.sax = {} : exports)
 
 }).call(this,require("buffer").Buffer)
+<<<<<<< HEAD
 },{"buffer":6,"stream":36,"string_decoder":5}],36:[function(require,module,exports){
+=======
+},{"buffer":6,"stream":34,"string_decoder":5}],34:[function(require,module,exports){
+>>>>>>> three-dots-fix
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -9363,12 +10027,21 @@ Stream.Writable = require('readable-stream/writable.js');
 Stream.Duplex = require('readable-stream/duplex.js');
 Stream.Transform = require('readable-stream/transform.js');
 Stream.PassThrough = require('readable-stream/passthrough.js');
+<<<<<<< HEAD
 
 // Backwards-compat with node 0.4.x
 Stream.Stream = Stream;
 
 
 
+=======
+
+// Backwards-compat with node 0.4.x
+Stream.Stream = Stream;
+
+
+
+>>>>>>> three-dots-fix
 // old-style streams.  Note that the pipe method (the only relevant
 // part of this class) is overridden in the Readable class.
 
@@ -9418,6 +10091,7 @@ Stream.prototype.pipe = function(dest, options) {
     didOnEnd = true;
 
     if (typeof dest.destroy === 'function') dest.destroy();
+<<<<<<< HEAD
   }
 
   // don't leave dangling pipes when there are errors.
@@ -9542,6 +10216,53 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
 module.exports = require("./src/api.js");
 
 },{"./src/api.js":39}],39:[function(require,module,exports){
+=======
+  }
+
+  // don't leave dangling pipes when there are errors.
+  function onerror(er) {
+    cleanup();
+    if (EE.listenerCount(this, 'error') === 0) {
+      throw er; // Unhandled stream error in pipe.
+    }
+  }
+
+  source.on('error', onerror);
+  dest.on('error', onerror);
+
+  // remove all the event listeners that were added.
+  function cleanup() {
+    source.removeListener('data', ondata);
+    dest.removeListener('drain', ondrain);
+
+    source.removeListener('end', onend);
+    source.removeListener('close', onclose);
+
+    source.removeListener('error', onerror);
+    dest.removeListener('error', onerror);
+
+    source.removeListener('end', cleanup);
+    source.removeListener('close', cleanup);
+
+    dest.removeListener('close', cleanup);
+  }
+
+  source.on('end', cleanup);
+  source.on('close', cleanup);
+
+  dest.on('close', cleanup);
+
+  dest.emit('pipe', source);
+
+  // Allow for unix-like usage: A.pipe(B).pipe(C)
+  return dest;
+};
+
+},{"events":8,"inherits":13,"readable-stream/duplex.js":17,"readable-stream/passthrough.js":28,"readable-stream/readable.js":29,"readable-stream/transform.js":30,"readable-stream/writable.js":31}],35:[function(require,module,exports){
+module.exports = require("./src/api.js");
+
+},{"./src/api.js":36}],36:[function(require,module,exports){
+>>>>>>> three-dots-fix
 var api = function (who) {
 
     var _methods = function () {
@@ -9727,7 +10448,11 @@ var api = function (who) {
 };
 
 module.exports = exports = api;
+<<<<<<< HEAD
 },{}],40:[function(require,module,exports){
+=======
+},{}],37:[function(require,module,exports){
+>>>>>>> three-dots-fix
 (function (global){
 
 /**
@@ -9798,7 +10523,11 @@ function config (name) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+<<<<<<< HEAD
 },{}],41:[function(require,module,exports){
+=======
+},{}],38:[function(require,module,exports){
+>>>>>>> three-dots-fix
 "use strict";
 
 // hog feature
@@ -9839,8 +10568,6 @@ module.exports = {
       return x + (xnext - x + width) / 2 + ~~(padding / 2) - 1;
     }).attr("x2", function (d) {
       var width = d3.min([x_scale(dom1 / d.max), height]);
-      // var x = x_scale((dom1/d.max) * d.max_in_hog);
-      // var xnext = x_scale((dom1/d.max) * (d.max_in_hog + 1));
       var x = width * (d.max_in_hog - 1);
       var xnext = width * d.max_in_hog;
 
@@ -9853,10 +10580,6 @@ module.exports = {
     var color = function color() {
       return "grey";
     };
-
-    // if (!color) {
-    //   color = () => "grey";
-    // }
 
     feature.colors = function (c) {
       if (!arguments.length) {
@@ -9912,13 +10635,13 @@ module.exports = {
       var width = d3.min([x_scale(dom1 / g.max), height]);
       var posx = g.hog_start * width + g.max_in_hog * width / 2;
       return "translate(" + posx + ", 0)";
-    }).attr('class', function (d) {
+    }).style('cursor', 'pointer').attr('class', function (d) {
       return d.name;
     });
 
-    g.append('circle').attr('cx', 0).attr('cy', -6).attr('r', 2).attr('fill', 'black');
-    g.append('circle').attr('cx', 0).attr('cy', -12).attr('r', 2).attr('fill', 'black');
-    g.append('circle').attr('cx', 0).attr('cy', -18).attr('r', 2).attr('fill', 'black');
+    g.append('circle').attr('cx', 0).attr('cy', -12).attr('r', 6).attr('stroke', '#95a5a6').style('cursor', 'pointer').style('fill', 'none');
+
+    g.append('text').attr('x', 0).attr('y', -11).attr('text-anchor', 'middle').attr('alignment-baseline', 'middle').style('fill', '#95a5a6').style('font-size', '9px').style('cursor', 'pointer').text('?');
   }).distribute(function (elems, x_scale) {
     var track = this;
     var padding = ~~(track.height() - track.height() * 0.8) / 2;
@@ -9933,7 +10656,11 @@ module.exports = {
   })
 };
 
+<<<<<<< HEAD
 },{}],42:[function(require,module,exports){
+=======
+},{}],39:[function(require,module,exports){
+>>>>>>> three-dots-fix
 'use strict';
 
 module.exports = function Hog_state() {
@@ -10025,7 +10752,11 @@ module.exports = function Hog_state() {
   };
 };
 
+<<<<<<< HEAD
 },{}],43:[function(require,module,exports){
+=======
+},{}],40:[function(require,module,exports){
+>>>>>>> three-dots-fix
 'use strict';
 
 /* global d3 */
@@ -10395,7 +11126,11 @@ function iHam() {
 
 module.exports = iHam;
 
+<<<<<<< HEAD
 },{"./features":41,"./hog_state":42,"./tooltips":44,"./utils.js":45,"./xcoords":46,"iham-parsers":10,"tnt.api":38}],44:[function(require,module,exports){
+=======
+},{"./features":38,"./hog_state":39,"./tooltips":41,"./utils.js":42,"./xcoords":43,"iham-parsers":10,"tnt.api":35}],41:[function(require,module,exports){
+>>>>>>> three-dots-fix
 "use strict";
 
 var _mouse_over_node = void 0;
@@ -10531,7 +11266,11 @@ module.exports = {
   }
 };
 
+<<<<<<< HEAD
 },{}],45:[function(require,module,exports){
+=======
+},{}],42:[function(require,module,exports){
+>>>>>>> three-dots-fix
 'use strict';
 
 module.exports = {
@@ -10575,7 +11314,11 @@ module.exports = {
   }
 };
 
+<<<<<<< HEAD
 },{}],46:[function(require,module,exports){
+=======
+},{}],43:[function(require,module,exports){
+>>>>>>> three-dots-fix
 "use strict";
 
 module.exports = function (arr, maxs, current_hog_state, fam_data, is_first) {
