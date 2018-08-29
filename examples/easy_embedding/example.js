@@ -8,7 +8,7 @@
       .query_gene({
         id: 12
       })
-        .show_oma_link(true)
+        .show_oma_link(false)
       .orthoxml(data.orthoxml)
       .newick(data.tree)
       .fam_data(data.fam_data)

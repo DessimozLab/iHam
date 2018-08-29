@@ -45,6 +45,8 @@ function iHam() {
     // display or not internal node label
     show_internal_labels: true,
 
+    show_oma_link: false,
+
     frozen_node: null,
 
     label_height: 20,
@@ -75,8 +77,6 @@ function iHam() {
     };
 
     // todo -30 should be define by margin variables
-    // const tot_width = parseInt(d3.select(div).style('width')) - 30;
-    const tot_width = board_width + tree_width;
 
     // Node display
     const collapsed_node = tnt.tree.node_display.triangle()
@@ -149,7 +149,11 @@ function iHam() {
           const limit = 30;
           const data = node.data();
           if (node.is_collapsed()) {
-            return `[${node.n_hidden()} hidden taxa]`;
+            if (data.name.length > limit - 16) {
+              const truncName_col = data.name.substr(0, limit - 19) + "...";
+              return `[Collapsed taxa] ${truncName_col.replace(/_/g, ' ')}`;
+            }
+            return `[Collapsed taxa] ${data.name}`;
           }
           if ((!config.show_internal_labels ||
             !state.highlight_condition(node)) &&
@@ -284,7 +288,7 @@ function iHam() {
           .add("hogs", hog_feature)
           .add('hog_groups', hog_group
             .on('click', function (hog) {
-              hog_header_tooltip.display.call(this, hog, current_opened_taxa_name, div);
+              hog_header_tooltip.display.call(this, hog, current_opened_taxa_name, div, config.show_oma_link);
             })
           )
         )
