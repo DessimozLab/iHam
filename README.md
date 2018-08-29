@@ -5,7 +5,7 @@ iHam (“interactive HOG Analysis Method’) is an interactive javascript tool b
 
 ## Installation
 
-The iHam library can be directly load using the following link to the latest release:
+The iHam library can be directly loaded using the following link to the latest release:
 
     <!-- Load the javascript -->
     <script href="https://dessimozlab.github.io/iHam/iHam.js"></script>
@@ -55,9 +55,7 @@ See below for a description of each method. The above snippet, assumes that the 
 
 ## Example
 
-We provide the following example to demonstrate how to embed an iHam session [See this example](http://bl.ocks.org/emepyc/ce259dd519f6a60d35d04c78b40ec425).
-We built for this example a custom options bar that demonstrate how to use iHam options and events API to display supplementary information (e.g. gene coloring based on sequence length) and add new features (e.g. hide low coverage HOGs).
-
+See [See this example](http://bl.ocks.org/emepyc/ce259dd519f6a60d35d04c78b40ec425) in this repository demonstrating how to use some of the widget options and API calls, like colouring the genes based on sequence length or hiding low coverage HOGs.
 
 # Configuration
 
