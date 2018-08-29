@@ -49,8 +49,9 @@ module.exports = function Hog_state() {
     if (that.hogs) {
       for (let i = 0; i < that.hogs.length; i++) {
         that.hogs[i].hog_start = genes_so_far;
-        if (fam_data[that.hogs[i].genes]) {
-          that.hogs[i].protid = fam_data[that.hogs[i].genes[0]].protid;
+        const protid = get_protid_for_genes(fam_data, that.hogs[i].genes);
+        if (protid) {
+          that.hogs[i].protid = protid;
         }
         genes_so_far += that.hogs[i].max_in_hog;
       }
@@ -89,4 +90,14 @@ module.exports = function Hog_state() {
   }
 };
 
+function get_protid_for_genes(fam_data, genes) {
+  if (!genes || !genes.length) {
+    return;
+  }
 
+  for (let i=0; i<genes.length; i++) {
+    if (fam_data[genes[i]]) {
+      return fam_data[genes[i]].protid;
+    }
+  }
+}

@@ -9979,12 +9979,18 @@ module.exports = function Hog_state() {
     if (that.hogs) {
       for (var _i3 = 0; _i3 < that.hogs.length; _i3++) {
         that.hogs[_i3].hog_start = genes_so_far;
-        if (fam_data[that.hogs[_i3].genes]) {
-          that.hogs[_i3].protid = fam_data[that.hogs[_i3].genes[0]].protid;
+        var protid = get_protid_for_genes(fam_data, that.hogs[_i3].genes);
+        if (protid) {
+          that.hogs[_i3].protid = protid;
         }
+        // if (fam_data[that.hogs[i].genes]) {
+        //   that.hogs[i].protid = fam_data[that.hogs[i].genes[0]].protid;
+        // }
         genes_so_far += that.hogs[_i3].max_in_hog;
       }
     }
+
+    console.log(that.hogs);
 
     return that.removed_hogs;
   };
@@ -10018,6 +10024,18 @@ module.exports = function Hog_state() {
     }
   };
 };
+
+function get_protid_for_genes(fam_data, genes) {
+  if (!genes || !genes.length) {
+    return;
+  }
+
+  for (var i = 0; i < genes.length; i++) {
+    if (fam_data[genes[i]]) {
+      return fam_data[genes[i]].protid;
+    }
+  }
+}
 
 },{}],43:[function(require,module,exports){
 'use strict';
@@ -10108,8 +10126,6 @@ function iHam() {
 
     var maxs = get_maxs(data_per_species);
     var current_hog_state = new hog_state(maxs);
-    console.log("current_hog_state...");
-    console.log(current_hog_state);
 
     gene_color = function gene_color(gene) {
       return config.query_gene && gene.id === config.query_gene.id ? "#27ae60" : "#95a5a6";
@@ -10357,7 +10373,6 @@ module.exports = iHam;
 },{"./features":41,"./hog_state":42,"./tooltips":44,"./utils.js":45,"./xcoords":46,"iham-parsers":10,"tnt.api":38}],44:[function(require,module,exports){
 "use strict";
 
-var _mouse_over_node = void 0;
 var _tree_node_tooltip = void 0;
 var _gene_tooltip = void 0;
 var _hog_header_tooltip = void 0;
@@ -10455,6 +10470,7 @@ module.exports = {
   },
   hog_header_tooltip: {
     display: function display(hog, taxa_name, div) {
+      console.log(hog);
       var obj = {};
       obj.header = hog.name;
       obj.rows = [];
