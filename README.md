@@ -1,8 +1,12 @@
 # iHam
 
 iHam (“interactive HOG Analysis Method’) is an interactive javascript tool based on the [TnT library](tntvis.github.io/tnt) to visualise the evolutionary history of a specific gene family (HOGs). The viewer is composed of two panels: a species tree which lets the user select a node to focus on a particular taxonomic range of interest, and a matrix that organizes extant genes according to their membership in species (rows) and hierarchical orthologous groups (columns).
+<br />
+<br />
 
 ![alt text](https://raw.githubusercontent.com/dessimozLab/iHam/master/assets/iHam_screenshot.png)
+<br />
+<br />
 
 The tree-guided matrix representation of HOGs facilitates: (i) to delineate orthologous groups at given taxonomic ranges, (ii) to identify duplication and loss events in the species tree, (iii) gauge the cumulative effect of duplication and losses on gene repertoires, and to (iv) identify likely mistakes in genome assembly, annotation, or orthology inference. Users can customize the view in different ways. They can color genes according to protein length or GC-content. Low-confidence HOGs can be masked. Irrelevant clades of species can be collapsed. iHam is a reusable web widget that can be easily embedded into a website, for instance it is used to display HOGs in OMA (http://omabrowser.org; Altenhoff et al. 2018). It merely requires as input HOGs in the standard OrthoXML format (Schmitt et al. 2011), the underlying species tree in newick format and gene family information in JSON format (see below for examples).
 
