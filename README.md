@@ -16,7 +16,7 @@ The tree-guided matrix representation of HOGs facilitates: (i) to delineate orth
 The iHam library can be directly loaded using the following link to the latest release:
 
     <!-- Load the javascript -->
-    <script href="https://dessimozlab.github.io/iHam/iHam.js"></script>
+    <script src="https://dessimozlab.github.io/iHam/iHam.js"></script>
 
     <!-- Load the stylesheet -->
     <link rel="stylesheet" href="https://dessimozlab.github.io/iHam/iHam.css"/>
