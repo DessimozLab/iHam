@@ -16,7 +16,7 @@ The tree-guided matrix representation of HOGs facilitates: (i) to delineate orth
 The iHam library can be directly loaded using the following link to the latest release:
 
     <!-- Load the javascript -->
-    <script href="https://dessimozlab.github.io/iHam/iHam.js"></script>
+    <script src="https://dessimozlab.github.io/iHam/iHam.js"></script>
 
     <!-- Load the stylesheet -->
     <link rel="stylesheet" href="https://dessimozlab.github.io/iHam/iHam.css"/>
@@ -63,7 +63,7 @@ See below for a description of each method. The above snippet, assumes that the 
 
 ## Example
 
-See [See this example](http://bl.ocks.org/emepyc/ce259dd519f6a60d35d04c78b40ec425) in this repository demonstrating how to use some of the widget options and API calls, like colouring the genes based on sequence length or hiding low coverage HOGs.
+[See this example](http://bl.ocks.org/emepyc/ce259dd519f6a60d35d04c78b40ec425) in this repository demonstrating how to use some of the widget options and API calls, like colouring the genes based on sequence length or hiding low coverage HOGs.
 
 # Configuration
 
@@ -71,9 +71,9 @@ iHam exposes several methods to set up the widget.
 
 ## Data input
 
-#### newick
+#### newick or phyloxml
 
-The tree corresponding to this HOG in newick format.
+The tree corresponding to this HOG where species names should matched the one in the orthoxml file in newick or phyloxml format.
 
 For example:
 
