@@ -133,6 +133,23 @@ function iHam() {
       state.highlight_condition = n => node.id() === n.id();
       tree.update_nodes();
       dispatch.updated.call(this);
+
+      const collapsedIndexes = [];
+      let i = 0;
+      tree.root().get_all_leaves().forEach(function (leaf) {
+        if (leaf.is_collapsed()) {
+          collapsedIndexes.push(i);
+        }
+        i++;
+      });
+      const tracks = board.tracks();
+      for (let i=0; i<collapsedIndexes.length; i++) {
+        const track = tracks[collapsedIndexes[i]];
+        const g = track.g;
+        const g_node = g.node();
+        g_node.parentNode.insertBefore(g_node, g_node.parentNode.firstChild.nextSibling);
+        // g.remove();
+      }
     };
 
     // Tree
@@ -183,7 +200,6 @@ function iHam() {
         tree_node_tooltip.display.call(this, node, div, {
             on_collapse: () => {
               node.toggle();
-              // update_nodes(node);
               iHamVis.update();
             },
             on_freeze: (action) => {
@@ -302,6 +318,7 @@ function iHam() {
       .track(track);
 
     iHamVis(div);
+    d3.select('.tnt_pane').style('fill', '#FFFFFF');
   };
 
   apijs(theme)

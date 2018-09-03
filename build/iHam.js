@@ -10097,7 +10097,7 @@ function iHam() {
     // display or not internal node label
     show_internal_labels: true,
 
-    show_oma_link: true,
+    show_oma_link: false,
 
     frozen_node: null,
 
@@ -10178,6 +10178,23 @@ function iHam() {
       };
       tree.update_nodes();
       dispatch.updated.call(this);
+
+      var collapsedIndexes = [];
+      var i = 0;
+      tree.root().get_all_leaves().forEach(function (leaf) {
+        if (leaf.is_collapsed()) {
+          collapsedIndexes.push(i);
+        }
+        i++;
+      });
+      var tracks = board.tracks();
+      for (var _i = 0; _i < collapsedIndexes.length; _i++) {
+        var _track = tracks[collapsedIndexes[_i]];
+        var g = _track.g;
+        var g_node = g.node();
+        g_node.parentNode.insertBefore(g_node, g_node.parentNode.firstChild.nextSibling);
+        // g.remove();
+      }
     };
 
     // Tree
@@ -10213,7 +10230,6 @@ function iHam() {
       tree_node_tooltip.display.call(this, node, div, {
         on_collapse: function on_collapse() {
           node.toggle();
-          // update_nodes(node);
           iHamVis.update();
         },
         on_freeze: function on_freeze(action) {
@@ -10303,6 +10319,9 @@ function iHam() {
     iHamVis = tnt().tree(tree).board(board).track(track);
 
     iHamVis(div);
+    d3.select('.tnt_pane').style('fill', '#FFFFFF');
+    // d3.select(board.parentNode.firstChild)
+    //   .style('fill', '#FFFFFF');
   };
 
   apijs(theme).getset(config);
