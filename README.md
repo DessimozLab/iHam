@@ -37,7 +37,8 @@ iHam also requires the following javascript libraries loaded to run:
 
 ## For developers: installing iHam as javascript library
 
-Alternatively, iHam can be installed using _yarn_ or _npm_:
+As an alternative to dynamic embedding, iHam can be installed using _yarn_ or 
+_npm_:
 
     $ npm install --save iham
     $ yarn add iham
