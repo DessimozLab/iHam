@@ -21,21 +21,7 @@ The iHam library can be directly loaded using the following link to the latest r
     <!-- Load the stylesheet -->
     <link rel="stylesheet" href="https://dessimozlab.github.io/iHam/iHam.css"/>
 
-## For developers: installing iHam as javascript library
-
-iHam can be installed using _yarn_ or _npm_:
-
-    $ npm install --save iham
-    $ yarn add iham
-
-And build using
-
-    $ npm run build && npm run build-css
-
-
-## iHam dependencies
-
-iHam requires the following javascript libraries loaded to run:
+iHam also requires the following javascript libraries loaded to run:
 
     <!-- d3 -->
     <script src="https://d3js.org/d3.v3.js"></script>
@@ -47,6 +33,19 @@ iHam requires the following javascript libraries loaded to run:
     <!-- TnT Tooltip-->
     <link rel="stylesheet" href="http://tntvis.github.io/tnt.tooltip/build/tnt.tooltip.css" type="text/css"/>
     <script src="http://tntvis.github.io/tnt.tooltip/build/tnt.tooltip.min.js" charset="utf-8"></script>
+
+
+## For developers: installing iHam as javascript library
+
+Alternatively, iHam can be installed using _yarn_ or _npm_:
+
+    $ npm install --save iham
+    $ yarn add iham
+
+And build using
+
+    $ npm run build && npm run build-css
+
 
 ## Usage
 
