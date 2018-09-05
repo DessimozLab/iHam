@@ -60,7 +60,7 @@ And build using
 
 See below for a description of each method. The above snippet, assumes that the widget will be rendered in a `div` element with id `container`.
 
-# Table of compatibility
+## Table of compatibility
 
 Support by iHam of various HOG inference ressources.
 
