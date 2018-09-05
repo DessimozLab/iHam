@@ -60,6 +60,17 @@ And build using
 
 See below for a description of each method. The above snippet, assumes that the widget will be rendered in a `div` element with id `container`.
 
+# Table of compatibility
+
+Support by iHam of various HOG inference ressources.
+
+| Resource | Species tree format | OrthoXML  |   Support  |
+| ---------- |:----------:| -----:|  -----:|
+| OMA browser      | PhyloXML and Newick | All HOGs, or one HOG at a time | YES |
+| OMA standalone      | PhyloXML and Newick | All HOGs | YES |
+| Ensembl      | Newick | one HOG at a time | YES |
+| HieranoidDB      | Newick | one HOG at a time | YES |
+
 
 ## Example
 
