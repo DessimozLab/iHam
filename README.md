@@ -21,21 +21,7 @@ The iHam library can be directly loaded using the following link to the latest r
     <!-- Load the stylesheet -->
     <link rel="stylesheet" href="https://dessimozlab.github.io/iHam/iHam.css"/>
 
-## For developers: installing iHam as javascript library
-
-iHam can be installed using _yarn_ or _npm_:
-
-    $ npm install --save iham
-    $ yarn add iham
-
-And build using
-
-    $ npm run build && npm run build-css
-
-
-## iHam dependencies
-
-iHam requires the following javascript libraries loaded to run:
+iHam also requires the following javascript libraries loaded to run:
 
     <!-- d3 -->
     <script src="https://d3js.org/d3.v3.js"></script>
@@ -48,6 +34,20 @@ iHam requires the following javascript libraries loaded to run:
     <link rel="stylesheet" href="http://tntvis.github.io/tnt.tooltip/build/tnt.tooltip.css" type="text/css"/>
     <script src="http://tntvis.github.io/tnt.tooltip/build/tnt.tooltip.min.js" charset="utf-8"></script>
 
+
+## For developers: installing iHam as javascript library
+
+As an alternative to dynamic embedding, iHam can be installed using _yarn_ or 
+_npm_:
+
+    $ npm install --save iham
+    $ yarn add iham
+
+And build using
+
+    $ npm run build && npm run build-css
+
+
 ## Usage
 
     var iham = iHam()
@@ -59,6 +59,17 @@ iHam requires the following javascript libraries loaded to run:
     iham(document.getElementById(container);
 
 See below for a description of each method. The above snippet, assumes that the widget will be rendered in a `div` element with id `container`.
+
+## Table of compatibility
+
+Support by iHam of various HOG inference ressources.
+
+| Resource | Species tree format | OrthoXML  |   Support  |
+| ---------- |:----------:| -----:|  -----:|
+| OMA browser      | PhyloXML and Newick | All HOGs, or one HOG at a time | YES |
+| OMA standalone      | PhyloXML and Newick | All HOGs | YES |
+| Ensembl      | Newick | one HOG at a time | YES |
+| HieranoidDB      | Newick | one HOG at a time | YES |
 
 
 ## Example
