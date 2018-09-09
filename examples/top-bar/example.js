@@ -26,7 +26,7 @@ function legend(colorScale, label) {
       return colorScale(domain[0] + ((domain[1] - domain[0]) * i) / n);
     });
 
-  var legendAxis = d3.svg.axis().scale(d3.scale.linear().domain(domain).range([1, n * 5])).orient('bottom').ticks(3);
+  var legendAxis = d3.svg.axis().scale(d3.scale.linear().domain(domain).range([1, (n-1) * 5])).orient('bottom').ticks(3);
 
   d3.select('#color-legend')
     .append('div')
