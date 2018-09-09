@@ -73,6 +73,18 @@
             padding-top: 7px;
             padding-bottom: 7px;
         }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: black;
+            shape-rendering: crispEdges;
+        }
+
+        .axis text {
+            font-family: sans-serif;
+            font-size: 11px;
+        }
     </style>
 </head>
 <body>
@@ -114,7 +126,7 @@
         </div>
     </div>
 </div>
-
+<div id="color-legend" style="float:right; padding-right:50px"></div>
 <div id="updating">
     Updating...
 </div>

@@ -1,5 +1,45 @@
-(
-  function (div) {
+function removeLegend() {
+  d3.select('#color-legend')
+    .selectAll('*')
+    .remove();
+}
+
+function legend(colorScale, label) {
+  var n = 30;
+
+  removeLegend();
+
+  d3.select('#color-legend')
+    .append('div')
+    .text(label);
+
+  var domain = colorScale.domain();
+  d3.select('#color-legend')
+    .selectAll('div')
+    .data(Array.apply(0, Array(n)).map(function(d, i) { return i + 1; }))
+    .enter()
+    .append('div')
+    .style('display', 'inline-block')
+    .style('width', '5px')
+    .style('height', '15px')
+    .style('background-color', function (d, i) {
+      return colorScale(domain[0] + ((domain[1] - domain[0]) * i) / n);
+    });
+
+  var legendAxis = d3.svg.axis().scale(d3.scale.linear().domain(domain).range([1, n * 5])).orient('bottom').ticks(3);
+
+  d3.select('#color-legend')
+    .append('div')
+    .append('svg')
+    .attr('width', n * 5)
+    .attr('height', 30)
+    .append('g')
+    .attr('class', 'axis')
+    .call(legendAxis);
+
+}
+
+(function (div) {
     var theme = iHam()
       .on('node_selected', function (node) {
         d3.select('#current-node')
@@ -8,7 +48,7 @@
       .query_gene({
         id: 12
       })
-        .show_oma_link(true)
+      .show_oma_link(true)
       .orthoxml(data.orthoxml)
       .newick(data.tree)
       .fam_data(data.fam_data)
@@ -39,6 +79,7 @@
     d3.select("#color-schema-dropdown")
       .selectAll("a")
       .on("click", function () {
+        removeLegend();
         // Manage state of menu itself
         d3.select(this.parentNode).selectAll("a").classed("active", false);
         d3.select(this)
@@ -61,6 +102,7 @@
           theme.gene_colors(function (d) {
             return colorScale(d.gene.sequence_length);
           });
+          legend(colorScale, 'Gene Length');
         }
 
         if (d3.select(this).text() === "GC Content") {
@@ -74,6 +116,7 @@
           theme.gene_colors(function (d) {
             return colorScale(d.gene.gc_content);
           });
+          legend(colorScale, 'GC Content');
         }
       });
 
