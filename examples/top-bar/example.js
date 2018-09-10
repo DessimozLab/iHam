@@ -31,7 +31,7 @@ function legend(colorScale, label) {
   d3.select('#color-legend')
     .append('div')
     .append('svg')
-    .attr('width', n * 5)
+    .attr('width', (n * 5) + 15)
     .attr('height', 30)
     .append('g')
     .attr('class', 'axis')
