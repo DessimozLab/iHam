@@ -12,6 +12,12 @@ The tree-guided matrix representation of HOGs facilitates: (i) to delineate orth
 
 A brief video tutorial is available at this URL: https://www.youtube.com/watch?v=6eAoamP7NLo.
 
+## How to cite iHam
+
+If you use iHam in your work, please consider citing:
+
+*Clément-Marie Train, Miguel Pignatelli, Adrian Altenhoff, Christophe Dessimoz; iHam and pyHam: visualizing and processing hierarchical orthologous groups, Bioinformatics, bty994, https://doi.org/10.1093/bioinformatics/bty994*
+
 ## Installation
 
 The iHam library can be directly loaded using the following link to the latest release:
