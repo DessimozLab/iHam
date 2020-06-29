@@ -60,11 +60,14 @@ function iHam() {
     config.fam_data.forEach(gene => {
       fam_data_obj[gene.id] = {
         gc_content: gene.gc_content,
+        nr_exons: gene.nr_exons,
         id: gene.id,
         protid: gene.protid,
         sequence_length: gene.sequence_length,
         taxon: gene.taxon,
-        xrefid: gene.xrefid
+        xrefid: gene.xrefid,
+        similarity: gene.similarity,
+        go_terms: ""
       };
     });
     d3.select(div).style("position", "relative");
