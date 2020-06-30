@@ -78,14 +78,57 @@ module.exports = {
     display: function (gene, div, mouseover) {
       const obj = {};
       obj.header = gene.gene.protid;
+      
+      function fetch_annots(gene_tooltip_obj, protid, mouseover){
+          $.ajax({
+            type:'get',
+            url: '/api/protein/' + protid + '/gene_ontology/?format=json',
+            dataType:'json',
+            success: function(data) {
+                var seen = new Set();
+                var go_annots = []
+                $.each(data, function(i, item) {
+                    // console.log(item.GO_term);
+                    //temp = temp + item.GO_term + " - " + item.name;
+                    if (!seen.has(item.GO_term)){
+                        go_annots.push({id: item.GO_term, name: item.name});
+                        seen.add(item.GO_term);
+                    }
+                });
+
+                gene.gene.go_terms = go_annots;
+                // gene_tooltip_obj.call.display(gene, div, mouseover);
+                var rect = gene_tooltip_obj.getBoundingClientRect();
+
+                // console.log(type_event);
+
+                var type_event = "click";
+                if(mouseover){
+                  type_event = "mouseover";
+                }
+                var evt = new MouseEvent(type_event, {bubbles: true, clientX: rect.right, clientY: rect.bottom});
+                gene_tooltip_obj.dispatchEvent(evt);
+
+            }
+        });
+      };
+
+      if(gene.gene.go_terms==""){
+        fetch_annots(this, gene.gene.protid, mouseover);
+      }
+
       obj.rows = [];
       obj.rows.push({
         label: "Name",
         value: gene.gene.xrefid
       });
+      obj.rows.push({label:"GO Annotations"});
+      $.each(gene.gene.go_terms, function(i, item){
+          obj.rows.push({label: item.id, value: item.name});
+      });
 
       _gene_tooltip = tooltip.table()
-        .width(120)
+        .width(240)
         .id('gene_tooltip')
         .container(div);
 
