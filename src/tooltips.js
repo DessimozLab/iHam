@@ -82,7 +82,7 @@ module.exports = {
       function fetch_annots(gene_tooltip_obj, protid, mouseover){
           $.ajax({
             type:'get',
-            url: 'https://omabrowser.org/api/protein/' + protid + '/gene_ontology/?format=json',
+            url: '/api/protein/' + protid + '/gene_ontology/?format=json',
             dataType:'json',
             success: function(data) {
                 var seen = new Set();
