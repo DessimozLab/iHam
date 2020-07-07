@@ -85,6 +85,7 @@ module.exports = {
             url: '/api/protein/' + protid + '/gene_ontology/?format=json',
             dataType:'json',
             success: function(data) {
+
                 var seen = new Set();
                 var go_annots = []
                 $.each(data, function(i, item) {
@@ -96,7 +97,27 @@ module.exports = {
                     }
                 });
 
+                if(go_annots.length==0) {
+                    go_annots.push({id: "N/A", name: "N/A"});
+                }
+
                 gene.gene.go_terms = go_annots;
+                // gene_tooltip_obj.call.display(gene, div, mouseover);
+                var rect = gene_tooltip_obj.getBoundingClientRect();
+
+                // console.log(type_event);
+
+                var type_event = "click";
+                if(mouseover){
+                  type_event = "mouseover";
+                }
+                var evt = new MouseEvent(type_event, {bubbles: true, clientX: rect.right, clientY: rect.bottom});
+                gene_tooltip_obj.dispatchEvent(evt);
+
+            },
+            error: function(request,status,errorThrown) {
+              console.log("YES");
+                gene.gene.go_terms = [{id: "N/A", name: "N/A"}];
                 // gene_tooltip_obj.call.display(gene, div, mouseover);
                 var rect = gene_tooltip_obj.getBoundingClientRect();
 
