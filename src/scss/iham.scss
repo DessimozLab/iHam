@@ -25,16 +25,19 @@
 
 .tnt_groupDiv {
   display: inline-block;
+  width:100%;
+  display: flex;
 }
 
 div[id^="tnt_tree_container_"] {
   display: inherit;
-  overflow-x: auto;
+  /*overflow-x: auto;*/
 }
 
 div[id^="tnt_annot_container_"] {
   display: inherit;
   overflow-x: auto;
+  flex-grow: 100;
 }
 
 

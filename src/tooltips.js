@@ -140,7 +140,7 @@ module.exports = {
 
       obj.rows = [];
       obj.rows.push({
-        label: "Name",
+        label: "Cross reference",
         value: gene.gene.xrefid
       });
       obj.rows.push({label:"GO Annotations"});
@@ -163,32 +163,45 @@ module.exports = {
     close: () => _gene_tooltip.close()
   },
   hog_header_tooltip: {
-    display: function (hog, taxa_name, div, show_oma_link) {
-      const obj = {};
-      obj.header = hog.name;
-      obj.rows = [];
-      obj.rows.push({
-        value: `${hog.genes.length} ${hog.genes.length === 1 ? 'gene' : 'genes'}`
-      });
-      obj.rows.push({
-        value: `${hog.coverage.toFixed(2)}% species represented`
-      });
-      if (show_oma_link) {
+    display: function (hog, taxa_name, div, show_oma_link, remote_data) {
 
+      function create_tooltip(hog, header, hogid, level){
+
+        var obj = {};
+        obj.header = header ;
+        obj.rows = [];
         obj.rows.push({
-          value: `<a href="https://omabrowser.org/oma/hogs/${hog.protid}/${taxa_name.replace(" ", "%20")}/fasta" target="_blank">Sequences (Fasta)</a>`,
+          value: hog.genes.length + " " + (hog.genes.length === 1 ? 'gene' : 'genes')
         });
         obj.rows.push({
-          value: `<a href="https://omabrowser.org/oma/hogs/${hog.protid}/${taxa_name.replace(" ", "%20")}/" target="_blank">HOGs tables</a>`,
+          value: hog.coverage.toFixed(2) + "% species represented"
         });
+        if (show_oma_link) {
+
+          obj.rows.push({
+            value: "<a href=\"/oma/hog/" + hogid + "/" + level + "/fasta\" target=\"_blank\">Sequences (Fasta)</a>"
+          });
+          obj.rows.push({value: "<a href=\"/oma/hog/" + hogid + "/" + level + "/table/\" target=\"_blank\"> Open "+header+ " </a>"});
+        }
+
+        _hog_header_tooltip = tooltip.list().width(180).id('hog_header_tooltip').container(div).call(this, obj);
 
       }
 
-      _hog_header_tooltip = tooltip.list()
-        .width(180)
-        .id('hog_header_tooltip')
-        .container(div)
-        .call(this, obj);
+      if (remote_data){
+        $.ajax({
+          url: '/api/hog/' + hog.protid + '/members/?level=' + taxa_name,
+          async: false, //blocks window close
+          success: function(data) {
+            create_tooltip(hog, data.hog_id, encodeURIComponent(data.hog_id), encodeURIComponent(data.level))
+          }
+        });
+      }
+
+      else{
+        create_tooltip(hog, hog.name, hog.protid,  taxa_name.replace(" ", "%20") )
+      }
+
     },
     close: () => _hog_header_tooltip.close()
   }

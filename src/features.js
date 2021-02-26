@@ -17,13 +17,13 @@ module.exports = {
         .append("line")
         .attr("class", "hog_boundary")
         .attr("x1", function (d) {
-          const width = d3.min([x_scale(dom1 / d.max), height]);
+          const width =16; // d3.min([x_scale(dom1 / d.max), height]);
           const x = width * (d.max_in_hog - 1);
           const xnext = width * d.max_in_hog;
           return x + (xnext - x + width) / 2 + ~~(padding / 2) - 1;
         })
         .attr("x2", function (d) {
-          const width = d3.min([x_scale(dom1 / d.max), height]);
+          const width = 16
           const x = width * (d.max_in_hog - 1);
           const xnext = width * d.max_in_hog;
           return x + (xnext - x + width) / 2 + ~~(padding / 2) - 1;
@@ -44,13 +44,13 @@ module.exports = {
         .transition()
         .duration(200)
         .attr("x1", function (d) {
-          const width = d3.min([x_scale(dom1 / d.max), height]);
+          const width = 16;
           const x = width * (d.max_in_hog - 1);
           const xnext = width * d.max_in_hog;
           return x + (xnext - x + width) / 2 + ~~(padding / 2) - 1;
         })
         .attr("x2", function (d) {
-          const width = d3.min([x_scale(dom1 / d.max), height]);
+          const width = 16;
           const x = width * (d.max_in_hog - 1);
           const xnext = width * d.max_in_hog;
 
@@ -59,8 +59,11 @@ module.exports = {
     }),
   hog_gene_feature: function () {
     const feature = tnt.board.track.feature();
+    var width = 16;
 
     let color = () => "grey";
+
+
 
     feature.colors = function (c) {
       if (!arguments.length) {
@@ -78,19 +81,16 @@ module.exports = {
         const track = this;
         const padding = ~~(track.height() - (track.height() * 0.8)) / 2;
         const height = track.height() - ~~(padding * 2);
-        const dom1 = x_scale.domain()[1];
 
         new_elems
           .append("rect")
           .attr("class", "hog_gene")
           .attr("x", function (d) {
-            const width = d3.min([x_scale(dom1 / d.max), height]);
             const x = width * d.pos;
             return x + padding;
           })
           .attr("y", padding)
           .attr("width", function (d) {
-            const width = d3.min([x_scale(dom1 / d.max), height]);
             return width - 2 * padding;
           })
           .attr("height", height)
@@ -99,18 +99,14 @@ module.exports = {
       .distribute(function (elems, x_scale) {
         const track = this;
         const padding = ~~(track.height() - (track.height() * 0.8)) / 2;
-        const height = track.height() - ~~(padding * 2);
-        const dom1 = x_scale.domain()[1];
 
         elems.select("rect")
           .transition()
           .attr("x", function (d) {
-            const width = d3.min([x_scale(dom1 / d.max), height]);
             const x = width * d.pos;
             return x + padding;
           })
           .attr("width", function (d) {
-            const width = d3.min([x_scale(dom1 / d.max), height]);
             return width - 2 * padding;
           });
       });
@@ -123,13 +119,12 @@ module.exports = {
     .create(function (new_group, x_scale) {
       const track = this;
       const padding = ~~(track.height() - (track.height() * 0.8)) / 2;
-      const height = track.height() - ~~(padding * 2);
-      const dom1 = x_scale.domain()[1];
+
 
       const g = new_group
         .append('g')
         .attr('transform', (g) => {
-          const width = d3.min([x_scale(dom1 / g.max), height]);
+          const width = 16;
           const posx = (g.hog_start * width) + (g.max_in_hog * width) / 2;
           return `translate(${posx}, 0)`;
         })
@@ -157,15 +152,11 @@ module.exports = {
         .text('?');
     })
     .distribute(function (elems, x_scale) {
-      const track = this;
-      const padding = ~~(track.height() - (track.height() * 0.8)) / 2;
-      const height = track.height() - ~~(padding * 2);
-      const dom1 = x_scale.domain()[1];
 
       elems.select('g')
         .transition()
         .attr('transform', function (g) {
-          const width = d3.min([x_scale(dom1 / g.max), height]);
+          const width =16;
           const posx = (g.hog_start * width) + (g.max_in_hog * width) / 2;
           return `translate(${posx}, 0)`;
         })

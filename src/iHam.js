@@ -46,6 +46,7 @@ function iHam() {
     show_internal_labels: true,
 
     show_oma_link: false,
+    remote_data: false,
 
     frozen_node: null,
 
@@ -117,7 +118,15 @@ function iHam() {
       if (config.frozen_node) {
         const removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
         dispatch.hogs_removed.call(this, removed_hogs);
-        board.width(board_width);
+
+        var w = 0;
+        var i = 0, len = current_hog_state.hogs.length;
+        while (i < len) {
+          w += current_hog_state.hogs[i].max_in_hog * 16 ;
+          i++
+        }
+
+        board.width(w);
         // update_board();
         board.update();
         dispatch.updated.call(this);
@@ -130,7 +139,15 @@ function iHam() {
       current_opened_taxa_name = node.node_name();
       const removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
       dispatch.hogs_removed.call(this, removed_hogs);
-      board.width(board_width);
+
+      var w = 0;
+      var i = 0, len = current_hog_state.hogs.length;
+      while (i < len) {
+        w += current_hog_state.hogs[i].max_in_hog * 16 ;
+        i++
+      }
+
+      board.width(w);
       board.update();
 
       state.highlight_condition = n => node.id() === n.id();
@@ -138,7 +155,7 @@ function iHam() {
       dispatch.updated.call(this);
 
       const collapsedIndexes = [];
-      let i = 0;
+      var i = 0;
       tree.root().get_all_leaves().forEach(function (leaf) {
         if (leaf.is_collapsed()) {
           collapsedIndexes.push(i);
@@ -229,6 +246,12 @@ function iHam() {
     current_opened_node = tree.root();
     current_opened_taxa_name = tree.root().node_name();
     current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
+    var w = 0;
+    var i = 0, len = current_hog_state.hogs.length;
+    while (i < len) {
+      w += current_hog_state.hogs[i].max_in_hog * 16 ;
+      i++
+    }
 
     // Board:
     board = tnt.board()
@@ -236,7 +259,7 @@ function iHam() {
       .zoom_in(1)
       .allow_drag(false)
       .to(2)
-      .width(board_width);
+      .width(w);
 
     // Board's track
     genes_feature = hog_gene_feature().colors(gene_color);
@@ -269,7 +292,7 @@ function iHam() {
 
             const all_leaves = current_opened_node.get_all_leaves();
             let first_node_with_data;
-            for (let i = 0; i < all_leaves.length; i++) {
+            for (var i = 0; i < all_leaves.length; i++) {
               const leaf = all_leaves[i];
               if (leaf.is_collapsed()) {
                 continue;
@@ -307,7 +330,7 @@ function iHam() {
           .add("hogs", hog_feature)
           .add('hog_groups', hog_group
             .on('click', function (hog) {
-              hog_header_tooltip.display.call(this, hog, current_opened_taxa_name, div, config.show_oma_link);
+              hog_header_tooltip.display.call(this, hog, current_opened_taxa_name, div, config.show_oma_link, config.remote_data);
             })
           )
         )
