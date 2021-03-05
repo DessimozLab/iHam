@@ -1,6 +1,6 @@
 {
   "name": "iham",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "interactive HOG Analysis Method visualisation plugin",
   "main": "index.umd.js",
   "module": "index.esm.js",
@@ -10,7 +10,7 @@
   "dependencies": {
     "@babel/core": "^7.0.0-0",
     "axios": "^0.18.0",
-    "iham": "^1.0.2",
+    "iham": "^1.0.3",
     "iham-parsers": "^0.2.1",
     "mkdirp": "^0.5.1",
     "npm-watch": "^0.3.0",

@@ -54,7 +54,7 @@ module.exports = function Hog_state() {
         if (protid) {
           that.hogs[i].protid = protid;
           if (that.hog_metadata != false){
-            that.hogs[_i3].name = that.hog_metadata[that.hogs[_i3].genes[0]][that.current_level].split("_")[0]
+            that.hogs[i].name = that.hog_metadata[that.hogs[i].genes[0]][that.current_level].split("_")[0]
           }
         }
         genes_so_far += that.hogs[i].max_in_hog;
