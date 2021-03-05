@@ -163,7 +163,7 @@ module.exports = {
     close: () => _gene_tooltip.close()
   },
   hog_header_tooltip: {
-    display: function (hog, taxa_name, div, show_oma_link, remote_data) {
+    display: function (hog, taxa_name, div, show_oma_link, remote_data, augmented_orthoxml) {
 
       function create_tooltip(hog, header, hogid, level){
 
@@ -188,7 +188,7 @@ module.exports = {
 
       }
 
-      if (remote_data){
+      if (remote_data  && augmented_orthoxml != true){
         $.ajax({
           url: '/api/hog/' + hog.protid + '/members/?level=' + taxa_name,
           async: false, //blocks window close
@@ -199,7 +199,7 @@ module.exports = {
       }
 
       else{
-        create_tooltip(hog, hog.name, hog.protid,  taxa_name.replace(" ", "%20") )
+        create_tooltip(hog, hog.name, hog.name,  taxa_name.replace(" ", "%20") )
       }
 
     },

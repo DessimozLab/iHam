@@ -47,6 +47,8 @@ function iHam() {
 
     show_oma_link: false,
     remote_data: false,
+    augmented_orthoxml: false,
+    query_hog: false,
 
     frozen_node: null,
 
@@ -54,10 +56,22 @@ function iHam() {
   };
 
   const theme = (div) => {
-    const data = parse_orthoxml(config.newick, config.orthoxml);
+    const data = parse_orthoxml(config.newick, config.orthoxml,  {augmented: config.augmented_orthoxml, query_hog: config.query_hog});
     const data_per_species = data.per_species;
     const tree_obj = data.tree;
     const fam_data_obj = {};
+
+    var hog_metadata;
+      if (config.augmented_orthoxml){
+           hog_metadata = data.hog_metadata}
+       else{hog_metadata = false}
+
+       var query_members;
+       if (config.augmented_orthoxml){
+           query_members = data.query_members}
+       else{query_members = false}
+
+
     config.fam_data.forEach(gene => {
       fam_data_obj[gene.id] = {
         gc_content: gene.gc_content,
@@ -77,7 +91,14 @@ function iHam() {
     const current_hog_state = new hog_state(maxs);
 
     gene_color = gene => {
-      return (config.query_gene && gene.id === config.query_gene.id ? "#27ae60" : "#95a5a6");
+      if (config.query_gene && gene.id === config.query_gene.id) {
+        return "#27ae60"
+      }
+      if (config.query_hog && $.inArray(gene.id, query_members) != -1) {
+        return "#27ae60"
+      }
+
+      return "#95a5a6";
     };
 
     // todo -30 should be define by margin variables
@@ -116,7 +137,7 @@ function iHam() {
       dispatch.updating.call(this);
 
       if (config.frozen_node) {
-        const removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
+        const removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj, hog_metadata);
         dispatch.hogs_removed.call(this, removed_hogs);
 
         var w = 0;
@@ -137,7 +158,7 @@ function iHam() {
       dispatch.node_selected.call(this, node);
       current_opened_node = node;
       current_opened_taxa_name = node.node_name();
-      const removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
+      const removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj, hog_metadata);
       dispatch.hogs_removed.call(this, removed_hogs);
 
       var w = 0;
@@ -245,7 +266,7 @@ function iHam() {
 
     current_opened_node = tree.root();
     current_opened_taxa_name = tree.root().node_name();
-    current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj);
+    current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj, hog_metadata);
     var w = 0;
     var i = 0, len = current_hog_state.hogs.length;
     while (i < len) {
@@ -330,7 +351,7 @@ function iHam() {
           .add("hogs", hog_feature)
           .add('hog_groups', hog_group
             .on('click', function (hog) {
-              hog_header_tooltip.display.call(this, hog, current_opened_taxa_name, div, config.show_oma_link, config.remote_data);
+              hog_header_tooltip.display.call(this, hog, current_opened_taxa_name, div, config.show_oma_link, config.remote_data, config.augmented_orthoxml);
             })
           )
         )

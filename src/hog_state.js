@@ -7,11 +7,12 @@ module.exports = function Hog_state() {
 
   const that = this;
 
-  this.reset_on = function (tree, per_species3, tax_name, threshold, fam_data) {
+  this.reset_on = function (tree, per_species3, tax_name, threshold, fam_data, hog_metadata) {
     that.current_level = tax_name;
     that.hogs = undefined;
     that.number_species = 0;
     that.removed_hogs = [];
+    that.hog_metadata = hog_metadata;
 
 
     const leaves = tree.root().get_all_leaves(true);
@@ -52,6 +53,9 @@ module.exports = function Hog_state() {
         const protid = get_protid_for_genes(fam_data, that.hogs[i].genes);
         if (protid) {
           that.hogs[i].protid = protid;
+          if (that.hog_metadata != false){
+            that.hogs[_i3].name = that.hog_metadata[that.hogs[_i3].genes[0]][that.current_level].split("_")[0]
+          }
         }
         genes_so_far += that.hogs[i].max_in_hog;
       }
