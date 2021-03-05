@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.0.0-0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "iham": "^1.0.2",
     "iham-parsers": "^0.2.1",
     "mkdirp": "^0.5.1",
