@@ -28,20 +28,6 @@ The iHam library can be directly loaded using the following link to the latest r
     <!-- Load the stylesheet -->
     <link rel="stylesheet" href="https://dessimozlab.github.io/iHam/iHam.css"/>
 
-iHam also requires the following javascript libraries loaded to run:
-
-    <!-- d3 -->
-    <script src="https://d3js.org/d3.v3.js"></script>
-
-    <!-- TnT -->
-    <link rel="stylesheet" href="http://tntvis.github.io/tnt/build/tnt.css" type="text/css"/>
-    <script src="http://tntvis.github.io/tnt/build/tnt.js" charset="utf-8"></script>
-
-    <!-- TnT Tooltip-->
-    <link rel="stylesheet" href="http://tntvis.github.io/tnt.tooltip/build/tnt.tooltip.css" type="text/css"/>
-    <script src="http://tntvis.github.io/tnt.tooltip/build/tnt.tooltip.min.js" charset="utf-8"></script>
-
-
 ## For developers: installing iHam as javascript library
 
 As an alternative to dynamic embedding, iHam can be installed using _yarn_ or 
