@@ -1,3 +1,121 @@
+.tnt_groupDiv {
+  position: relative;
+  margin: 0px 3px 5px 3px;
+  position: relative;
+  margin: 0px 3px 5px 3px; }
+
+.tnt_node_display_elem {
+  pointer-events: none; }
+
+.tnt_tree_node_proxy {
+  opacity: 0;
+  pointer-events: all; }
+
+svg text {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  cursor: default; }
+
+.tnt_track path, .tnt_track line {
+  fill: none;
+  stroke: grey;
+  stroke-width: 1; }
+
+.tick text {
+  font-size: 0.7em;
+  font-size: 10px; }
+
+.tnt_name {
+  font-size: 14px; }
+
+.tnt_framed {
+  border: 2px solid;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px; }
+
+.tnt_tree_container {
+  display: inline-block;
+  vertical-align: top; }
+
+.tnt_annot_container {
+  display: inline-block;
+  vertical-align: top; }
+
+div .tnt_tooltip {
+  display: block;
+  position: absolute;
+  top: 0px;
+  opacity: 0;
+  border: 2px solid;
+  background-color: #FFFFFF;
+  font-size: 12px; }
+  div .tnt_tooltip h1 {
+    font-size: 30px; }
+  div .tnt_tooltip .link {
+    color: blue; }
+    div .tnt_tooltip .link:hover {
+      cursor: pointer; }
+
+div .tnt_tooltip_active {
+  opacity: 1;
+  z-index: 1001; }
+
+.tnt_tooltip_closer:before, .tnt_tooltip_closer:after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 4px;
+  background-color: white;
+  border-radius: 2;
+  -webkit-border-radius: 2;
+  -moz-border-radius: 2;
+  border-radius: 2px;
+  top: 8px;
+  box-shadow: 0 0 2px 0 #ccc; }
+
+.tnt_tooltip_closer {
+  width: 20px;
+  height: 20px;
+  background-color: black;
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  border-radius: 6px; }
+  .tnt_tooltip_closer:before {
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    left: 2px; }
+  .tnt_tooltip_closer:after {
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    right: 2px; }
+
+.tnt_zmenu {
+  font-size: 10px;
+  border-style: solid;
+  border-collapse: collapse; }
+  .tnt_zmenu th, .tnt_zmenu td {
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-bottom: 5px;
+    white-space: normal;
+    text-align: left;
+    vertical-align: top;
+    font-size: 12px; }
+  .tnt_zmenu th {
+    cursor: move; }
+  .tnt_zmenu th:active {
+    cursor: move; }
+
 .axis path, .axis line {
   fill: none;
   stroke: black;
@@ -21,7 +139,8 @@
 .tnt_groupDiv {
   display: inline-block;
   width: 100%;
-  display: flex; }
+  display: flex;
+  font-family: 'Roboto', sans-serif; }
 
 div[id^="tnt_tree_container_"] {
   display: inherit;
@@ -37,3 +156,59 @@ div[id^="tnt_annot_container_"] {
 
 #tnt_tooltip_gene_tooltip_mouseover {
   pointer-events: none; }
+
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/roboto/v29/KFOmCnqEu92Fr1Mu72xKKTU1Kvnz.woff2) format("woff2");
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+
+/* cyrillic */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/roboto/v29/KFOmCnqEu92Fr1Mu5mxKKTU1Kvnz.woff2) format("woff2");
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+
+/* greek-ext */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/roboto/v29/KFOmCnqEu92Fr1Mu7mxKKTU1Kvnz.woff2) format("woff2");
+  unicode-range: U+1F00-1FFF; }
+
+/* greek */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/roboto/v29/KFOmCnqEu92Fr1Mu4WxKKTU1Kvnz.woff2) format("woff2");
+  unicode-range: U+0370-03FF; }
+
+/* vietnamese */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/roboto/v29/KFOmCnqEu92Fr1Mu7WxKKTU1Kvnz.woff2) format("woff2");
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB; }
+
+/* latin-ext */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/roboto/v29/KFOmCnqEu92Fr1Mu7GxKKTU1Kvnz.woff2) format("woff2");
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+
+/* latin */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/roboto/v29/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }

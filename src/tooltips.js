@@ -3,6 +3,9 @@ let _tree_node_tooltip;
 let _gene_tooltip;
 let _hog_header_tooltip;
 
+const tooltip = require('tnt.tooltip');
+const $ = require('jquery');
+
 
 module.exports = {
   tree_node_tooltip: {

@@ -1,6 +1,8 @@
 /* global d3 */
 
 const apijs = require('tnt.api');
+const tnt = require('tntvis');
+const d3 = require('d3');
 const {get_maxs} = require('./utils.js');
 const hog_state = require('./hog_state');
 const {hog_feature, hog_gene_feature, hog_group} = require('./features');

@@ -5,8 +5,8 @@
       .then(function (resp) {
         return resp.data;
       });
-    var orthoxml = axios.get('https://omabrowser.org/oma/hogs/NOX1_HUMAN/orthoxml/')
-      .then(function (resp) {
+    var orthoxml = axios.get('https://omabrowser.org/oma/hog/HOG:A0564158/orthoxml/')
+        .then(function (resp) {
         return resp.data;
       });
     var fam_data = axios.get('https://omabrowser.org/oma/hogdata/NOX1_HUMAN/json')
