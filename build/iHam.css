@@ -41,7 +41,16 @@ svg text {
 
 .tnt_annot_container {
   display: inline-block;
-  vertical-align: top; }
+  vertical-align: top;
+  position: relative; }
+
+#tnt_annot_drag {
+  width: 8px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  cursor: col-resize;
+  border-left: 1px dotted grey; }
 
 div .tnt_tooltip {
   display: block;

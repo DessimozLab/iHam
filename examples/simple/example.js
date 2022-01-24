@@ -10,7 +10,7 @@
       })
       .tree_width(500)
       .board_width(800)
-        .start_opened_at("Tracheophyta")
+        //.start_opened_at("Tracheophyta")
         //.show_oma_link(true)
       .orthoxml(data.orthoxml)
       .newick(data.tree)

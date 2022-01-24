@@ -1,6 +1,6 @@
 {
   "name": "iham",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "interactive HOG Analysis Method visualisation plugin",
   "main": "index.umd.js",
   "module": "index.esm.js",
@@ -11,7 +11,7 @@
     "@babel/core": "^7.0.0-0",
     "axios": "^0.18.0",
     "d3": "^3.0.0",
-    "iham": "^1.0.4",
+    "iham": "^1.0.6",
     "iham-parsers": "^0.2.1",
     "jquery": "^3.3.1",
     "mkdirp": "^0.5.1",
@@ -20,7 +20,7 @@
     "tnt.api": "^0.1.1",
     "tnt.newick": "^0.1.0",
     "tnt.tooltip": "^0.2.0",
-    "tntvis": "^0.1.5"
+    "tntvis": "^0.3.1"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.0.0-beta.46",
