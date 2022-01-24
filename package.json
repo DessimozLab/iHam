@@ -1,6 +1,6 @@
 {
   "name": "iham",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "interactive HOG Analysis Method visualisation plugin",
   "main": "index.umd.js",
   "module": "index.esm.js",

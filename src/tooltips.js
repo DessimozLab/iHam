@@ -78,7 +78,7 @@ module.exports = {
     close: () => _tree_node_tooltip.close()
   },
   gene_tooltip: {
-    display: function (gene, div, mouseover) {
+    display: function (gene, div, mouseover, show_oma_link) {
       const obj = {};
       obj.header = gene.gene.protid;
       
@@ -144,7 +144,7 @@ module.exports = {
       obj.rows = [];
       obj.rows.push({
         label: "Cross reference",
-        value: gene.gene.xrefid
+        value:  show_oma_link ? '<a target="_blank" href="/oma/vps/' + gene.gene.xrefid +'/">' +  gene.gene.xrefid + ' </a>' : gene.gene.xrefid
       });
       obj.rows.push({label:"GO Annotations"});
       $.each(gene.gene.go_terms, function(i, item){
@@ -184,7 +184,10 @@ module.exports = {
           obj.rows.push({
             value: "<a href=\"/oma/hog/" + hogid + "/" + level + "/fasta\" target=\"_blank\">Sequences (Fasta)</a>"
           });
-          obj.rows.push({value: "<a href=\"/oma/hog/" + hogid + "/" + level + "/table/\" target=\"_blank\"> Open "+header+ " </a>"});
+          obj.rows.push({value: "<a href=\"/oma/hog/" + hogid + "/" + level + "/table/\" target=\"_blank\"> Show "+header+ " members</a>"});
+
+          obj.rows.push({value: "<a href=\"/oma/hog/" + hogid + "/" + level + "/iham/\" target=\"_blank\"> Set focal to "+header+ " </a>"});
+
         }
 
         _hog_header_tooltip = tooltip.list().width(180).id('hog_header_tooltip').container(div).call(this, obj);

@@ -43,10 +43,12 @@ function iHam() {
     orthoxml: null,
     newick: null,
 
+
     // Options
     // display or not internal node label
     show_internal_labels: true,
 
+    start_opened_at: false,
     show_oma_link: false,
     remote_data: false,
     augmented_orthoxml: false,
@@ -268,6 +270,21 @@ function iHam() {
 
     current_opened_node = tree.root();
     current_opened_taxa_name = tree.root().node_name();
+
+    var reopen = false
+
+    tree.root().get_all_nodes().forEach(function (node) {
+
+      if(node.node_name() == config.start_opened_at){
+        current_opened_node = node;
+        current_opened_taxa_name = node.node_name();
+        reopen = node
+
+
+      }
+
+    });
+
     current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj, hog_metadata);
     var w = 0;
     var i = 0, len = current_hog_state.hogs.length;
@@ -336,12 +353,12 @@ function iHam() {
           .add("genes", genes_feature
             .on("click", function (gene) {
               if (config.gene_tooltips_on === "click") {
-                gene_tooltip.display.call(this, gene, div, false);
+                gene_tooltip.display.call(this, gene, div, false, config.show_oma_link);
               }
             })
             .on("mouseover", function (gene) {
               if (config.gene_tooltips_on === "mouseover") {
-                gene_tooltip.display.call(this, gene, div, true);
+                gene_tooltip.display.call(this, gene, div, true, config.show_oma_link);
               }
             })
             .on("mouseout", function () {
@@ -368,6 +385,8 @@ function iHam() {
 
     iHamVis(div);
     d3.select('.tnt_pane').style('fill', '#FFFFFF');
+
+    if (reopen != false) {update_nodes.call(this, reopen);}
   };
 
   apijs(theme)
