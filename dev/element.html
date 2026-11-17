@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>iHam element playground</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 16px 24px;
+        font-family: system-ui, sans-serif;
+      }
+      nav a {
+        margin-right: 12px;
+      }
+      #log {
+        font: 12px ui-monospace, monospace;
+        color: #555;
+      }
+    </style>
+    <script type="module" src="./element-entry.ts"></script>
+  </head>
+  <body>
+    <nav><strong>iHam 2 playground</strong> · <a href="/">Vue component</a><a href="/element.html">&lt;i-ham&gt; element</a></nav>
+    <p>
+      Plain HTML usage, data loaded from URLs (OMA stage, through the dev-server proxy). The production build of this is
+      <code>dist/element/iham-element.js</code> (or <code>.iife.js</code> for a classic script tag).
+    </p>
+
+    <i-ham
+      id="viewer"
+      orthoxml-url="/oma/hog/HOG:F0782425.2c.7a/orthoxml/augmented/"
+      species-tree-url="/All/speciestree.nwk"
+      fam-data-url="/oma/hogdata/PROCO25562/json"
+      query-hog="HOG:F0782425.2c.7a_207598"
+      level="Homininae"
+      preset="oma"
+      height="60vh"
+    ></i-ham>
+
+    <pre id="log"></pre>
+    <script type="module">
+      const log = document.getElementById("log");
+      const viewer = document.getElementById("viewer");
+      for (const name of ["loaded", "node-selected", "update:level", "hogs-removed", "error"]) {
+        viewer.addEventListener(name, (e) => {
+          const detail = e.detail?.[0];
+          const text = typeof detail === "object" ? JSON.stringify(detail, (k, v) => (k === "species" ? `[${v.length}]` : v)) : detail;
+          log.textContent = `${name}: ${text}\n` + log.textContent.split("\n").slice(0, 8).join("\n");
+        });
+      }
+    </script>
+  </body>
+</html>
