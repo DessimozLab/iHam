@@ -19,7 +19,7 @@ npm run typecheck    # vue-tsc over src, test, dev
 npm run build        # build:lib (dist/iham.js + iham.css, vue external) + build:element (dist/element/*.js, Vue bundled) + build:types
 ```
 
-`vite.config.ts` switches on `--mode`: `lib`, `element`, or the dev playground (root `dev/`). The element build compiles SFCs with `features.customElement` so their `<style>` blocks are inlined into the shadow root; in dev mode the element page is therefore unstyled. To check the real element bundle, load `/@fs/<abs path>/dist/element/iham-element.iife.js` from a dev page. HTML pages in `dev/` can't reference modules outside `dev/` directly; go through a `dev/*.ts` entry (see `element-entry.ts`).
+`vite.config.ts` switches on `--mode`: `lib`, `element`, or the dev playground (root `dev/`). The element build compiles SFCs with `features.customElement` so their `<style>` blocks are inlined into the shadow root; served from source the element would be unstyled. So `npm run dev` also runs the element build in watch mode as a child process (plugin `iham:element-watch-build`; in-process it corrupts plugin-vue's cache for the dev server), serves `dist/element/` as the public dir and reloads `element.html` after each rebuild: `element.html` always exercises the real bundle. HTML pages in `dev/` can't reference modules outside `dev/` directly; go through a `dev/*.ts` entry.
 
 Tests use jsdom, not happy-dom: happy-dom's XML parser rejects valid OrthoXML (single-quoted XML declarations, namespaces).
 

@@ -18,13 +18,14 @@
         color: #555;
       }
     </style>
-    <script type="module" src="./element-entry.ts"></script>
+    <!-- the real element build (dist/element), rebuilt in watch mode by the dev server -->
+    <script src="/iham-element.iife.js"></script>
   </head>
   <body>
     <nav><strong>iHam 2 playground</strong> · <a href="/">Vue component</a><a href="/element.html">&lt;i-ham&gt; element</a></nav>
     <p>
-      Plain HTML usage, data loaded from URLs (OMA stage, through the dev-server proxy). The production build of this is
-      <code>dist/element/iham-element.js</code> (or <code>.iife.js</code> for a classic script tag).
+      Plain HTML usage of the production bundle <code>dist/element/iham-element.iife.js</code> (rebuilt on every change;
+      this page reloads afterwards). Data is loaded from URLs (OMA stage, through the dev-server proxy).
     </p>
 
     <i-ham
@@ -45,7 +46,11 @@
       for (const name of ["loaded", "node-selected", "update:level", "hogs-removed", "error"]) {
         viewer.addEventListener(name, (e) => {
           const detail = e.detail?.[0];
-          const text = typeof detail === "object" ? JSON.stringify(detail, (k, v) => (k === "species" ? `[${v.length}]` : v)) : detail;
+          // abbreviate long arrays (e.g. the species list of node-selected)
+          const text =
+            typeof detail === "object"
+              ? JSON.stringify(detail, (k, v) => (Array.isArray(v) && v.length > 5 ? `[${v.length} items]` : v))
+              : detail;
           log.textContent = `${name}: ${text}\n` + log.textContent.split("\n").slice(0, 8).join("\n");
         });
       }

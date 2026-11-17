@@ -1,6 +1,7 @@
 /// <reference types="vitest/config" />
+import { spawn } from "node:child_process";
 import { resolve } from "node:path";
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 import vue from "@vitejs/plugin-vue";
 
 // Modes:
@@ -9,9 +10,50 @@ import vue from "@vitejs/plugin-vue";
 //   element   <i-ham> custom element: dist/element/iham-element.{js,iife.js},
 //             Vue bundled in, component styles injected into the shadow root
 const OMA_UPSTREAM = process.env.IHAM_OMA_URL ?? "https://oma-stage.vital-it.ch";
+const ELEMENT_OUT = resolve(import.meta.dirname, "dist/element");
 
-export default defineConfig(({ mode }) => {
+/**
+ * The custom element only gets its styles in the `element` build (they are
+ * inlined into the shadow root), so the dev server can't serve it from source.
+ * Instead, run the element build in watch mode next to the dev server, serve
+ * its output (see `publicDir`) and reload element.html after each rebuild.
+ *
+ * The build runs in a child process: in-process it shares @vitejs/plugin-vue's
+ * per-file cache with the dev server, which corrupts the dev server's SFC
+ * transforms (duplicate `export default`).
+ */
+function elementWatchBuild(): Plugin {
+  return {
+    name: "iham:element-watch-build",
+    apply: "serve",
+    configureServer(server) {
+      const child = spawn(
+        process.execPath,
+        [resolve(import.meta.dirname, "node_modules/vite/bin/vite.js"), "build", "--mode", "element", "--watch", "--logLevel", "warn"],
+        { cwd: import.meta.dirname, stdio: ["ignore", "inherit", "inherit"] },
+      );
+      const stop = () => child.kill();
+      server.httpServer?.on("close", stop);
+      process.once("exit", stop);
+
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      const bundle = resolve(ELEMENT_OUT, "iham-element.iife.js");
+      server.watcher.add(bundle);
+      const onChange = (file: string) => {
+        if (file === bundle) {
+          clearTimeout(timer);
+          timer = setTimeout(() => server.ws.send({ type: "full-reload", path: "/element.html" }), 200);
+        }
+      };
+      server.watcher.on("add", onChange).on("change", onChange);
+    },
+  };
+}
+
+export default defineConfig(({ mode, command }) => {
   const isElement = mode === "element";
+  // `vite` dev server only (vitest also "serves", in mode "test")
+  const isPlayground = command === "serve" && mode === "development";
 
   return {
     plugins: [
@@ -20,7 +62,10 @@ export default defineConfig(({ mode }) => {
         // defineCustomElement can put it into the shadow root.
         features: { customElement: isElement },
       }),
+      isPlayground && elementWatchBuild(),
     ],
+    // the playground's element.html loads the watch-built element from here
+    publicDir: isPlayground ? ELEMENT_OUT : false,
     define: isElement ? { "process.env.NODE_ENV": JSON.stringify("production") } : {},
     resolve: {
       alias: { "@": resolve(import.meta.dirname, "src") },
