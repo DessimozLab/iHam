@@ -1,0 +1,2713 @@
+<orthoXML xmlns="http://orthoXML.org/2011/" origin="OMA" originVersion="May 2025" version="0.5">
+  <species name="Anguilla anguilla" NCBITaxId="7936" taxonId="7936">
+    <database name="Anguilla anguilla from Refseq" version="Refseq; fAngAng1.pri; GCF_013347855.1; 07-JUL-2020">
+      <genes>
+        <gene id="18630597" protId="ANGAN13207"/>
+        <gene id="18651001" protId="ANGAN33611"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Cyprinus carpio carpio" NCBITaxId="630221" taxonId="630221">
+    <database name="Cyprinus carpio carpio from Ensembl Vertebrates 58" version="Ensembl Vertebrates 58; Cypcar_WagV4.0">
+      <genes>
+        <gene id="18691508" protId="CYPCA16027"/>
+        <gene id="18692569" protId="CYPCA17088"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Sinocyclocheilus grahami" NCBITaxId="75366" taxonId="75366">
+    <database name="Sinocyclocheilus grahami from Ensembl Vertebrates 51" version="Ensembl Vertebrates 51; SAMN03320097.WGS_v1.1">
+      <genes>
+        <gene id="18843178" protId="SINGR22121"/>
+        <gene id="18882589" protId="SINGR61532"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Danio rerio" NCBITaxId="7955" taxonId="7955">
+    <database name="Danio rerio from Ensembl 106" version="Ensembl 106; GRCz11; GCA_000002035.4">
+      <genes>
+        <gene id="18962468" protId="DANRE35793"/>
+        <gene id="18975703" protId="DANRE49028"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Astyanax mexicanus" NCBITaxId="7994" taxonId="7994">
+    <database name="Astyanax mexicanus from ENSEMBL v74" version="Ensembl 74; AstMex102; 27-NOV-2013">
+      <genes>
+        <gene id="18998987" protId="ASTMX20223"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Pygocentrus nattereri" NCBITaxId="42514" taxonId="42514">
+    <database name="Pygocentrus nattereri from Ensembl Vertebrates 42" version="Ensembl Vertebrates 42; Pygocentrus_nattereri-1.0.2">
+      <genes>
+        <gene id="19037801" protId="PYGNA35958"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Ictalurus punctatus" NCBITaxId="7998" taxonId="7998">
+    <database name="Ictalurus punctatus from Ensembl Main 94" version="Ensembl Main 94; IpCoco_1.2">
+      <genes>
+        <gene id="19063353" protId="ICTPU23515"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Ameiurus melas" NCBITaxId="219545" taxonId="219545">
+    <database name="Ameiurus melas from Refseq" version="Refseq; AMELA_1.0; GCA_012411365.1; 16-APR-2020; AMELA_1.0">
+      <genes>
+        <gene id="19096999" protId="AMEME20984"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Clarias magur" NCBITaxId="1594786" taxonId="1594786">
+    <database name="Clarias magur from Refseq" version="Refseq; C_magur1.0; GCA_013621035.1; 24-JUL-2020; C_magur1.0">
+      <genes>
+        <gene id="19118836" protId="CLAMG18467"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Tachysurus fulvidraco" NCBITaxId="1234273" taxonId="1234273">
+    <database name="Tachysurus fulvidraco from Refseq" version="Refseq; HZAU_PFXX_2.0; GCF_022655615.1; 20-APR-2022; HZAU_PFXX_2.0">
+      <genes>
+        <gene id="19177881" protId="TACFU53800"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Electrophorus electricus" NCBITaxId="8005" taxonId="8005">
+    <database name="Electrophorus electricus from Ensembl Vertebrates 51" version="Ensembl Vertebrates 51; Ee_SOAP_WITH_SSPACE">
+      <genes>
+        <gene id="19187149" protId="ELEEL07547"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Salmo salar" NCBITaxId="8030" taxonId="8030">
+    <database name="Salmo salar from Ensembl 111" version="Ensembl 111; Ssal_v3.1; GCA_905237065.2">
+      <genes>
+        <gene id="19350811" protId="SALSA120216"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Salmo trutta" NCBITaxId="8032" taxonId="8032">
+    <database name="Salmo trutta from Ensembl Vertebrates 51" version="Ensembl Vertebrates 51; fSalTru1.1">
+      <genes>
+        <gene id="19481806" protId="SALTR105039"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Esox lucius" NCBITaxId="8010" taxonId="8010">
+    <database name="Esox lucius from Ensembl 106" version="Ensembl 106; Eluc_v4; GCA_004634155.1">
+      <genes>
+        <gene id="19511532" protId="ESOLU18208"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Lepisosteus oculatus" NCBITaxId="7918" taxonId="7918">
+    <database name="Lepisosteus oculatus from ENSEMBL v74" version="Ensembl 74; LepOcu1; 27-NOV-2013">
+      <genes>
+        <gene id="20831583" protId="LEPOC07666"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Latimeria chalumnae" NCBITaxId="7897" taxonId="7897">
+    <database name="Latimeria chalumnae from ENSEMBL v70" version="Ensembl 70; LatCha1; 11-DEC-2012">
+      <genes>
+        <gene id="20853720" protId="LATCH10910"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Bufo bufo" NCBITaxId="8384" taxonId="8384">
+    <database name="Bufo bufo from Refseq" version="Refseq; aBufBuf1.1; GCF_905171765.1; 30-MAR-2021">
+      <genes>
+        <gene id="20869630" protId="BUFBU06462"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Eleutherodactylus coqui" NCBITaxId="57060" taxonId="57060">
+    <database name="Eleutherodactylus coqui from Refseq" version="Refseq; aEleCoq1.hap1; GCF_035609145.1; 22-JUL-2024; GCF_035609145.1-RS_2024_07">
+      <genes>
+        <gene id="20901278" protId="ELECQ00001"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Xenopus tropicalis" NCBITaxId="8364" taxonId="8364">
+    <database name="Xenopus tropicalis from Refseq" version="Refseq; UCB_Xtro_10.0; GCF_000004195.4; 18-DEC-2019">
+      <genes>
+        <gene id="20997889" protId="XENTR16861"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Taeniopygia guttata" NCBITaxId="59729" taxonId="59729">
+    <database name="Taeniopygia guttata from Ensembl 106" version="Ensembl 106; bTaeGut1_v1.p; GCA_003957565.2">
+      <genes>
+        <gene id="21718509" protId="TAEGU00666"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Strigops habroptila" NCBITaxId="2489341" taxonId="2489341">
+    <database name="Strigops habroptila from Ensembl Vertebrates 50" version="Ensembl Vertebrates 50; bStrHab1_v1.p">
+      <genes>
+        <gene id="21807903" protId="STRHB07090"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Gallus gallus" NCBITaxId="9031" taxonId="9031">
+    <database name="Gallus gallus from Refseq" version="Refseq; bGalGal1.mat.broiler.GRCg7b; GCF_016699485.2; 10-APR-2021">
+      <genes>
+        <gene id="22024066" protId="CHICK68530"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Pelodiscus sinensis" NCBITaxId="13735" taxonId="13735">
+    <database name="Pelodiscus sinensis from ENSEMBL v68" version="Ensembl 68; PelSin_1.0; 6-AUG-2012">
+      <genes>
+        <gene id="22122616" protId="PELSI05784"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Chrysemys picta bellii" NCBITaxId="8478" taxonId="8478">
+    <database name="Chrysemys picta bellii from Ensembl 95" version="Ensembl 95; Chrysemys_picta_bellii-3.0.3">
+      <genes>
+        <gene id="22162562" protId="CHRPI27412"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Chelonoidis abingdonii" NCBITaxId="106734" taxonId="106734">
+    <database name="Chelonoidis abingdonii from Ensembl 96" version="Ensembl 96; ASM359739v1; GCA_003597395.1">
+      <genes>
+        <gene id="22200223" protId="CHEAB27881"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Ornithorhynchus anatinus" NCBITaxId="9258" taxonId="9258">
+    <database name="Ornithorhynchus anatinus from Ensembl 106" version="Ensembl 106; mOrnAna1.p.v1; GCA_004115215.2">
+      <genes>
+        <gene id="22236663" protId="ORNAN32678"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Tachyglossus aculeatus" NCBITaxId="9261" taxonId="9261">
+    <database name="Tachyglossus aculeatus from Refseq" version="Refseq; mTacAcu1.pri; GCF_015852505.1; 06-JAN-2021">
+      <genes>
+        <gene id="22263924" protId="TACAU27000"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Gracilinanus agilis" NCBITaxId="191870" taxonId="191870">
+    <database name="Gracilinanus agilis from Refseq" version="Refseq; AgileGrace; GCF_016433145.1; 20-OCT-2021; AgileGrace">
+      <genes>
+        <gene id="22325679" protId="GRAAG18929"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Sarcophilus harrisii" NCBITaxId="9305" taxonId="9305">
+    <database name="Sarcophilus harrisii from ENSEMBL" version="Ensembl 64; DEVIL7.0; 3-SEP-2011">
+      <genes>
+        <gene id="22351192" protId="SARHA15516"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Notamacropus eugenii" NCBITaxId="9315" taxonId="9315">
+    <database name="Macropus eugenii from ENSEMBL v70" version="Ensembl 70; Meug_1.0; 11-DEC-2012">
+      <genes>
+        <gene id="22357503" protId="NOTEU02490"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Vombatus ursinus" NCBITaxId="29139" taxonId="29139">
+    <database name="Vombatus ursinus from Ensembl Vertebrates 51" version="Ensembl Vertebrates 51; bare-nosed_wombat_genome_assembly">
+      <genes>
+        <gene id="22397334" protId="VOMUR27059"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Phascolarctos cinereus" NCBITaxId="38626" taxonId="38626">
+    <database name="Phascolarctos cinereus from Ensembl 95" version="Ensembl 95; phaCin_tgac_v2.0">
+      <genes>
+        <gene id="22428375" protId="PHACI25211"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Dasypus novemcinctus" NCBITaxId="9361" taxonId="9361">
+    <database name="Dasypus novemcinctus from ENSEMBL v78" version="Ensembl 78; Dasnov3.0; 21-NOV-2014">
+      <genes>
+        <gene id="22470674" protId="DASNO18728"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Echinops telfairi" NCBITaxId="9371" taxonId="9371">
+    <database name="Echinops telfairi from ENSEMBL v70" version="Ensembl 70; TENREC; 11-DEC-2012">
+      <genes>
+        <gene id="22481239" protId="ECHTE05760"/>
+        <gene id="22486090" protId="ECHTE10611"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Loxodonta africana" NCBITaxId="9785" taxonId="9785">
+    <database name="Loxodonta africana from ENSEMBL v70" version="Ensembl 70; loxAfr3; 11-DEC-2012">
+      <genes>
+        <gene id="22492080" protId="LOXAF00102"/>
+        <gene id="22492122" protId="LOXAF00144"/>
+        <gene id="22492134" protId="LOXAF00156"/>
+        <gene id="22492176" protId="LOXAF00198"/>
+        <gene id="22492222" protId="LOXAF00244"/>
+        <gene id="22492330" protId="LOXAF00352"/>
+        <gene id="22492420" protId="LOXAF00442"/>
+        <gene id="22492444" protId="LOXAF00466"/>
+        <gene id="22492448" protId="LOXAF00470"/>
+        <gene id="22492801" protId="LOXAF00823"/>
+        <gene id="22492802" protId="LOXAF00824"/>
+        <gene id="22499943" protId="LOXAF07965"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Procavia capensis" NCBITaxId="9813" taxonId="9813">
+    <database name="Procavia capensis from ENSEMBL v70" version="Ensembl 70; proCap1; 12-DEC-2012">
+      <genes>
+        <gene id="22526790" protId="PROCA13762"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Erinaceus europaeus" NCBITaxId="9365" taxonId="9365">
+    <database name="Erinaceus europaeus from ENSEMBL v70" version="Ensembl 70; HEDGEHOG; 12-DEC-2012">
+      <genes>
+        <gene id="22542472" protId="ERIEU13442"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Sorex araneus" NCBITaxId="42254" taxonId="42254">
+    <database name="Sorex araneus from ENSEMBL v70" version="Ensembl 70; COMMON_SHREW1; 11-DEC-2012">
+      <genes>
+        <gene id="22556511" protId="SORAR12993"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Pteropus vampyrus" NCBITaxId="132908" taxonId="132908">
+    <database name="Pteropus vampyrus from ENSEMBL v70" version="Ensembl 70; pteVam1; 12-DEC-2012">
+      <genes>
+        <gene id="22572103" protId="PTEVA15489"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Myotis lucifugus" NCBITaxId="59463" taxonId="59463">
+    <database name="Myotis lucifugus from ENSEMBL v80" version="Ensembl 80; Myoluc2.0; 15-MAY-2015">
+      <genes>
+        <gene id="22587821" protId="MYOLU14260"/>
+        <gene id="22591910" protId="MYOLU18349"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Pipistrellus kuhlii" NCBITaxId="59472" taxonId="59472">
+    <database name="Pipistrellus kuhlii from Refseq" version="Refseq; mPipKuh1.p; GCF_014108245.1; 22-DEC-2021; Pipistrellus kuhlii Annotation Release 101">
+      <genes>
+        <gene id="22621035" protId="PIPKU27612"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Rhinolophus ferrumequinum" NCBITaxId="59479" taxonId="59479">
+    <database name="Rhinolophus ferrumequinum from Ensembl Vertebrates 51" version="Ensembl Vertebrates 51; mRhiFer1_v1.p">
+      <genes>
+        <gene id="22658383" protId="RHIFE07467"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Hipposideros armiger" NCBITaxId="186990" taxonId="186990">
+    <database name="Hipposideros armiger from Refseq" version="Refseq; ASM189008v1; GCF_001890085.2; 20-DEC-2016">
+      <genes>
+        <gene id="22711897" protId="HIPAR27264"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Equus asinus asinus" NCBITaxId="83772" taxonId="83772">
+    <database name="Equus asinus asinus from Ensembl 94" version="Ensembl 94; ASM303372v1">
+      <genes>
+        <gene id="22754287" protId="EQUAS23865"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Equus caballus" NCBITaxId="9796" taxonId="9796">
+    <database name="Equus caballus from Ensembl 106" version="Ensembl 106; EquCab3.0; GCA_002863925.1">
+      <genes>
+        <gene id="22767618" protId="HORSE03645"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Ceratotherium simum simum" NCBITaxId="73337" taxonId="73337">
+    <database name="Ceratotherium simum simum from Refseq" version="Refseq; CerSimSim1.0; GCF_000283155.1; 27-NOV-2015">
+      <genes>
+        <gene id="22828583" protId="CERSS19676"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Manis javanica" NCBITaxId="9974" taxonId="9974">
+    <database name="Manis javanica from Refseq" version="Refseq; YNU_ManJav_2.0; GCF_014570535.1; 30-OCT-2020">
+      <genes>
+        <gene id="22876211" protId="MANJA33675"/>
+        <gene id="22876212" protId="MANJA33676"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Felis catus" NCBITaxId="9685" taxonId="9685">
+    <database name="Felis catus from Ensembl 106" version="Ensembl 106; Felis_catus_9.0; GCA_000181335.4">
+      <genes>
+        <gene id="22930612" protId="FELCA32207"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Lynx rufus" NCBITaxId="61384" taxonId="61384">
+    <database name="Lynx rufus from Refseq" version="Refseq; mLynRuf1.p; GCF_022079265.1; 05-MAR-2023; mLynRuf1.p">
+      <genes>
+        <gene id="22958083" protId="LYNRU19376"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Puma yagouaroundi" NCBITaxId="1608482" taxonId="1608482">
+    <database name="Puma yagouaroundi from Refseq" version="Refseq; PumYag; GCF_014898765.1; 01-APR-2021; PumYag">
+      <genes>
+        <gene id="23018183" protId="PUMYA40841"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Panthera leo" NCBITaxId="9689" taxonId="9689">
+    <database name="Panthera leo from Ensembl Vertebrates 57" version="Ensembl Vertebrates 57; PanLeo1.0">
+      <genes>
+        <gene id="23038140" protId="PANLE05212"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Suricata suricatta" NCBITaxId="37032" taxonId="37032">
+    <database name="Suricata suricatta from Ensembl Vertebrates 51" version="Ensembl Vertebrates 51; meerkat_22Aug2017_6uvM2_HiC">
+      <genes>
+        <gene id="23090881" protId="SURSU26775"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Canis lupus familiaris" NCBITaxId="9615" taxonId="9615">
+    <database name="Canis familiaris from ENSEMBL v70" version="Ensembl 70; CanFam3.1; 11-DEC-2012">
+      <genes>
+        <gene id="23116861" protId="CANLF15465"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Vulpes vulpes" NCBITaxId="9627" taxonId="9627">
+    <database name="Vulpes vulpes from Ensembl 95" version="Ensembl 95; VulVul2.2">
+      <genes>
+        <gene id="23140759" protId="VULVU18753"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Ursus americanus" NCBITaxId="9643" taxonId="9643">
+    <database name="Ursus americanus from Ensembl 95" version="Ensembl 95; ASM334442v1">
+      <genes>
+        <gene id="23185774" protId="URSAM24678"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Ursus maritimus" NCBITaxId="29073" taxonId="29073">
+    <database name="Ursus maritimus from Ensembl 95" version="Ensembl 95; UrsMar_1.0">
+      <genes>
+        <gene id="23214919" protId="URSMA20986"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Ailuropoda melanoleuca" NCBITaxId="9646" taxonId="9646">
+    <database name="Ailuropoda melanoleuca from ENSEMBL v70" version="Ensembl 70; ailMel1; 12-DEC-2012">
+      <genes>
+        <gene id="23235019" protId="AILME07424"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Mustela putorius furo" NCBITaxId="9669" taxonId="9669">
+    <database name="Mustela putorius furo from ENSEMBL v69" version="Ensembl 69; MusPutFur1.0; 4-OCT-2012">
+      <genes>
+        <gene id="23257544" protId="MUSPF10133"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Meles meles" NCBITaxId="9662" taxonId="9662">
+    <database name="Meles meles from Refseq" version="Refseq; mMelMel3.1 paternal haplotype; GCF_922984935.1; 20-JAN-2022; mMelMel3.1 paternal haplotype">
+      <genes>
+        <gene id="23306236" protId="MELME38920"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Capra hircus" NCBITaxId="9925" taxonId="9925">
+    <database name="Capra hircus from Ensembl 97" version="Ensembl 97; ARS1; GCA_001704415.1">
+      <genes>
+        <gene id="23339972" protId="CAPHI10405"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Ovis aries" NCBITaxId="9940" taxonId="9940">
+    <database name="Ovis aries from ENSEMBL v74" version="Ensembl 74; Oar_v3.1; 27-NOV-2013">
+      <genes>
+        <gene id="23365203" protId="SHEEP02763"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Bos taurus" NCBITaxId="9913" taxonId="9913">
+    <database name="Bos taurus from Ensembl 102" version="Ensembl 102; ARS-UCD1.2; GCA_002263795.2">
+      <genes>
+        <gene id="23396285" protId="BOVIN12761"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Bos indicus x Bos taurus" NCBITaxId="30522" taxonId="30522">
+    <database name="Bos indicus x Bos taurus from Ensembl Vertebrates 51" version="Ensembl Vertebrates 51; UOA_Angus_1">
+      <genes>
+        <gene id="23435373" protId="BOBOX14311"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Sus scrofa" NCBITaxId="9823" taxonId="9823">
+    <database name="Sus scrofa from Ensembl 94" version="Ensembl 94; Sscrofa11.1">
+      <genes>
+        <gene id="23466900" protId="PIGXX03337"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Tursiops truncatus" NCBITaxId="9739" taxonId="9739">
+    <database name="Tursiops truncatus from ENSEMBL v70" version="Ensembl 70; turTru1; 11-DEC-2012">
+      <genes>
+        <gene id="23517302" protId="TURTR13573"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Balaenoptera musculus" NCBITaxId="9771" taxonId="9771">
+    <database name="Balaenoptera musculus from Ensembl Vertebrates [103]" version="Ensembl Vertebrates [103]; mBalMus1.v2">
+      <genes>
+        <gene id="23531712" protId="BALMU11487"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Tupaia belangeri" NCBITaxId="37347" taxonId="37347">
+    <database name="Tupaia belangeri from ENSEMBL v70" version="Ensembl 70; TREESHREW; 11-DEC-2012">
+      <genes>
+        <gene id="23552025" protId="TUPBE00446"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Propithecus coquereli" NCBITaxId="379532" taxonId="379532">
+    <database name="Propithecus coquereli from Ensembl 94" version="Ensembl 94; Pcoq_1.0">
+      <genes>
+        <gene id="23592514" protId="PROCO25562"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Microcebus murinus" NCBITaxId="30608" taxonId="30608">
+    <database name="Microcebus murinus from ENSEMBL v70" version="Ensembl 70; micMur1; 11-DEC-2012">
+      <genes>
+        <gene id="23607787" protId="MICMU08633"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Otolemur garnettii" NCBITaxId="30611" taxonId="30611">
+    <database name="Otolemur garnettii from ENSEMBL v70" version="Ensembl 70; OtoGar3; 11-DEC-2012">
+      <genes>
+        <gene id="23626276" protId="OTOGA10899"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Callithrix jacchus" NCBITaxId="9483" taxonId="9483">
+    <database name="Callithrix jacchus from Ensembl 106" version="Ensembl 106; mCalJac1.pat.X; GCA_011100555.1">
+      <genes>
+        <gene id="23668938" protId="CALJA34047"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Cebus imitator" NCBITaxId="2715852" taxonId="2715852">
+    <database name="Cebus capucinus imitator from Ensembl Vertebrates 52" version="Ensembl Vertebrates 52; Cebus_imitator-1.0">
+      <genes>
+        <gene id="23696261" protId="CEBIM12687"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Saimiri boliviensis boliviensis" NCBITaxId="39432" taxonId="39432">
+    <database name="Saimiri boliviensis boliviensis from Ensembl  41" version="Ensembl  41; SaiBol1.0">
+      <genes>
+        <gene id="23739202" protId="SAIBB15416"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Aotus nancymaae" NCBITaxId="37293" taxonId="37293">
+    <database name="Aotus nancymaae from Ensembl  41" version="Ensembl  41; Anan_2.0">
+      <genes>
+        <gene id="23779548" protId="AOTNA15067"/>
+        <gene id="23782206" protId="AOTNA17725"/>
+        <gene id="23797417" protId="AOTNA32936"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Cercocebus atys" NCBITaxId="9531" taxonId="9531">
+    <database name="Cercocebus atys from Ensembl  41" version="Ensembl  41; Caty_1.0">
+      <genes>
+        <gene id="23823910" protId="CERAT16919"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Macaca fascicularis" NCBITaxId="9541" taxonId="9541">
+    <database name="Macaca fascicularis from Ensembl 94" version="Ensembl 94; Macaca_fascicularis_5.0">
+      <genes>
+        <gene id="23865990" protId="MACFA12932"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Macaca mulatta" NCBITaxId="9544" taxonId="9544">
+    <database name="Macaca mulatta from Ensembl 106" version="Ensembl 106; Mmul_10; GCA_003339765.3">
+      <genes>
+        <gene id="23913377" protId="MACMU14171"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Macaca nemestrina" NCBITaxId="9545" taxonId="9545">
+    <database name="Macaca nemestrina from Ensembl  41" version="Ensembl  41; Mnem_1.0">
+      <genes>
+        <gene id="23980028" protId="MACNE32052"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Papio anubis" NCBITaxId="9555" taxonId="9555">
+    <database name="Papio anubis from Ensembl 106" version="Ensembl 106; Panubis1.0; GCA_008728515.1">
+      <genes>
+        <gene id="24008903" protId="PAPAN14689"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Mandrillus leucophaeus" NCBITaxId="9568" taxonId="9568">
+    <database name="Mandrillus leucophaeus from Ensembl  41" version="Ensembl  41; Mleu.le_1.0">
+      <genes>
+        <gene id="24052901" protId="MANLE14753"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Chlorocebus sabaeus" NCBITaxId="60711" taxonId="60711">
+    <database name="Chlorocebus sabaeus from ENSEMBL v77" version="Ensembl 77; ChlSab1.1; 26-SEP-2014">
+      <genes>
+        <gene id="24084263" protId="CHLSB05212"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Colobus angolensis palliatus" NCBITaxId="336983" taxonId="336983">
+    <database name="Colobus angolensis palliatus from Ensembl 94" version="Ensembl 94; Cang.pa_1.0">
+      <genes>
+        <gene id="24121724" protId="COLAP23501"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Rhinopithecus bieti" NCBITaxId="61621" taxonId="61621">
+    <database name="Rhinopithecus bieti from Ensembl  41" version="Ensembl  41; ASM169854v1">
+      <genes>
+        <gene id="24149099" protId="RHIBE10478"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Rhinopithecus roxellana" NCBITaxId="61622" taxonId="61622">
+    <database name="Rhinopithecus roxellana from Ensembl  41" version="Ensembl  41; Rrox_v1">
+      <genes>
+        <gene id="24210803" protId="RHIRO28452"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Nomascus leucogenys" NCBITaxId="61853" taxonId="61853">
+    <database name="Nomascus leucogenys from Ensembl 106" version="Ensembl 106; Nleu_3.0; GCA_000146795.3">
+      <genes>
+        <gene id="24244981" protId="NOMLE16733"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Gorilla gorilla gorilla" NCBITaxId="9595" taxonId="9595">
+    <database name="Gorilla gorilla gorilla from Ensembl 106" version="Ensembl 106; gorGor4; GCA_000151905.3">
+      <genes>
+        <gene id="24281722" protId="GORGO12947"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Pan paniscus" NCBITaxId="9597" taxonId="9597">
+    <database name="Pan paniscus from Ensembl Main 91" version="Ensembl Main 91; panpan1.1">
+      <genes>
+        <gene id="24330257" protId="PANPA16288"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Pan troglodytes" NCBITaxId="9598" taxonId="9598">
+    <database name="Pan troglodytes from Ensembl Main 91" version="Ensembl Main 91; Pan_tro_3.0">
+      <genes>
+        <gene id="24370499" protId="PANTR13505"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Homo sapiens" NCBITaxId="9606" taxonId="9606">
+    <database name="Homo sapiens from Ensembl 102" version="Ensembl 102; GRCh38">
+      <genes>
+        <gene id="24438216" protId="HUMAN31534"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Pongo abelii" NCBITaxId="9601" taxonId="9601">
+    <database name="Pongo abelii from Ensembl 106" version="Ensembl 106; Susie_PABv2; GCA_002880775.3">
+      <genes>
+        <gene id="24522978" protId="PONAB13096"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Carlito syrichta" NCBITaxId="1868482" taxonId="1868482">
+    <database name="Carlito syrichta from Ensembl 106" version="Ensembl 106; Tarsius_syrichta-2.0.1; GCA_000164805.2">
+      <genes>
+        <gene id="24558733" protId="CARSF10741"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Ochotona princeps" NCBITaxId="9978" taxonId="9978">
+    <database name="Ochotona princeps from ENSEMBL v70" version="Ensembl 70; pika; 11-DEC-2012">
+      <genes>
+        <gene id="24589396" protId="OCHPR09613"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Oryctolagus cuniculus" NCBITaxId="9986" taxonId="9986">
+    <database name="Oryctolagus cuniculus from ENSEMBL v84" version="Ensembl 84; OryCun2.0; 24-FEB-2016">
+      <genes>
+        <gene id="24602846" protId="RABIT07195"/>
+        <gene id="24613906" protId="RABIT18255"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Cavia porcellus" NCBITaxId="10141" taxonId="10141">
+    <database name="Cavia porcellus from Ensembl 106" version="Ensembl 106; Cavpor3.0; GCA_000151735.1">
+      <genes>
+        <gene id="24633402" protId="CAVPO18384"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Cavia aperea" NCBITaxId="37548" taxonId="37548">
+    <database name="Cavia aperea from Ensembl 94" version="Ensembl 94; CavAp1.0">
+      <genes>
+        <gene id="24654024" protId="CAVAP13424"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Chinchilla lanigera" NCBITaxId="34839" taxonId="34839">
+    <database name="Chinchilla lanigera from Ensembl 90" version="Ensembl 90; ChiLan1.0">
+      <genes>
+        <gene id="24675481" protId="CHILA16183"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Octodon degus" NCBITaxId="10160" taxonId="10160">
+    <database name="Octodon degus from Ensembl 90" version="Ensembl 90; OctDeg1.0">
+      <genes>
+        <gene id="24701654" protId="OCTDE17078"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Heterocephalus glaber" NCBITaxId="10181" taxonId="10181">
+    <database name="Heterocephalus glaber from Ensembl  41" version="Ensembl  41; HetGla_1.0">
+      <genes>
+        <gene id="24714580" protId="HETGA02957"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Fukomys damarensis" NCBITaxId="885580" taxonId="885580">
+    <database name="Fukomys damarensis from Ensembl 91" version="Ensembl 91; DMR_v1.0">
+      <genes>
+        <gene id="24750010" protId="FUKDA10288"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Ictidomys tridecemlineatus" NCBITaxId="43179" taxonId="43179">
+    <database name="Spermophilus tridecemlineatus from ENSEMBL v67" version="Ensembl 67; spetri2; 26-APR-2012">
+      <genes>
+        <gene id="24779650" protId="ICTTR16589"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Dipodomys ordii" NCBITaxId="10020" taxonId="10020">
+    <database name="Dipodomys ordii from Ensembl 106" version="Ensembl 106; Dord_2.0; GCA_000151885.2">
+      <genes>
+        <gene id="24790761" protId="DIPOR08661"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Mus musculus" NCBITaxId="10090" taxonId="10090">
+    <database name="Mus musculus from Ensembl 104" version="Ensembl 104; GRCm39">
+      <genes>
+        <gene id="24811722" protId="MOUSE05660"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Rattus norvegicus" NCBITaxId="10116" taxonId="10116">
+    <database name="Rattus norvegicus from Ensembl 106" version="Ensembl 106; mRatBN7.2; GCA_015227675.2">
+      <genes>
+        <gene id="24876297" protId="RATNO03077"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Rattus rattus" NCBITaxId="10117" taxonId="10117">
+    <database name="Rattus rattus from Refseq" version="Refseq; Rrattus_CSIRO_v1; GCF_011064425.1; 14-MAR-2020; Rrattus_CSIRO_v1">
+      <genes>
+        <gene id="24927884" protId="RATRT08728"/>
+        <gene id="24942736" protId="RATRT23580"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Nannospalax galili" NCBITaxId="1026970" taxonId="1026970">
+    <database name="Nannospalax galili from Ensembl 90" version="Ensembl 90; S.galili_v1.0">
+      <genes>
+        <gene id="24956493" protId="NANGA01862"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Cricetulus griseus" NCBITaxId="10029" taxonId="10029">
+    <database name="Cricetulus griseus from Ensembl  41" version="Ensembl  41; CriGri_1.0">
+      <genes>
+        <gene id="24984530" protId="CRIGR03030"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Microtus ochrogaster" NCBITaxId="79684" taxonId="79684">
+    <database name="Microtus ochrogaster from Refseq" version="Refseq; MicOch1.0; GCF_000317375.1; 15-OCT-2018; Microtus ochrogaster Annotation Release 102">
+      <genes>
+        <gene id="25017612" protId="MICOH09127"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Jaculus jaculus" NCBITaxId="51337" taxonId="51337">
+    <database name="Jaculus jaculus from Ensembl 90" version="Ensembl 90; JacJac1.0">
+      <genes>
+        <gene id="25067413" protId="JACJA21133"/>
+      </genes>
+    </database>
+  </species>
+  <taxonomy>
+    <taxon id="117571" name="Euteleostomi">
+      <taxon id="41665" name="Neopterygii">
+        <taxon id="7918" name="Lepisosteus oculatus"/>
+        <taxon id="32443" name="Teleostei">
+          <taxon id="7936" name="Anguilla anguilla"/>
+          <taxon id="186625" name="Clupeocephala">
+            <taxon id="186626" name="Otophysi">
+              <taxon id="30727" name="Cyprinoidei">
+                <taxon id="7955" name="Danio rerio"/>
+                <taxon id="2743694" name="Cyprininae">
+                  <taxon id="630221" name="Cyprinus carpio carpio"/>
+                  <taxon id="75366" name="Sinocyclocheilus grahami"/>
+                </taxon>
+              </taxon>
+              <taxon id="186628" name="Characiphysae">
+                <taxon id="8005" name="Electrophorus electricus"/>
+                <taxon id="1489739" name="Characoidei">
+                  <taxon id="7994" name="Astyanax mexicanus"/>
+                  <taxon id="42514" name="Pygocentrus nattereri"/>
+                </taxon>
+                <taxon id="1489793" name="Siluroidei">
+                  <taxon id="1234273" name="Tachysurus fulvidraco"/>
+                  <taxon id="1594786" name="Clarias magur"/>
+                  <taxon id="7996" name="Ictaluridae">
+                    <taxon id="219545" name="Ameiurus melas"/>
+                    <taxon id="7998" name="Ictalurus punctatus"/>
+                  </taxon>
+                </taxon>
+              </taxon>
+            </taxon>
+            <taxon id="1489388" name="Euteleosteomorpha">
+              <taxon id="41705" name="Protacanthopterygii">
+                <taxon id="8010" name="Esox lucius"/>
+                <taxon id="8028" name="Salmo">
+                  <taxon id="8030" name="Salmo salar"/>
+                  <taxon id="8032" name="Salmo trutta"/>
+                </taxon>
+              </taxon>
+              <taxon id="123368" name="Acanthomorphata">
+                <taxon id="8049" name="Gadus morhua"/>
+                <taxon id="1489872" name="Percomorphaceae">
+                  <taxon id="64144" name="Anabas testudineus"/>
+                  <taxon id="109280" name="Hippocampus comes"/>
+                  <taxon id="1489904" name="Carangaria">
+                    <taxon id="1489907" name="Carangiformes">
+                      <taxon id="41447" name="Seriola dumerili"/>
+                      <taxon id="173247" name="Echeneis naucrates"/>
+                    </taxon>
+                    <taxon id="30942" name="Pleuronectoidei">
+                      <taxon id="244447" name="Cynoglossus semilaevis"/>
+                      <taxon id="52904" name="Scophthalmus maximus"/>
+                    </taxon>
+                  </taxon>
+                  <taxon id="1489922" name="Eupercaria">
+                    <taxon id="13489" name="Dicentrarchus labrax"/>
+                    <taxon id="69293" name="Gasterosteus aculeatus"/>
+                    <taxon id="8175" name="Sparus aurata"/>
+                    <taxon id="31022" name="Tetraodontiformes">
+                      <taxon id="94237" name="Mola mola"/>
+                      <taxon id="31031" name="Tetraodontidae">
+                        <taxon id="31033" name="Takifugu rubripes"/>
+                        <taxon id="99883" name="Tetraodon nigroviridis"/>
+                      </taxon>
+                    </taxon>
+                  </taxon>
+                  <taxon id="1489908" name="Ovalentaria">
+                    <taxon id="181472" name="Salarias fasciatus"/>
+                    <taxon id="80969" name="Amphiprion">
+                      <taxon id="80972" name="Amphiprion ocellaris"/>
+                      <taxon id="161767" name="Amphiprion percula"/>
+                    </taxon>
+                    <taxon id="8113" name="Cichlidae">
+                      <taxon id="61819" name="Amphilophus citrinellus"/>
+                      <taxon id="318546" name="Pseudocrenilabrinae">
+                        <taxon id="32507" name="Neolamprologus brichardi"/>
+                        <taxon id="319058" name="Haplochromini">
+                          <taxon id="8154" name="Astatotilapia calliptera"/>
+                          <taxon id="8153" name="Haplochromis burtoni"/>
+                        </taxon>
+                        <taxon id="8139" name="Oreochromis">
+                          <taxon id="47969" name="Oreochromis aureus"/>
+                          <taxon id="8128" name="Oreochromis niloticus"/>
+                        </taxon>
+                      </taxon>
+                    </taxon>
+                    <taxon id="1489913" name="Atherinomorphae">
+                      <taxon id="8089" name="Oryzias">
+                        <taxon id="123683" name="Oryzias javanicus"/>
+                        <taxon id="8090" name="Oryzias latipes"/>
+                        <taxon id="30732" name="Oryzias melastigma"/>
+                      </taxon>
+                      <taxon id="28738" name="Cyprinodontiformes">
+                        <taxon id="45443" name="Aplocheiloidei">
+                          <taxon id="105023" name="Nothobranchius furzeri"/>
+                          <taxon id="37003" name="Kryptolebias marmoratus"/>
+                        </taxon>
+                        <taxon id="8087" name="Cyprinodontoidei">
+                          <taxon id="28743" name="Cyprinodon variegatus"/>
+                          <taxon id="586240" name="Poeciliinae">
+                            <taxon id="33528" name="Gambusia affinis"/>
+                            <taxon id="8083" name="Xiphophorus maculatus"/>
+                            <taxon id="8080" name="Poecilia">
+                              <taxon id="48698" name="Poecilia formosa"/>
+                              <taxon id="8081" name="Poecilia reticulata"/>
+                            </taxon>
+                          </taxon>
+                        </taxon>
+                      </taxon>
+                    </taxon>
+                  </taxon>
+                </taxon>
+              </taxon>
+            </taxon>
+          </taxon>
+        </taxon>
+      </taxon>
+      <taxon id="8287" name="Sarcopterygii">
+        <taxon id="7897" name="Latimeria chalumnae"/>
+        <taxon id="32523" name="Tetrapoda">
+          <taxon id="8342" name="Anura">
+            <taxon id="8417" name="Hyloidea">
+              <taxon id="8384" name="Bufo bufo"/>
+              <taxon id="57060" name="Eleutherodactylus coqui"/>
+            </taxon>
+            <taxon id="8353" name="Xenopus">
+              <taxon id="8364" name="Xenopus tropicalis"/>
+              <taxon id="8355" name="Xenopus laevis"/>
+            </taxon>
+          </taxon>
+          <taxon id="32524" name="Amniota">
+            <taxon id="32561" name="Sauria">
+              <taxon id="8504" name="Lepidosauria">
+                <taxon id="8508" name="Sphenodon punctatus"/>
+                <taxon id="1329961" name="Bifurcata">
+                  <taxon id="481883" name="Eublepharis macularius"/>
+                  <taxon id="1329912" name="Episquamata">
+                    <taxon id="1329976" name="Laterata">
+                      <taxon id="96440" name="Salvator merianae"/>
+                      <taxon id="162266" name="Lacertinae">
+                        <taxon id="80427" name="Lacerta agilis"/>
+                        <taxon id="64176" name="Podarcis muralis"/>
+                        <taxon id="8524" name="Zootoca vivipara"/>
+                      </taxon>
+                    </taxon>
+                    <taxon id="1329911" name="Toxicofera">
+                      <taxon id="61221" name="Varanus komodoensis"/>
+                      <taxon id="8511" name="Iguania">
+                        <taxon id="28377" name="Anolis carolinensis"/>
+                        <taxon id="42425" name="Phrynosomatinae">
+                          <taxon id="52577" name="Phrynosoma platyrhinos"/>
+                          <taxon id="8520" name="Sceloporus undulatus"/>
+                        </taxon>
+                      </taxon>
+                      <taxon id="8570" name="Serpentes">
+                        <taxon id="176946" name="Python bivittatus"/>
+                        <taxon id="34989" name="Colubroidea">
+                          <taxon id="8578" name="Colubridae">
+                            <taxon id="94885" name="Pantherophis guttatus"/>
+                            <taxon id="35005" name="Thamnophis elegans"/>
+                          </taxon>
+                          <taxon id="8710" name="Crotalinae">
+                            <taxon id="88082" name="Crotalus tigris"/>
+                            <taxon id="103944" name="Protobothrops mucrosquamatus"/>
+                          </taxon>
+                          <taxon id="8602" name="Elapidae">
+                            <taxon id="8673" name="Pseudonaja textilis"/>
+                            <taxon id="42168" name="Elapinae">
+                              <taxon id="35670" name="Naja naja"/>
+                              <taxon id="8665" name="Ophiophagus hannah"/>
+                            </taxon>
+                          </taxon>
+                        </taxon>
+                      </taxon>
+                    </taxon>
+                  </taxon>
+                </taxon>
+              </taxon>
+              <taxon id="1329799" name="Archelosauria">
+                <taxon id="8464" name="Cryptodira">
+                  <taxon id="13735" name="Pelodiscus sinensis"/>
+                  <taxon id="8486" name="Testudinoidea">
+                    <taxon id="8478" name="Chrysemys picta bellii"/>
+                    <taxon id="106734" name="Chelonoidis abingdonii"/>
+                  </taxon>
+                </taxon>
+                <taxon id="8492" name="Archosauria">
+                  <taxon id="8502" name="Crocodylus porosus"/>
+                  <taxon id="8825" name="Neognathae">
+                    <taxon id="52644" name="Haliaeetus leucocephalus"/>
+                    <taxon id="100819" name="Falco tinnunculus"/>
+                    <taxon id="9223" name="Psittaciformes">
+                      <taxon id="2489341" name="Strigops habroptila"/>
+                      <taxon id="13146" name="Melopsittacus undulatus"/>
+                    </taxon>
+                    <taxon id="30458" name="Strigiformes">
+                      <taxon id="194338" name="Athene cunicularia"/>
+                      <taxon id="56313" name="Tyto alba"/>
+                    </taxon>
+                    <taxon id="1549675" name="Galloanserae">
+                      <taxon id="8839" name="Anas platyrhynchos">
+                        <taxon id="-2589" name="Anas platyrhynchos - ANAPL"/>
+                        <taxon id="8840" name="Anas platyrhynchos platyrhynchos"/>
+                      </taxon>
+                      <taxon id="9005" name="Phasianidae">
+                        <taxon id="9103" name="Meleagris gallopavo"/>
+                        <taxon id="9072" name="Phasianinae">
+                          <taxon id="9031" name="Gallus gallus"/>
+                          <taxon id="9054" name="Phasianus colchicus"/>
+                        </taxon>
+                      </taxon>
+                    </taxon>
+                    <taxon id="9126" name="Passeriformes">
+                      <taxon id="1196302" name="Corvus moneduloides"/>
+                      <taxon id="59894" name="Ficedula albicollis"/>
+                      <taxon id="9157" name="Parus major"/>
+                      <taxon id="40217" name="Junco hyemalis"/>
+                      <taxon id="175121" name="Passeroidea">
+                        <taxon id="59729" name="Taeniopygia guttata"/>
+                        <taxon id="9135" name="Serinus canaria"/>
+                        <taxon id="44316" name="Chloebia gouldiae"/>
+                      </taxon>
+                    </taxon>
+                  </taxon>
+                </taxon>
+              </taxon>
+            </taxon>
+            <taxon id="40674" name="Mammalia">
+              <taxon id="9255" name="Monotremata">
+                <taxon id="9258" name="Ornithorhynchus anatinus"/>
+                <taxon id="9261" name="Tachyglossus aculeatus"/>
+              </taxon>
+              <taxon id="32525" name="Theria">
+                <taxon id="9263" name="Metatheria">
+                  <taxon id="9305" name="Sarcophilus harrisii"/>
+                  <taxon id="126287" name="Didelphinae">
+                    <taxon id="191870" name="Gracilinanus agilis"/>
+                    <taxon id="13616" name="Monodelphis domestica"/>
+                  </taxon>
+                  <taxon id="38609" name="Diprotodontia">
+                    <taxon id="9315" name="Notamacropus eugenii"/>
+                    <taxon id="38626" name="Phascolarctos cinereus"/>
+                    <taxon id="29139" name="Vombatus ursinus"/>
+                  </taxon>
+                </taxon>
+                <taxon id="9347" name="Eutheria">
+                  <taxon id="9348" name="Xenarthra">
+                    <taxon id="9361" name="Dasypus novemcinctus"/>
+                    <taxon id="9358" name="Choloepus hoffmanni"/>
+                  </taxon>
+                  <taxon id="311790" name="Afrotheria">
+                    <taxon id="9813" name="Procavia capensis"/>
+                    <taxon id="9785" name="Loxodonta africana"/>
+                    <taxon id="9371" name="Echinops telfairi"/>
+                  </taxon>
+                  <taxon id="1437010" name="Boreoeutheria">
+                    <taxon id="314145" name="Laurasiatheria">
+                      <taxon id="9974" name="Manis javanica"/>
+                      <taxon id="9362" name="Eulipotyphla">
+                        <taxon id="9365" name="Erinaceus europaeus"/>
+                        <taxon id="42254" name="Sorex araneus"/>
+                      </taxon>
+                      <taxon id="9787" name="Perissodactyla">
+                        <taxon id="73337" name="Ceratotherium simum simum"/>
+                        <taxon id="9789" name="Equus">
+                          <taxon id="83772" name="Equus asinus asinus"/>
+                          <taxon id="9796" name="Equus caballus"/>
+                        </taxon>
+                      </taxon>
+                      <taxon id="9397" name="Chiroptera">
+                        <taxon id="132908" name="Pteropus vampyrus"/>
+                        <taxon id="59479" name="Rhinolophus ferrumequinum"/>
+                        <taxon id="186990" name="Hipposideros armiger"/>
+                        <taxon id="9431" name="Vespertilionidae">
+                          <taxon id="59463" name="Myotis lucifugus"/>
+                          <taxon id="59472" name="Pipistrellus kuhlii"/>
+                        </taxon>
+                      </taxon>
+                      <taxon id="91561" name="Artiodactyla">
+                        <taxon id="9823" name="Sus scrofa"/>
+                        <taxon id="30538" name="Vicugna pacos"/>
+                        <taxon id="9721" name="Cetacea">
+                          <taxon id="9771" name="Balaenoptera musculus"/>
+                          <taxon id="9739" name="Tursiops truncatus"/>
+                        </taxon>
+                        <taxon id="9895" name="Bovidae">
+                          <taxon id="9903" name="Bos">
+                            <taxon id="30522" name="Bos indicus x Bos taurus"/>
+                            <taxon id="9913" name="Bos taurus"/>
+                          </taxon>
+                          <taxon id="9963" name="Caprinae">
+                            <taxon id="9925" name="Capra hircus"/>
+                            <taxon id="9940" name="Ovis aries"/>
+                          </taxon>
+                        </taxon>
+                      </taxon>
+                      <taxon id="33554" name="Carnivora">
+                        <taxon id="379583" name="Feliformia">
+                          <taxon id="37032" name="Suricata suricatta"/>
+                          <taxon id="9681" name="Felidae">
+                            <taxon id="9689" name="Panthera leo"/>
+                            <taxon id="338152" name="Felinae">
+                              <taxon id="9685" name="Felis catus"/>
+                              <taxon id="61384" name="Lynx rufus"/>
+                              <taxon id="1608482" name="Puma yagouaroundi"/>
+                            </taxon>
+                          </taxon>
+                        </taxon>
+                        <taxon id="379584" name="Caniformia">
+                          <taxon id="9608" name="Canidae">
+                            <taxon id="9615" name="Canis lupus familiaris"/>
+                            <taxon id="9627" name="Vulpes vulpes"/>
+                          </taxon>
+                          <taxon id="9655" name="Mustelidae">
+                            <taxon id="9662" name="Meles meles"/>
+                            <taxon id="9669" name="Mustela putorius furo"/>
+                          </taxon>
+                          <taxon id="9632" name="Ursidae">
+                            <taxon id="9646" name="Ailuropoda melanoleuca"/>
+                            <taxon id="9639" name="Ursus">
+                              <taxon id="9643" name="Ursus americanus"/>
+                              <taxon id="29073" name="Ursus maritimus"/>
+                            </taxon>
+                          </taxon>
+                        </taxon>
+                      </taxon>
+                    </taxon>
+                    <taxon id="314146" name="Euarchontoglires">
+                      <taxon id="37347" name="Tupaia belangeri"/>
+                      <taxon id="314147" name="Glires">
+                        <taxon id="9975" name="Lagomorpha">
+                          <taxon id="9986" name="Oryctolagus cuniculus"/>
+                          <taxon id="9978" name="Ochotona princeps"/>
+                        </taxon>
+                        <taxon id="9989" name="Rodentia">
+                          <taxon id="10020" name="Dipodomys ordii"/>
+                          <taxon id="43179" name="Ictidomys tridecemlineatus"/>
+                          <taxon id="33550" name="Hystricomorpha">
+                            <taxon id="34839" name="Chinchilla lanigera"/>
+                            <taxon id="10160" name="Octodon degus"/>
+                            <taxon id="10167" name="Bathyergidae">
+                              <taxon id="885580" name="Fukomys damarensis"/>
+                              <taxon id="10181" name="Heterocephalus glaber"/>
+                            </taxon>
+                            <taxon id="10140" name="Cavia">
+                              <taxon id="37548" name="Cavia aperea"/>
+                              <taxon id="10141" name="Cavia porcellus"/>
+                            </taxon>
+                          </taxon>
+                          <taxon id="1963758" name="Myomorpha">
+                            <taxon id="51337" name="Jaculus jaculus"/>
+                            <taxon id="337687" name="Muroidea">
+                              <taxon id="1026970" name="Nannospalax galili"/>
+                              <taxon id="337677" name="Cricetidae">
+                                <taxon id="79684" name="Microtus ochrogaster"/>
+                                <taxon id="10029" name="Cricetulus griseus"/>
+                              </taxon>
+                              <taxon id="39107" name="Murinae">
+                                <taxon id="10090" name="Mus musculus"/>
+                                <taxon id="10114" name="Rattus">
+                                  <taxon id="10116" name="Rattus norvegicus"/>
+                                  <taxon id="10117" name="Rattus rattus"/>
+                                </taxon>
+                              </taxon>
+                            </taxon>
+                          </taxon>
+                        </taxon>
+                      </taxon>
+                      <taxon id="9443" name="Primates">
+                        <taxon id="376911" name="Strepsirrhini">
+                          <taxon id="30611" name="Otolemur garnettii"/>
+                          <taxon id="376915" name="Lemuriformes">
+                            <taxon id="30608" name="Microcebus murinus"/>
+                            <taxon id="379532" name="Propithecus coquereli"/>
+                          </taxon>
+                        </taxon>
+                        <taxon id="376913" name="Haplorrhini">
+                          <taxon id="1868482" name="Carlito syrichta"/>
+                          <taxon id="314293" name="Simiiformes">
+                            <taxon id="9479" name="Platyrrhini">
+                              <taxon id="37293" name="Aotus nancymaae"/>
+                              <taxon id="9498" name="Cebidae">
+                                <taxon id="9483" name="Callithrix jacchus"/>
+                                <taxon id="2715852" name="Cebus imitator"/>
+                                <taxon id="39432" name="Saimiri boliviensis boliviensis"/>
+                              </taxon>
+                            </taxon>
+                            <taxon id="9526" name="Catarrhini">
+                              <taxon id="314295" name="Hominoidea">
+                                <taxon id="61853" name="Nomascus leucogenys"/>
+                                <taxon id="9604" name="Hominidae">
+                                  <taxon id="9601" name="Pongo abelii"/>
+                                  <taxon id="207598" name="Homininae">
+                                    <taxon id="9595" name="Gorilla gorilla gorilla"/>
+                                    <taxon id="9606" name="Homo sapiens"/>
+                                    <taxon id="9596" name="Pan">
+                                      <taxon id="9597" name="Pan paniscus"/>
+                                      <taxon id="9598" name="Pan troglodytes"/>
+                                    </taxon>
+                                  </taxon>
+                                </taxon>
+                              </taxon>
+                              <taxon id="9527" name="Cercopithecidae">
+                                <taxon id="9569" name="Colobinae">
+                                  <taxon id="336983" name="Colobus angolensis palliatus"/>
+                                  <taxon id="542827" name="Rhinopithecus">
+                                    <taxon id="61621" name="Rhinopithecus bieti"/>
+                                    <taxon id="61622" name="Rhinopithecus roxellana"/>
+                                  </taxon>
+                                </taxon>
+                                <taxon id="9528" name="Cercopithecinae">
+                                  <taxon id="9531" name="Cercocebus atys"/>
+                                  <taxon id="60711" name="Chlorocebus sabaeus"/>
+                                  <taxon id="9568" name="Mandrillus leucophaeus"/>
+                                  <taxon id="9555" name="Papio anubis"/>
+                                  <taxon id="9539" name="Macaca">
+                                    <taxon id="9541" name="Macaca fascicularis"/>
+                                    <taxon id="9544" name="Macaca mulatta"/>
+                                    <taxon id="9545" name="Macaca nemestrina"/>
+                                  </taxon>
+                                </taxon>
+                              </taxon>
+                            </taxon>
+                          </taxon>
+                        </taxon>
+                      </taxon>
+                    </taxon>
+                  </taxon>
+                </taxon>
+              </taxon>
+            </taxon>
+          </taxon>
+        </taxon>
+      </taxon>
+    </taxon>
+  </taxonomy>
+  <scores>
+    <scoreDef id="CompletenessScore" desc="Fraction of expected species genes in the HOG"/>
+  </scores>
+  <groups>
+    <orthologGroup taxonId="117571" id="HOG:F0782425_117571">
+      <score id="CompletenessScore" value="0.607"/>
+      <property name="TaxRange" value="Euteleostomi"/>
+      <property name="NrMemberGenes" value="130"/>
+      <paralogGroup>
+        <orthologGroup taxonId="41665" id="HOG:F0782425.1a_41665">
+          <score id="CompletenessScore" value="0.319"/>
+          <property name="TaxRange" value="Neopterygii"/>
+          <property name="NrMemberGenes" value="18"/>
+          <orthologGroup taxonId="7918" id="HOG:F0782425.1a_7918">
+            <score id="CompletenessScore" value="1.000"/>
+            <property name="TaxRange" value="Lepisosteus oculatus"/>
+            <property name="taxid" value="7918"/>
+            <property name="NrMemberGenes" value="1"/>
+            <geneRef id="20831583" LOFT="HOG:F0782425.1a"/>
+          </orthologGroup>
+          <orthologGroup taxonId="32443" id="HOG:F0782425.1a_32443">
+            <score id="CompletenessScore" value="0.304"/>
+            <property name="TaxRange" value="Teleostei"/>
+            <property name="NrMemberGenes" value="17"/>
+            <orthologGroup taxonId="7936" id="HOG:F0782425.1a_7936">
+              <score id="CompletenessScore" value="1.000"/>
+              <property name="TaxRange" value="Anguilla anguilla"/>
+              <property name="taxid" value="7936"/>
+              <property name="NrMemberGenes" value="1"/>
+              <geneRef id="18651001" LOFT="HOG:F0782425.1a"/>
+            </orthologGroup>
+            <orthologGroup taxonId="186625" id="HOG:F0782425.1a_186625">
+              <score id="CompletenessScore" value="0.289"/>
+              <property name="TaxRange" value="Clupeocephala"/>
+              <property name="NrMemberGenes" value="16"/>
+              <orthologGroup taxonId="186626" id="HOG:F0782425.1a_186626">
+                <score id="CompletenessScore" value="1.000"/>
+                <property name="TaxRange" value="Otophysi"/>
+                <property name="NrMemberGenes" value="13"/>
+                <orthologGroup taxonId="30727" id="HOG:F0782425.1a_30727">
+                  <score id="CompletenessScore" value="1.000"/>
+                  <property name="TaxRange" value="Cyprinoidei"/>
+                  <property name="NrMemberGenes" value="6"/>
+                  <paralogGroup>
+                    <orthologGroup taxonId="7955" id="HOG:F0782425.1a.1a_7955">
+                      <score id="CompletenessScore" value="1.000"/>
+                      <property name="TaxRange" value="Danio rerio"/>
+                      <property name="taxid" value="7955"/>
+                      <property name="NrMemberGenes" value="1"/>
+                      <geneRef id="18962468" LOFT="HOG:F0782425.1a.1a"/>
+                    </orthologGroup>
+                    <orthologGroup taxonId="7955" id="HOG:F0782425.1a.1b_7955">
+                      <score id="CompletenessScore" value="1.000"/>
+                      <property name="TaxRange" value="Danio rerio"/>
+                      <property name="taxid" value="7955"/>
+                      <property name="NrMemberGenes" value="1"/>
+                      <geneRef id="18975703" LOFT="HOG:F0782425.1a.1b"/>
+                    </orthologGroup>
+                  </paralogGroup>
+                  <paralogGroup>
+                    <orthologGroup taxonId="2743694" id="HOG:F0782425.1a.2a_2743694">
+                      <score id="CompletenessScore" value="1.000"/>
+                      <property name="TaxRange" value="Cyprininae"/>
+                      <property name="NrMemberGenes" value="2"/>
+                      <orthologGroup taxonId="630221" id="HOG:F0782425.1a.2a_630221">
+                        <score id="CompletenessScore" value="1.000"/>
+                        <property name="TaxRange" value="Cyprinus carpio carpio"/>
+                        <property name="taxid" value="630221"/>
+                        <property name="NrMemberGenes" value="1"/>
+                        <geneRef id="18691508" LOFT="HOG:F0782425.1a.2a"/>
+                      </orthologGroup>
+                      <orthologGroup taxonId="75366" id="HOG:F0782425.1a.2a_75366">
+                        <score id="CompletenessScore" value="1.000"/>
+                        <property name="TaxRange" value="Sinocyclocheilus grahami"/>
+                        <property name="taxid" value="75366"/>
+                        <property name="NrMemberGenes" value="1"/>
+                        <geneRef id="18843178" LOFT="HOG:F0782425.1a.2a"/>
+                      </orthologGroup>
+                    </orthologGroup>
+                    <orthologGroup taxonId="2743694" id="HOG:F0782425.1a.2b_2743694">
+                      <score id="CompletenessScore" value="1.000"/>
+                      <property name="TaxRange" value="Cyprininae"/>
+                      <property name="NrMemberGenes" value="2"/>
+                      <orthologGroup taxonId="630221" id="HOG:F0782425.1a.2b_630221">
+                        <score id="CompletenessScore" value="1.000"/>
+                        <property name="TaxRange" value="Cyprinus carpio carpio"/>
+                        <property name="taxid" value="630221"/>
+                        <property name="NrMemberGenes" value="1"/>
+                        <geneRef id="18692569" LOFT="HOG:F0782425.1a.2b"/>
+                      </orthologGroup>
+                      <orthologGroup taxonId="75366" id="HOG:F0782425.1a.2b_75366">
+                        <score id="CompletenessScore" value="1.000"/>
+                        <property name="TaxRange" value="Sinocyclocheilus grahami"/>
+                        <property name="taxid" value="75366"/>
+                        <property name="NrMemberGenes" value="1"/>
+                        <geneRef id="18882589" LOFT="HOG:F0782425.1a.2b"/>
+                      </orthologGroup>
+                    </orthologGroup>
+                  </paralogGroup>
+                </orthologGroup>
+                <orthologGroup taxonId="186628" id="HOG:F0782425.1a_186628">
+                  <score id="CompletenessScore" value="1.000"/>
+                  <property name="TaxRange" value="Characiphysae"/>
+                  <property name="NrMemberGenes" value="7"/>
+                  <orthologGroup taxonId="8005" id="HOG:F0782425.1a_8005">
+                    <score id="CompletenessScore" value="1.000"/>
+                    <property name="TaxRange" value="Electrophorus electricus"/>
+                    <property name="taxid" value="8005"/>
+                    <property name="NrMemberGenes" value="1"/>
+                    <geneRef id="19187149" LOFT="HOG:F0782425.1a"/>
+                  </orthologGroup>
+                  <orthologGroup taxonId="1489739" id="HOG:F0782425.1a_1489739">
+                    <score id="CompletenessScore" value="1.000"/>
+                    <property name="TaxRange" value="Characoidei"/>
+                    <property name="NrMemberGenes" value="2"/>
+                    <orthologGroup taxonId="7994" id="HOG:F0782425.1a_7994">
+                      <score id="CompletenessScore" value="1.000"/>
+                      <property name="TaxRange" value="Astyanax mexicanus"/>
+                      <property name="taxid" value="7994"/>
+                      <property name="NrMemberGenes" value="1"/>
+                      <geneRef id="18998987" LOFT="HOG:F0782425.1a"/>
+                    </orthologGroup>
+                    <orthologGroup taxonId="42514" id="HOG:F0782425.1a_42514">
+                      <score id="CompletenessScore" value="1.000"/>
+                      <property name="TaxRange" value="Pygocentrus nattereri"/>
+                      <property name="taxid" value="42514"/>
+                      <property name="NrMemberGenes" value="1"/>
+                      <geneRef id="19037801" LOFT="HOG:F0782425.1a"/>
+                    </orthologGroup>
+                  </orthologGroup>
+                  <orthologGroup taxonId="1489793" id="HOG:F0782425.1a_1489793">
+                    <score id="CompletenessScore" value="1.000"/>
+                    <property name="TaxRange" value="Siluroidei"/>
+                    <property name="NrMemberGenes" value="4"/>
+                    <orthologGroup taxonId="1234273" id="HOG:F0782425.1a_1234273">
+                      <score id="CompletenessScore" value="1.000"/>
+                      <property name="TaxRange" value="Tachysurus fulvidraco"/>
+                      <property name="taxid" value="1234273"/>
+                      <property name="NrMemberGenes" value="1"/>
+                      <geneRef id="19177881" LOFT="HOG:F0782425.1a"/>
+                    </orthologGroup>
+                    <orthologGroup taxonId="1594786" id="HOG:F0782425.1a_1594786">
+                      <score id="CompletenessScore" value="1.000"/>
+                      <property name="TaxRange" value="Clarias magur"/>
+                      <property name="taxid" value="1594786"/>
+                      <property name="NrMemberGenes" value="1"/>
+                      <geneRef id="19118836" LOFT="HOG:F0782425.1a"/>
+                    </orthologGroup>
+                    <orthologGroup taxonId="7996" id="HOG:F0782425.1a_7996">
+                      <score id="CompletenessScore" value="1.000"/>
+                      <property name="TaxRange" value="Ictaluridae"/>
+                      <property name="NrMemberGenes" value="2"/>
+                      <orthologGroup taxonId="219545" id="HOG:F0782425.1a_219545">
+                        <score id="CompletenessScore" value="1.000"/>
+                        <property name="TaxRange" value="Ameiurus melas"/>
+                        <property name="taxid" value="219545"/>
+                        <property name="NrMemberGenes" value="1"/>
+                        <geneRef id="19096999" LOFT="HOG:F0782425.1a"/>
+                      </orthologGroup>
+                      <orthologGroup taxonId="7998" id="HOG:F0782425.1a_7998">
+                        <score id="CompletenessScore" value="1.000"/>
+                        <property name="TaxRange" value="Ictalurus punctatus"/>
+                        <property name="taxid" value="7998"/>
+                        <property name="NrMemberGenes" value="1"/>
+                        <geneRef id="19063353" LOFT="HOG:F0782425.1a"/>
+                      </orthologGroup>
+                    </orthologGroup>
+                  </orthologGroup>
+                </orthologGroup>
+              </orthologGroup>
+              <orthologGroup taxonId="1489388" id="HOG:F0782425.1a_1489388">
+                <score id="CompletenessScore" value="0.086"/>
+                <property name="TaxRange" value="Euteleosteomorpha"/>
+                <property name="taxid" value="1489388"/>
+                <property name="NrMemberGenes" value="3"/>
+                <orthologGroup taxonId="41705" id="HOG:F0782425.1a_41705">
+                  <score id="CompletenessScore" value="1.000"/>
+                  <property name="TaxRange" value="Protacanthopterygii"/>
+                  <property name="NrMemberGenes" value="3"/>
+                  <orthologGroup taxonId="8010" id="HOG:F0782425.1a_8010">
+                    <score id="CompletenessScore" value="1.000"/>
+                    <property name="TaxRange" value="Esox lucius"/>
+                    <property name="taxid" value="8010"/>
+                    <property name="NrMemberGenes" value="1"/>
+                    <geneRef id="19511532" LOFT="HOG:F0782425.1a"/>
+                  </orthologGroup>
+                  <orthologGroup taxonId="8028" id="HOG:F0782425.1a_8028">
+                    <score id="CompletenessScore" value="1.000"/>
+                    <property name="TaxRange" value="Salmo"/>
+                    <property name="NrMemberGenes" value="2"/>
+                    <orthologGroup taxonId="8030" id="HOG:F0782425.1a_8030">
+                      <score id="CompletenessScore" value="1.000"/>
+                      <property name="TaxRange" value="Salmo salar"/>
+                      <property name="taxid" value="8030"/>
+                      <property name="NrMemberGenes" value="1"/>
+                      <geneRef id="19350811" LOFT="HOG:F0782425.1a"/>
+                    </orthologGroup>
+                    <orthologGroup taxonId="8032" id="HOG:F0782425.1a_8032">
+                      <score id="CompletenessScore" value="1.000"/>
+                      <property name="TaxRange" value="Salmo trutta"/>
+                      <property name="taxid" value="8032"/>
+                      <property name="NrMemberGenes" value="1"/>
+                      <geneRef id="19481806" LOFT="HOG:F0782425.1a"/>
+                    </orthologGroup>
+                  </orthologGroup>
+                </orthologGroup>
+              </orthologGroup>
+            </orthologGroup>
+          </orthologGroup>
+        </orthologGroup>
+        <orthologGroup taxonId="41665" id="HOG:F0782425.1b_41665">
+          <score id="CompletenessScore" value="0.021"/>
+          <property name="TaxRange" value="Neopterygii"/>
+          <property name="taxid" value="41665"/>
+          <property name="NrMemberGenes" value="1"/>
+          <orthologGroup taxonId="32443" id="HOG:F0782425.1b_32443">
+            <score id="CompletenessScore" value="0.022"/>
+            <property name="TaxRange" value="Teleostei"/>
+            <property name="taxid" value="32443"/>
+            <property name="NrMemberGenes" value="1"/>
+            <orthologGroup taxonId="7936" id="HOG:F0782425.1b_7936">
+              <score id="CompletenessScore" value="1.000"/>
+              <property name="TaxRange" value="Anguilla anguilla"/>
+              <property name="taxid" value="7936"/>
+              <property name="NrMemberGenes" value="1"/>
+              <geneRef id="18630597" LOFT="HOG:F0782425.1b"/>
+            </orthologGroup>
+          </orthologGroup>
+        </orthologGroup>
+      </paralogGroup>
+      <orthologGroup taxonId="8287" id="HOG:F0782425_8287">
+        <score id="CompletenessScore" value="0.710"/>
+        <property name="TaxRange" value="Sarcopterygii"/>
+        <property name="NrMemberGenes" value="111"/>
+        <orthologGroup taxonId="7897" id="HOG:F0782425_7897">
+          <score id="CompletenessScore" value="1.000"/>
+          <property name="TaxRange" value="Latimeria chalumnae"/>
+          <property name="taxid" value="7897"/>
+          <property name="NrMemberGenes" value="1"/>
+          <geneRef id="20853720" LOFT="HOG:F0782425"/>
+        </orthologGroup>
+        <orthologGroup taxonId="32523" id="HOG:F0782425_32523">
+          <score id="CompletenessScore" value="0.708"/>
+          <property name="TaxRange" value="Tetrapoda"/>
+          <property name="NrMemberGenes" value="110"/>
+          <orthologGroup taxonId="8342" id="HOG:F0782425_8342">
+            <score id="CompletenessScore" value="0.750"/>
+            <property name="TaxRange" value="Anura"/>
+            <property name="NrMemberGenes" value="3"/>
+            <orthologGroup taxonId="8417" id="HOG:F0782425_8417">
+              <score id="CompletenessScore" value="1.000"/>
+              <property name="TaxRange" value="Hyloidea"/>
+              <property name="NrMemberGenes" value="2"/>
+              <orthologGroup taxonId="8384" id="HOG:F0782425_8384">
+                <score id="CompletenessScore" value="1.000"/>
+                <property name="TaxRange" value="Bufo bufo"/>
+                <property name="taxid" value="8384"/>
+                <property name="NrMemberGenes" value="1"/>
+                <geneRef id="20869630" LOFT="HOG:F0782425"/>
+              </orthologGroup>
+              <orthologGroup taxonId="57060" id="HOG:F0782425_57060">
+                <score id="CompletenessScore" value="1.000"/>
+                <property name="TaxRange" value="Eleutherodactylus coqui"/>
+                <property name="taxid" value="57060"/>
+                <property name="NrMemberGenes" value="1"/>
+                <geneRef id="20901278" LOFT="HOG:F0782425"/>
+              </orthologGroup>
+            </orthologGroup>
+            <orthologGroup taxonId="8353" id="HOG:F0782425_8353">
+              <score id="CompletenessScore" value="0.500"/>
+              <property name="TaxRange" value="Xenopus"/>
+              <property name="taxid" value="8353"/>
+              <property name="NrMemberGenes" value="1"/>
+              <orthologGroup taxonId="8364" id="HOG:F0782425_8364">
+                <score id="CompletenessScore" value="1.000"/>
+                <property name="TaxRange" value="Xenopus tropicalis"/>
+                <property name="taxid" value="8364"/>
+                <property name="NrMemberGenes" value="1"/>
+                <geneRef id="20997889" LOFT="HOG:F0782425"/>
+              </orthologGroup>
+            </orthologGroup>
+          </orthologGroup>
+          <orthologGroup taxonId="32524" id="HOG:F0782425_32524">
+            <score id="CompletenessScore" value="0.706"/>
+            <property name="TaxRange" value="Amniota"/>
+            <property name="NrMemberGenes" value="107"/>
+            <orthologGroup taxonId="32561" id="HOG:F0782425_32561">
+              <score id="CompletenessScore" value="0.150"/>
+              <property name="TaxRange" value="Sauria"/>
+              <property name="taxid" value="32561"/>
+              <property name="NrMemberGenes" value="6"/>
+              <orthologGroup taxonId="1329799" id="HOG:F0782425_1329799">
+                <score id="CompletenessScore" value="0.273"/>
+                <property name="TaxRange" value="Archelosauria"/>
+                <property name="NrMemberGenes" value="6"/>
+                <orthologGroup taxonId="8464" id="HOG:F0782425_8464">
+                  <score id="CompletenessScore" value="1.000"/>
+                  <property name="TaxRange" value="Cryptodira"/>
+                  <property name="NrMemberGenes" value="3"/>
+                  <orthologGroup taxonId="13735" id="HOG:F0782425_13735">
+                    <score id="CompletenessScore" value="1.000"/>
+                    <property name="TaxRange" value="Pelodiscus sinensis"/>
+                    <property name="taxid" value="13735"/>
+                    <property name="NrMemberGenes" value="1"/>
+                    <geneRef id="22122616" LOFT="HOG:F0782425"/>
+                  </orthologGroup>
+                  <orthologGroup taxonId="8486" id="HOG:F0782425_8486">
+                    <score id="CompletenessScore" value="1.000"/>
+                    <property name="TaxRange" value="Testudinoidea"/>
+                    <property name="NrMemberGenes" value="2"/>
+                    <orthologGroup taxonId="8478" id="HOG:F0782425_8478">
+                      <score id="CompletenessScore" value="1.000"/>
+                      <property name="TaxRange" value="Chrysemys picta bellii"/>
+                      <property name="taxid" value="8478"/>
+                      <property name="NrMemberGenes" value="1"/>
+                      <geneRef id="22162562" LOFT="HOG:F0782425"/>
+                    </orthologGroup>
+                    <orthologGroup taxonId="106734" id="HOG:F0782425_106734">
+                      <score id="CompletenessScore" value="1.000"/>
+                      <property name="TaxRange" value="Chelonoidis abingdonii"/>
+                      <property name="taxid" value="106734"/>
+                      <property name="NrMemberGenes" value="1"/>
+                      <geneRef id="22200223" LOFT="HOG:F0782425"/>
+                    </orthologGroup>
+                  </orthologGroup>
+                </orthologGroup>
+                <orthologGroup taxonId="8492" id="HOG:F0782425_8492">
+                  <score id="CompletenessScore" value="0.158"/>
+                  <property name="TaxRange" value="Archosauria"/>
+                  <property name="taxid" value="8492"/>
+                  <property name="NrMemberGenes" value="3"/>
+                  <orthologGroup taxonId="8825" id="HOG:F0782425_8825">
+                    <score id="CompletenessScore" value="0.167"/>
+                    <property name="TaxRange" value="Neognathae"/>
+                    <property name="NrMemberGenes" value="3"/>
+                    <orthologGroup taxonId="9223" id="HOG:F0782425_9223">
+                      <score id="CompletenessScore" value="0.500"/>
+                      <property name="TaxRange" value="Psittaciformes"/>
+                      <property name="taxid" value="9223"/>
+                      <property name="NrMemberGenes" value="1"/>
+                      <orthologGroup taxonId="2489341" id="HOG:F0782425_2489341">
+                        <score id="CompletenessScore" value="1.000"/>
+                        <property name="TaxRange" value="Strigops habroptila"/>
+                        <property name="taxid" value="2489341"/>
+                        <property name="NrMemberGenes" value="1"/>
+                        <geneRef id="21807903" LOFT="HOG:F0782425"/>
+                      </orthologGroup>
+                    </orthologGroup>
+                    <orthologGroup taxonId="1549675" id="HOG:F0782425_1549675">
+                      <score id="CompletenessScore" value="0.200"/>
+                      <property name="TaxRange" value="Galloanserae"/>
+                      <property name="taxid" value="1549675"/>
+                      <property name="NrMemberGenes" value="1"/>
+                      <orthologGroup taxonId="9005" id="HOG:F0782425_9005">
+                        <score id="CompletenessScore" value="0.333"/>
+                        <property name="TaxRange" value="Phasianidae"/>
+                        <property name="taxid" value="9005"/>
+                        <property name="NrMemberGenes" value="1"/>
+                        <orthologGroup taxonId="9072" id="HOG:F0782425_9072">
+                          <score id="CompletenessScore" value="0.500"/>
+                          <property name="TaxRange" value="Phasianinae"/>
+                          <property name="taxid" value="9072"/>
+                          <property name="NrMemberGenes" value="1"/>
+                          <orthologGroup taxonId="9031" id="HOG:F0782425_9031">
+                            <score id="CompletenessScore" value="1.000"/>
+                            <property name="TaxRange" value="Gallus gallus"/>
+                            <property name="taxid" value="9031"/>
+                            <property name="NrMemberGenes" value="1"/>
+                            <geneRef id="22024066" LOFT="HOG:F0782425"/>
+                          </orthologGroup>
+                        </orthologGroup>
+                      </orthologGroup>
+                    </orthologGroup>
+                    <orthologGroup taxonId="9126" id="HOG:F0782425_9126">
+                      <score id="CompletenessScore" value="0.143"/>
+                      <property name="TaxRange" value="Passeriformes"/>
+                      <property name="taxid" value="9126"/>
+                      <property name="NrMemberGenes" value="1"/>
+                      <orthologGroup taxonId="175121" id="HOG:F0782425_175121">
+                        <score id="CompletenessScore" value="0.333"/>
+                        <property name="TaxRange" value="Passeroidea"/>
+                        <property name="taxid" value="175121"/>
+                        <property name="NrMemberGenes" value="1"/>
+                        <orthologGroup taxonId="59729" id="HOG:F0782425_59729">
+                          <score id="CompletenessScore" value="1.000"/>
+                          <property name="TaxRange" value="Taeniopygia guttata"/>
+                          <property name="taxid" value="59729"/>
+                          <property name="NrMemberGenes" value="1"/>
+                          <geneRef id="21718509" LOFT="HOG:F0782425"/>
+                        </orthologGroup>
+                      </orthologGroup>
+                    </orthologGroup>
+                  </orthologGroup>
+                </orthologGroup>
+              </orthologGroup>
+            </orthologGroup>
+            <orthologGroup taxonId="40674" id="HOG:F0782425_40674">
+              <score id="CompletenessScore" value="0.965"/>
+              <property name="TaxRange" value="Mammalia"/>
+              <property name="NrMemberGenes" value="101"/>
+              <orthologGroup taxonId="9255" id="HOG:F0782425_9255">
+                <score id="CompletenessScore" value="1.000"/>
+                <property name="TaxRange" value="Monotremata"/>
+                <property name="NrMemberGenes" value="2"/>
+                <orthologGroup taxonId="9258" id="HOG:F0782425_9258">
+                  <score id="CompletenessScore" value="1.000"/>
+                  <property name="TaxRange" value="Ornithorhynchus anatinus"/>
+                  <property name="taxid" value="9258"/>
+                  <property name="NrMemberGenes" value="1"/>
+                  <geneRef id="22236663" LOFT="HOG:F0782425"/>
+                </orthologGroup>
+                <orthologGroup taxonId="9261" id="HOG:F0782425_9261">
+                  <score id="CompletenessScore" value="1.000"/>
+                  <property name="TaxRange" value="Tachyglossus aculeatus"/>
+                  <property name="taxid" value="9261"/>
+                  <property name="NrMemberGenes" value="1"/>
+                  <geneRef id="22263924" LOFT="HOG:F0782425"/>
+                </orthologGroup>
+              </orthologGroup>
+              <orthologGroup taxonId="32525" id="HOG:F0782425_32525">
+                <score id="CompletenessScore" value="0.964"/>
+                <property name="TaxRange" value="Theria"/>
+                <property name="NrMemberGenes" value="99"/>
+                <paralogGroup>
+                  <orthologGroup taxonId="9347" id="HOG:F0782425.2a_9347">
+                    <score id="CompletenessScore" value="0.038"/>
+                    <property name="TaxRange" value="Eutheria"/>
+                    <property name="taxid" value="9347"/>
+                    <property name="NrMemberGenes" value="14"/>
+                    <orthologGroup taxonId="311790" id="HOG:F0782425.2a_311790">
+                      <score id="CompletenessScore" value="1.000"/>
+                      <property name="TaxRange" value="Afrotheria"/>
+                      <property name="NrMemberGenes" value="14"/>
+                      <paralogGroup>
+                        <orthologGroup taxonId="9785" id="HOG:F0782425.2a.3a_9785">
+                          <score id="CompletenessScore" value="1.000"/>
+                          <property name="TaxRange" value="Loxodonta africana"/>
+                          <property name="taxid" value="9785"/>
+                          <property name="NrMemberGenes" value="1"/>
+                          <geneRef id="22499943" LOFT="HOG:F0782425.2a.3a"/>
+                        </orthologGroup>
+                        <orthologGroup taxonId="9785" id="HOG:F0782425.2a.3b_9785">
+                          <score id="CompletenessScore" value="1.000"/>
+                          <property name="TaxRange" value="Loxodonta africana"/>
+                          <property name="taxid" value="9785"/>
+                          <property name="NrMemberGenes" value="1"/>
+                          <geneRef id="22492420" LOFT="HOG:F0782425.2a.3b"/>
+                        </orthologGroup>
+                        <orthologGroup taxonId="9785" id="HOG:F0782425.2a.3c_9785">
+                          <score id="CompletenessScore" value="1.000"/>
+                          <property name="TaxRange" value="Loxodonta africana"/>
+                          <property name="taxid" value="9785"/>
+                          <property name="NrMemberGenes" value="1"/>
+                          <geneRef id="22492134" LOFT="HOG:F0782425.2a.3c"/>
+                        </orthologGroup>
+                        <orthologGroup taxonId="9785" id="HOG:F0782425.2a.3d_9785">
+                          <score id="CompletenessScore" value="1.000"/>
+                          <property name="TaxRange" value="Loxodonta africana"/>
+                          <property name="taxid" value="9785"/>
+                          <property name="NrMemberGenes" value="1"/>
+                          <geneRef id="22492222" LOFT="HOG:F0782425.2a.3d"/>
+                        </orthologGroup>
+                        <orthologGroup taxonId="9785" id="HOG:F0782425.2a.3e_9785">
+                          <score id="CompletenessScore" value="1.000"/>
+                          <property name="TaxRange" value="Loxodonta africana"/>
+                          <property name="taxid" value="9785"/>
+                          <property name="NrMemberGenes" value="1"/>
+                          <geneRef id="22492444" LOFT="HOG:F0782425.2a.3e"/>
+                        </orthologGroup>
+                        <orthologGroup taxonId="9785" id="HOG:F0782425.2a.3f_9785">
+                          <score id="CompletenessScore" value="1.000"/>
+                          <property name="TaxRange" value="Loxodonta africana"/>
+                          <property name="taxid" value="9785"/>
+                          <property name="NrMemberGenes" value="1"/>
+                          <geneRef id="22492801" LOFT="HOG:F0782425.2a.3f"/>
+                        </orthologGroup>
+                        <orthologGroup taxonId="9785" id="HOG:F0782425.2a.3g_9785">
+                          <score id="CompletenessScore" value="1.000"/>
+                          <property name="TaxRange" value="Loxodonta africana"/>
+                          <property name="taxid" value="9785"/>
+                          <property name="NrMemberGenes" value="1"/>
+                          <geneRef id="22492448" LOFT="HOG:F0782425.2a.3g"/>
+                        </orthologGroup>
+                        <orthologGroup taxonId="9785" id="HOG:F0782425.2a.3h_9785">
+                          <score id="CompletenessScore" value="1.000"/>
+                          <property name="TaxRange" value="Loxodonta africana"/>
+                          <property name="taxid" value="9785"/>
+                          <property name="NrMemberGenes" value="1"/>
+                          <geneRef id="22492122" LOFT="HOG:F0782425.2a.3h"/>
+                        </orthologGroup>
+                        <orthologGroup taxonId="9785" id="HOG:F0782425.2a.3i_9785">
+                          <score id="CompletenessScore" value="1.000"/>
+                          <property name="TaxRange" value="Loxodonta africana"/>
+                          <property name="taxid" value="9785"/>
+                          <property name="NrMemberGenes" value="1"/>
+                          <geneRef id="22492080" LOFT="HOG:F0782425.2a.3i"/>
+                        </orthologGroup>
+                        <orthologGroup taxonId="9785" id="HOG:F0782425.2a.3j_9785">
+                          <score id="CompletenessScore" value="1.000"/>
+                          <property name="TaxRange" value="Loxodonta africana"/>
+                          <property name="taxid" value="9785"/>
+                          <property name="NrMemberGenes" value="1"/>
+                          <geneRef id="22492802" LOFT="HOG:F0782425.2a.3j"/>
+                        </orthologGroup>
+                        <orthologGroup taxonId="9785" id="HOG:F0782425.2a.3k_9785">
+                          <score id="CompletenessScore" value="1.000"/>
+                          <property name="TaxRange" value="Loxodonta africana"/>
+                          <property name="taxid" value="9785"/>
+                          <property name="NrMemberGenes" value="1"/>
+                          <geneRef id="22492176" LOFT="HOG:F0782425.2a.3k"/>
+                        </orthologGroup>
+                      </paralogGroup>
+                      <paralogGroup>
+                        <orthologGroup taxonId="9371" id="HOG:F0782425.2a.4a_9371">
+                          <score id="CompletenessScore" value="1.000"/>
+                          <property name="TaxRange" value="Echinops telfairi"/>
+                          <property name="taxid" value="9371"/>
+                          <property name="NrMemberGenes" value="1"/>
+                          <geneRef id="22486090" LOFT="HOG:F0782425.2a.4a"/>
+                        </orthologGroup>
+                        <orthologGroup taxonId="9371" id="HOG:F0782425.2a.4b_9371">
+                          <score id="CompletenessScore" value="1.000"/>
+                          <property name="TaxRange" value="Echinops telfairi"/>
+                          <property name="taxid" value="9371"/>
+                          <property name="NrMemberGenes" value="1"/>
+                          <geneRef id="22481239" LOFT="HOG:F0782425.2a.4b"/>
+                        </orthologGroup>
+                      </paralogGroup>
+                      <orthologGroup taxonId="9813" id="HOG:F0782425.2a_9813">
+                        <score id="CompletenessScore" value="1.000"/>
+                        <property name="TaxRange" value="Procavia capensis"/>
+                        <property name="taxid" value="9813"/>
+                        <property name="NrMemberGenes" value="1"/>
+                        <geneRef id="22526790" LOFT="HOG:F0782425.2a"/>
+                      </orthologGroup>
+                    </orthologGroup>
+                  </orthologGroup>
+                  <orthologGroup taxonId="9347" id="HOG:F0782425.2b_9347">
+                    <score id="CompletenessScore" value="0.013"/>
+                    <property name="TaxRange" value="Eutheria"/>
+                    <property name="taxid" value="9347"/>
+                    <property name="NrMemberGenes" value="1"/>
+                    <orthologGroup taxonId="311790" id="HOG:F0782425.2b_311790">
+                      <score id="CompletenessScore" value="0.333"/>
+                      <property name="TaxRange" value="Afrotheria"/>
+                      <property name="taxid" value="311790"/>
+                      <property name="NrMemberGenes" value="1"/>
+                      <orthologGroup taxonId="9785" id="HOG:F0782425.2b_9785">
+                        <score id="CompletenessScore" value="1.000"/>
+                        <property name="TaxRange" value="Loxodonta africana"/>
+                        <property name="taxid" value="9785"/>
+                        <property name="NrMemberGenes" value="1"/>
+                        <geneRef id="22492330" LOFT="HOG:F0782425.2b"/>
+                      </orthologGroup>
+                    </orthologGroup>
+                  </orthologGroup>
+                  <orthologGroup taxonId="9347" id="HOG:F0782425.2c_9347">
+                    <score id="CompletenessScore" value="0.936"/>
+                    <property name="TaxRange" value="Eutheria"/>
+                    <property name="NrMemberGenes" value="79"/>
+                    <orthologGroup taxonId="9348" id="HOG:F0782425.2c_9348">
+                      <score id="CompletenessScore" value="0.500"/>
+                      <property name="TaxRange" value="Xenarthra"/>
+                      <property name="taxid" value="9348"/>
+                      <property name="NrMemberGenes" value="1"/>
+                      <orthologGroup taxonId="9361" id="HOG:F0782425.2c_9361">
+                        <score id="CompletenessScore" value="1.000"/>
+                        <property name="TaxRange" value="Dasypus novemcinctus"/>
+                        <property name="taxid" value="9361"/>
+                        <property name="NrMemberGenes" value="1"/>
+                        <geneRef id="22470674" LOFT="HOG:F0782425.2c"/>
+                      </orthologGroup>
+                    </orthologGroup>
+                    <orthologGroup taxonId="1437010" id="HOG:F0782425.2c_1437010">
+                      <score id="CompletenessScore" value="0.986"/>
+                      <property name="TaxRange" value="Boreoeutheria"/>
+                      <property name="NrMemberGenes" value="78"/>
+                      <orthologGroup taxonId="314145" id="HOG:F0782425.2c_314145">
+                        <score id="CompletenessScore" value="0.968"/>
+                        <property name="TaxRange" value="Laurasiatheria"/>
+                        <property name="NrMemberGenes" value="32"/>
+                        <paralogGroup>
+                          <orthologGroup taxonId="9974" id="HOG:F0782425.2c.5a_9974">
+                            <score id="CompletenessScore" value="1.000"/>
+                            <property name="TaxRange" value="Manis javanica"/>
+                            <property name="taxid" value="9974"/>
+                            <property name="NrMemberGenes" value="1"/>
+                            <geneRef id="22876211" LOFT="HOG:F0782425.2c.5a"/>
+                          </orthologGroup>
+                          <orthologGroup taxonId="9974" id="HOG:F0782425.2c.5b_9974">
+                            <score id="CompletenessScore" value="1.000"/>
+                            <property name="TaxRange" value="Manis javanica"/>
+                            <property name="taxid" value="9974"/>
+                            <property name="NrMemberGenes" value="1"/>
+                            <geneRef id="22876212" LOFT="HOG:F0782425.2c.5b"/>
+                          </orthologGroup>
+                        </paralogGroup>
+                        <orthologGroup taxonId="9362" id="HOG:F0782425.2c_9362">
+                          <score id="CompletenessScore" value="1.000"/>
+                          <property name="TaxRange" value="Eulipotyphla"/>
+                          <property name="NrMemberGenes" value="2"/>
+                          <orthologGroup taxonId="9365" id="HOG:F0782425.2c_9365">
+                            <score id="CompletenessScore" value="1.000"/>
+                            <property name="TaxRange" value="Erinaceus europaeus"/>
+                            <property name="taxid" value="9365"/>
+                            <property name="NrMemberGenes" value="1"/>
+                            <geneRef id="22542472" LOFT="HOG:F0782425.2c"/>
+                          </orthologGroup>
+                          <orthologGroup taxonId="42254" id="HOG:F0782425.2c_42254">
+                            <score id="CompletenessScore" value="1.000"/>
+                            <property name="TaxRange" value="Sorex araneus"/>
+                            <property name="taxid" value="42254"/>
+                            <property name="NrMemberGenes" value="1"/>
+                            <geneRef id="22556511" LOFT="HOG:F0782425.2c"/>
+                          </orthologGroup>
+                        </orthologGroup>
+                        <orthologGroup taxonId="9787" id="HOG:F0782425.2c_9787">
+                          <score id="CompletenessScore" value="1.000"/>
+                          <property name="TaxRange" value="Perissodactyla"/>
+                          <property name="NrMemberGenes" value="3"/>
+                          <orthologGroup taxonId="73337" id="HOG:F0782425.2c_73337">
+                            <score id="CompletenessScore" value="1.000"/>
+                            <property name="TaxRange" value="Ceratotherium simum simum"/>
+                            <property name="taxid" value="73337"/>
+                            <property name="NrMemberGenes" value="1"/>
+                            <geneRef id="22828583" LOFT="HOG:F0782425.2c"/>
+                          </orthologGroup>
+                          <orthologGroup taxonId="9789" id="HOG:F0782425.2c_9789">
+                            <score id="CompletenessScore" value="1.000"/>
+                            <property name="TaxRange" value="Equus"/>
+                            <property name="NrMemberGenes" value="2"/>
+                            <orthologGroup taxonId="83772" id="HOG:F0782425.2c_83772">
+                              <score id="CompletenessScore" value="1.000"/>
+                              <property name="TaxRange" value="Equus asinus asinus"/>
+                              <property name="taxid" value="83772"/>
+                              <property name="NrMemberGenes" value="1"/>
+                              <geneRef id="22754287" LOFT="HOG:F0782425.2c"/>
+                            </orthologGroup>
+                            <orthologGroup taxonId="9796" id="HOG:F0782425.2c_9796">
+                              <score id="CompletenessScore" value="1.000"/>
+                              <property name="TaxRange" value="Equus caballus"/>
+                              <property name="taxid" value="9796"/>
+                              <property name="NrMemberGenes" value="1"/>
+                              <geneRef id="22767618" LOFT="HOG:F0782425.2c"/>
+                            </orthologGroup>
+                          </orthologGroup>
+                        </orthologGroup>
+                        <orthologGroup taxonId="9397" id="HOG:F0782425.2c_9397">
+                          <score id="CompletenessScore" value="1.000"/>
+                          <property name="TaxRange" value="Chiroptera"/>
+                          <property name="NrMemberGenes" value="6"/>
+                          <orthologGroup taxonId="132908" id="HOG:F0782425.2c_132908">
+                            <score id="CompletenessScore" value="1.000"/>
+                            <property name="TaxRange" value="Pteropus vampyrus"/>
+                            <property name="taxid" value="132908"/>
+                            <property name="NrMemberGenes" value="1"/>
+                            <geneRef id="22572103" LOFT="HOG:F0782425.2c"/>
+                          </orthologGroup>
+                          <orthologGroup taxonId="59479" id="HOG:F0782425.2c_59479">
+                            <score id="CompletenessScore" value="1.000"/>
+                            <property name="TaxRange" value="Rhinolophus ferrumequinum"/>
+                            <property name="taxid" value="59479"/>
+                            <property name="NrMemberGenes" value="1"/>
+                            <geneRef id="22658383" LOFT="HOG:F0782425.2c"/>
+                          </orthologGroup>
+                          <orthologGroup taxonId="186990" id="HOG:F0782425.2c_186990">
+                            <score id="CompletenessScore" value="1.000"/>
+                            <property name="TaxRange" value="Hipposideros armiger"/>
+                            <property name="taxid" value="186990"/>
+                            <property name="NrMemberGenes" value="1"/>
+                            <geneRef id="22711897" LOFT="HOG:F0782425.2c"/>
+                          </orthologGroup>
+                          <orthologGroup taxonId="9431" id="HOG:F0782425.2c_9431">
+                            <score id="CompletenessScore" value="1.000"/>
+                            <property name="TaxRange" value="Vespertilionidae"/>
+                            <property name="NrMemberGenes" value="3"/>
+                            <paralogGroup>
+                              <orthologGroup taxonId="59463" id="HOG:F0782425.2c.6a_59463">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Myotis lucifugus"/>
+                                <property name="taxid" value="59463"/>
+                                <property name="NrMemberGenes" value="1"/>
+                                <geneRef id="22591910" LOFT="HOG:F0782425.2c.6a"/>
+                              </orthologGroup>
+                              <orthologGroup taxonId="59463" id="HOG:F0782425.2c.6b_59463">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Myotis lucifugus"/>
+                                <property name="taxid" value="59463"/>
+                                <property name="NrMemberGenes" value="1"/>
+                                <geneRef id="22587821" LOFT="HOG:F0782425.2c.6b"/>
+                              </orthologGroup>
+                            </paralogGroup>
+                            <orthologGroup taxonId="59472" id="HOG:F0782425.2c_59472">
+                              <score id="CompletenessScore" value="1.000"/>
+                              <property name="TaxRange" value="Pipistrellus kuhlii"/>
+                              <property name="taxid" value="59472"/>
+                              <property name="NrMemberGenes" value="1"/>
+                              <geneRef id="22621035" LOFT="HOG:F0782425.2c"/>
+                            </orthologGroup>
+                          </orthologGroup>
+                        </orthologGroup>
+                        <orthologGroup taxonId="91561" id="HOG:F0782425.2c_91561">
+                          <score id="CompletenessScore" value="0.875"/>
+                          <property name="TaxRange" value="Artiodactyla"/>
+                          <property name="NrMemberGenes" value="7"/>
+                          <orthologGroup taxonId="9823" id="HOG:F0782425.2c_9823">
+                            <score id="CompletenessScore" value="1.000"/>
+                            <property name="TaxRange" value="Sus scrofa"/>
+                            <property name="taxid" value="9823"/>
+                            <property name="NrMemberGenes" value="1"/>
+                            <geneRef id="23466900" LOFT="HOG:F0782425.2c"/>
+                          </orthologGroup>
+                          <orthologGroup taxonId="9721" id="HOG:F0782425.2c_9721">
+                            <score id="CompletenessScore" value="1.000"/>
+                            <property name="TaxRange" value="Cetacea"/>
+                            <property name="NrMemberGenes" value="2"/>
+                            <orthologGroup taxonId="9771" id="HOG:F0782425.2c_9771">
+                              <score id="CompletenessScore" value="1.000"/>
+                              <property name="TaxRange" value="Balaenoptera musculus"/>
+                              <property name="taxid" value="9771"/>
+                              <property name="NrMemberGenes" value="1"/>
+                              <geneRef id="23531712" LOFT="HOG:F0782425.2c"/>
+                            </orthologGroup>
+                            <orthologGroup taxonId="9739" id="HOG:F0782425.2c_9739">
+                              <score id="CompletenessScore" value="1.000"/>
+                              <property name="TaxRange" value="Tursiops truncatus"/>
+                              <property name="taxid" value="9739"/>
+                              <property name="NrMemberGenes" value="1"/>
+                              <geneRef id="23517302" LOFT="HOG:F0782425.2c"/>
+                            </orthologGroup>
+                          </orthologGroup>
+                          <orthologGroup taxonId="9895" id="HOG:F0782425.2c_9895">
+                            <score id="CompletenessScore" value="1.000"/>
+                            <property name="TaxRange" value="Bovidae"/>
+                            <property name="NrMemberGenes" value="4"/>
+                            <orthologGroup taxonId="9903" id="HOG:F0782425.2c_9903">
+                              <score id="CompletenessScore" value="1.000"/>
+                              <property name="TaxRange" value="Bos"/>
+                              <property name="NrMemberGenes" value="2"/>
+                              <orthologGroup taxonId="30522" id="HOG:F0782425.2c_30522">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Bos indicus x Bos taurus"/>
+                                <property name="taxid" value="30522"/>
+                                <property name="NrMemberGenes" value="1"/>
+                                <geneRef id="23435373" LOFT="HOG:F0782425.2c"/>
+                              </orthologGroup>
+                              <orthologGroup taxonId="9913" id="HOG:F0782425.2c_9913">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Bos taurus"/>
+                                <property name="taxid" value="9913"/>
+                                <property name="NrMemberGenes" value="1"/>
+                                <geneRef id="23396285" LOFT="HOG:F0782425.2c"/>
+                              </orthologGroup>
+                            </orthologGroup>
+                            <orthologGroup taxonId="9963" id="HOG:F0782425.2c_9963">
+                              <score id="CompletenessScore" value="1.000"/>
+                              <property name="TaxRange" value="Caprinae"/>
+                              <property name="NrMemberGenes" value="2"/>
+                              <orthologGroup taxonId="9925" id="HOG:F0782425.2c_9925">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Capra hircus"/>
+                                <property name="taxid" value="9925"/>
+                                <property name="NrMemberGenes" value="1"/>
+                                <geneRef id="23339972" LOFT="HOG:F0782425.2c"/>
+                              </orthologGroup>
+                              <orthologGroup taxonId="9940" id="HOG:F0782425.2c_9940">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Ovis aries"/>
+                                <property name="taxid" value="9940"/>
+                                <property name="NrMemberGenes" value="1"/>
+                                <geneRef id="23365203" LOFT="HOG:F0782425.2c"/>
+                              </orthologGroup>
+                            </orthologGroup>
+                          </orthologGroup>
+                        </orthologGroup>
+                        <orthologGroup taxonId="33554" id="HOG:F0782425.2c_33554">
+                          <score id="CompletenessScore" value="1.000"/>
+                          <property name="TaxRange" value="Carnivora"/>
+                          <property name="NrMemberGenes" value="12"/>
+                          <orthologGroup taxonId="379583" id="HOG:F0782425.2c_379583">
+                            <score id="CompletenessScore" value="1.000"/>
+                            <property name="TaxRange" value="Feliformia"/>
+                            <property name="NrMemberGenes" value="5"/>
+                            <orthologGroup taxonId="37032" id="HOG:F0782425.2c_37032">
+                              <score id="CompletenessScore" value="1.000"/>
+                              <property name="TaxRange" value="Suricata suricatta"/>
+                              <property name="taxid" value="37032"/>
+                              <property name="NrMemberGenes" value="1"/>
+                              <geneRef id="23090881" LOFT="HOG:F0782425.2c"/>
+                            </orthologGroup>
+                            <orthologGroup taxonId="9681" id="HOG:F0782425.2c_9681">
+                              <score id="CompletenessScore" value="1.000"/>
+                              <property name="TaxRange" value="Felidae"/>
+                              <property name="NrMemberGenes" value="4"/>
+                              <orthologGroup taxonId="9689" id="HOG:F0782425.2c_9689">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Panthera leo"/>
+                                <property name="taxid" value="9689"/>
+                                <property name="NrMemberGenes" value="1"/>
+                                <geneRef id="23038140" LOFT="HOG:F0782425.2c"/>
+                              </orthologGroup>
+                              <orthologGroup taxonId="338152" id="HOG:F0782425.2c_338152">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Felinae"/>
+                                <property name="NrMemberGenes" value="3"/>
+                                <orthologGroup taxonId="9685" id="HOG:F0782425.2c_9685">
+                                  <score id="CompletenessScore" value="1.000"/>
+                                  <property name="TaxRange" value="Felis catus"/>
+                                  <property name="taxid" value="9685"/>
+                                  <property name="NrMemberGenes" value="1"/>
+                                  <geneRef id="22930612" LOFT="HOG:F0782425.2c"/>
+                                </orthologGroup>
+                                <orthologGroup taxonId="61384" id="HOG:F0782425.2c_61384">
+                                  <score id="CompletenessScore" value="1.000"/>
+                                  <property name="TaxRange" value="Lynx rufus"/>
+                                  <property name="taxid" value="61384"/>
+                                  <property name="NrMemberGenes" value="1"/>
+                                  <geneRef id="22958083" LOFT="HOG:F0782425.2c"/>
+                                </orthologGroup>
+                                <orthologGroup taxonId="1608482" id="HOG:F0782425.2c_1608482">
+                                  <score id="CompletenessScore" value="1.000"/>
+                                  <property name="TaxRange" value="Puma yagouaroundi"/>
+                                  <property name="taxid" value="1608482"/>
+                                  <property name="NrMemberGenes" value="1"/>
+                                  <geneRef id="23018183" LOFT="HOG:F0782425.2c"/>
+                                </orthologGroup>
+                              </orthologGroup>
+                            </orthologGroup>
+                          </orthologGroup>
+                          <orthologGroup taxonId="379584" id="HOG:F0782425.2c_379584">
+                            <score id="CompletenessScore" value="1.000"/>
+                            <property name="TaxRange" value="Caniformia"/>
+                            <property name="NrMemberGenes" value="7"/>
+                            <orthologGroup taxonId="9608" id="HOG:F0782425.2c_9608">
+                              <score id="CompletenessScore" value="1.000"/>
+                              <property name="TaxRange" value="Canidae"/>
+                              <property name="NrMemberGenes" value="2"/>
+                              <orthologGroup taxonId="9615" id="HOG:F0782425.2c_9615">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Canis lupus familiaris"/>
+                                <property name="taxid" value="9615"/>
+                                <property name="NrMemberGenes" value="1"/>
+                                <geneRef id="23116861" LOFT="HOG:F0782425.2c"/>
+                              </orthologGroup>
+                              <orthologGroup taxonId="9627" id="HOG:F0782425.2c_9627">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Vulpes vulpes"/>
+                                <property name="taxid" value="9627"/>
+                                <property name="NrMemberGenes" value="1"/>
+                                <geneRef id="23140759" LOFT="HOG:F0782425.2c"/>
+                              </orthologGroup>
+                            </orthologGroup>
+                            <orthologGroup taxonId="9655" id="HOG:F0782425.2c_9655">
+                              <score id="CompletenessScore" value="1.000"/>
+                              <property name="TaxRange" value="Mustelidae"/>
+                              <property name="NrMemberGenes" value="2"/>
+                              <orthologGroup taxonId="9662" id="HOG:F0782425.2c_9662">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Meles meles"/>
+                                <property name="taxid" value="9662"/>
+                                <property name="NrMemberGenes" value="1"/>
+                                <geneRef id="23306236" LOFT="HOG:F0782425.2c"/>
+                              </orthologGroup>
+                              <orthologGroup taxonId="9669" id="HOG:F0782425.2c_9669">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Mustela putorius furo"/>
+                                <property name="taxid" value="9669"/>
+                                <property name="NrMemberGenes" value="1"/>
+                                <geneRef id="23257544" LOFT="HOG:F0782425.2c"/>
+                              </orthologGroup>
+                            </orthologGroup>
+                            <orthologGroup taxonId="9632" id="HOG:F0782425.2c_9632">
+                              <score id="CompletenessScore" value="1.000"/>
+                              <property name="TaxRange" value="Ursidae"/>
+                              <property name="NrMemberGenes" value="3"/>
+                              <orthologGroup taxonId="9646" id="HOG:F0782425.2c_9646">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Ailuropoda melanoleuca"/>
+                                <property name="taxid" value="9646"/>
+                                <property name="NrMemberGenes" value="1"/>
+                                <geneRef id="23235019" LOFT="HOG:F0782425.2c"/>
+                              </orthologGroup>
+                              <orthologGroup taxonId="9639" id="HOG:F0782425.2c_9639">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Ursus"/>
+                                <property name="NrMemberGenes" value="2"/>
+                                <orthologGroup taxonId="9643" id="HOG:F0782425.2c_9643">
+                                  <score id="CompletenessScore" value="1.000"/>
+                                  <property name="TaxRange" value="Ursus americanus"/>
+                                  <property name="taxid" value="9643"/>
+                                  <property name="NrMemberGenes" value="1"/>
+                                  <geneRef id="23185774" LOFT="HOG:F0782425.2c"/>
+                                </orthologGroup>
+                                <orthologGroup taxonId="29073" id="HOG:F0782425.2c_29073">
+                                  <score id="CompletenessScore" value="1.000"/>
+                                  <property name="TaxRange" value="Ursus maritimus"/>
+                                  <property name="taxid" value="29073"/>
+                                  <property name="NrMemberGenes" value="1"/>
+                                  <geneRef id="23214919" LOFT="HOG:F0782425.2c"/>
+                                </orthologGroup>
+                              </orthologGroup>
+                            </orthologGroup>
+                          </orthologGroup>
+                        </orthologGroup>
+                      </orthologGroup>
+                      <orthologGroup taxonId="314146" id="HOG:F0782425.2c_314146">
+                        <score id="CompletenessScore" value="1.000"/>
+                        <property name="TaxRange" value="Euarchontoglires"/>
+                        <property name="NrMemberGenes" value="46"/>
+                        <paralogGroup>
+                          <orthologGroup taxonId="9443" id="HOG:F0782425.2c.7a_9443">
+                            <score id="CompletenessScore" value="0.958"/>
+                            <property name="TaxRange" value="Primates"/>
+                            <property name="NrMemberGenes" value="25"/>
+                            <orthologGroup taxonId="376911" id="HOG:F0782425.2c.7a_376911">
+                              <score id="CompletenessScore" value="1.000"/>
+                              <property name="TaxRange" value="Strepsirrhini"/>
+                              <property name="NrMemberGenes" value="3"/>
+                              <orthologGroup taxonId="30611" id="HOG:F0782425.2c.7a_30611">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Otolemur garnettii"/>
+                                <property name="taxid" value="30611"/>
+                                <property name="NrMemberGenes" value="1"/>
+                                <geneRef id="23626276" LOFT="HOG:F0782425.2c.7a"/>
+                              </orthologGroup>
+                              <orthologGroup taxonId="376915" id="HOG:F0782425.2c.7a_376915">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Lemuriformes"/>
+                                <property name="NrMemberGenes" value="2"/>
+                                <orthologGroup taxonId="30608" id="HOG:F0782425.2c.7a_30608">
+                                  <score id="CompletenessScore" value="1.000"/>
+                                  <property name="TaxRange" value="Microcebus murinus"/>
+                                  <property name="taxid" value="30608"/>
+                                  <property name="NrMemberGenes" value="1"/>
+                                  <geneRef id="23607787" LOFT="HOG:F0782425.2c.7a"/>
+                                </orthologGroup>
+                                <orthologGroup taxonId="379532" id="HOG:F0782425.2c.7a_379532">
+                                  <score id="CompletenessScore" value="1.000"/>
+                                  <property name="TaxRange" value="Propithecus coquereli"/>
+                                  <property name="taxid" value="379532"/>
+                                  <property name="NrMemberGenes" value="1"/>
+                                  <geneRef id="23592514" LOFT="HOG:F0782425.2c.7a"/>
+                                </orthologGroup>
+                              </orthologGroup>
+                            </orthologGroup>
+                            <orthologGroup taxonId="376913" id="HOG:F0782425.2c.7a_376913">
+                              <score id="CompletenessScore" value="0.952"/>
+                              <property name="TaxRange" value="Haplorrhini"/>
+                              <property name="NrMemberGenes" value="22"/>
+                              <orthologGroup taxonId="1868482" id="HOG:F0782425.2c.7a_1868482">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Carlito syrichta"/>
+                                <property name="taxid" value="1868482"/>
+                                <property name="NrMemberGenes" value="1"/>
+                                <geneRef id="24558733" LOFT="HOG:F0782425.2c.7a"/>
+                              </orthologGroup>
+                              <orthologGroup taxonId="314293" id="HOG:F0782425.2c.7a_314293">
+                                <score id="CompletenessScore" value="0.950"/>
+                                <property name="TaxRange" value="Simiiformes"/>
+                                <property name="NrMemberGenes" value="21"/>
+                                <paralogGroup>
+                                  <orthologGroup taxonId="9479" id="HOG:F0782425.2c.7a.1a_9479">
+                                    <score id="CompletenessScore" value="1.000"/>
+                                    <property name="TaxRange" value="Platyrrhini"/>
+                                    <property name="NrMemberGenes" value="5"/>
+                                    <paralogGroup>
+                                      <orthologGroup taxonId="37293" id="HOG:F0782425.2c.7a.1a.1a_37293">
+                                        <score id="CompletenessScore" value="1.000"/>
+                                        <property name="TaxRange" value="Aotus nancymaae"/>
+                                        <property name="taxid" value="37293"/>
+                                        <property name="NrMemberGenes" value="1"/>
+                                        <geneRef id="23779548" LOFT="HOG:F0782425.2c.7a.1a.1a"/>
+                                      </orthologGroup>
+                                      <orthologGroup taxonId="37293" id="HOG:F0782425.2c.7a.1a.1b_37293">
+                                        <score id="CompletenessScore" value="1.000"/>
+                                        <property name="TaxRange" value="Aotus nancymaae"/>
+                                        <property name="taxid" value="37293"/>
+                                        <property name="NrMemberGenes" value="1"/>
+                                        <geneRef id="23797417" LOFT="HOG:F0782425.2c.7a.1a.1b"/>
+                                      </orthologGroup>
+                                    </paralogGroup>
+                                    <orthologGroup taxonId="9498" id="HOG:F0782425.2c.7a.1a_9498">
+                                      <score id="CompletenessScore" value="1.000"/>
+                                      <property name="TaxRange" value="Cebidae"/>
+                                      <property name="NrMemberGenes" value="3"/>
+                                      <orthologGroup taxonId="9483" id="HOG:F0782425.2c.7a.1a_9483">
+                                        <score id="CompletenessScore" value="1.000"/>
+                                        <property name="TaxRange" value="Callithrix jacchus"/>
+                                        <property name="taxid" value="9483"/>
+                                        <property name="NrMemberGenes" value="1"/>
+                                        <geneRef id="23668938" LOFT="HOG:F0782425.2c.7a.1a"/>
+                                      </orthologGroup>
+                                      <orthologGroup taxonId="2715852" id="HOG:F0782425.2c.7a.1a_2715852">
+                                        <score id="CompletenessScore" value="1.000"/>
+                                        <property name="TaxRange" value="Cebus imitator"/>
+                                        <property name="taxid" value="2715852"/>
+                                        <property name="NrMemberGenes" value="1"/>
+                                        <geneRef id="23696261" LOFT="HOG:F0782425.2c.7a.1a"/>
+                                      </orthologGroup>
+                                      <orthologGroup taxonId="39432" id="HOG:F0782425.2c.7a.1a_39432">
+                                        <score id="CompletenessScore" value="1.000"/>
+                                        <property name="TaxRange" value="Saimiri boliviensis boliviensis"/>
+                                        <property name="taxid" value="39432"/>
+                                        <property name="NrMemberGenes" value="1"/>
+                                        <geneRef id="23739202" LOFT="HOG:F0782425.2c.7a.1a"/>
+                                      </orthologGroup>
+                                    </orthologGroup>
+                                  </orthologGroup>
+                                  <orthologGroup taxonId="9479" id="HOG:F0782425.2c.7a.1b_9479">
+                                    <score id="CompletenessScore" value="0.250"/>
+                                    <property name="TaxRange" value="Platyrrhini"/>
+                                    <property name="taxid" value="9479"/>
+                                    <property name="NrMemberGenes" value="1"/>
+                                    <orthologGroup taxonId="37293" id="HOG:F0782425.2c.7a.1b_37293">
+                                      <score id="CompletenessScore" value="1.000"/>
+                                      <property name="TaxRange" value="Aotus nancymaae"/>
+                                      <property name="taxid" value="37293"/>
+                                      <property name="NrMemberGenes" value="1"/>
+                                      <geneRef id="23782206" LOFT="HOG:F0782425.2c.7a.1b"/>
+                                    </orthologGroup>
+                                  </orthologGroup>
+                                </paralogGroup>
+                                <orthologGroup taxonId="9526" id="HOG:F0782425.2c.7a_9526">
+                                  <score id="CompletenessScore" value="0.938"/>
+                                  <property name="TaxRange" value="Catarrhini"/>
+                                  <property name="NrMemberGenes" value="15"/>
+                                  <orthologGroup taxonId="314295" id="HOG:F0782425.2c.7a_314295">
+                                    <score id="CompletenessScore" value="1.000"/>
+                                    <property name="TaxRange" value="Hominoidea"/>
+                                    <property name="NrMemberGenes" value="6"/>
+                                    <orthologGroup taxonId="61853" id="HOG:F0782425.2c.7a_61853">
+                                      <score id="CompletenessScore" value="1.000"/>
+                                      <property name="TaxRange" value="Nomascus leucogenys"/>
+                                      <property name="taxid" value="61853"/>
+                                      <property name="NrMemberGenes" value="1"/>
+                                      <geneRef id="24244981" LOFT="HOG:F0782425.2c.7a"/>
+                                    </orthologGroup>
+                                    <orthologGroup taxonId="9604" id="HOG:F0782425.2c.7a_9604">
+                                      <score id="CompletenessScore" value="1.000"/>
+                                      <property name="TaxRange" value="Hominidae"/>
+                                      <property name="NrMemberGenes" value="5"/>
+                                      <orthologGroup taxonId="9601" id="HOG:F0782425.2c.7a_9601">
+                                        <score id="CompletenessScore" value="1.000"/>
+                                        <property name="TaxRange" value="Pongo abelii"/>
+                                        <property name="taxid" value="9601"/>
+                                        <property name="NrMemberGenes" value="1"/>
+                                        <geneRef id="24522978" LOFT="HOG:F0782425.2c.7a"/>
+                                      </orthologGroup>
+                                      <orthologGroup taxonId="207598" id="HOG:F0782425.2c.7a_207598">
+                                        <score id="CompletenessScore" value="1.000"/>
+                                        <property name="TaxRange" value="Homininae"/>
+                                        <property name="NrMemberGenes" value="4"/>
+                                        <orthologGroup taxonId="9595" id="HOG:F0782425.2c.7a_9595">
+                                          <score id="CompletenessScore" value="1.000"/>
+                                          <property name="TaxRange" value="Gorilla gorilla gorilla"/>
+                                          <property name="taxid" value="9595"/>
+                                          <property name="NrMemberGenes" value="1"/>
+                                          <geneRef id="24281722" LOFT="HOG:F0782425.2c.7a"/>
+                                        </orthologGroup>
+                                        <orthologGroup taxonId="9606" id="HOG:F0782425.2c.7a_9606">
+                                          <score id="CompletenessScore" value="1.000"/>
+                                          <property name="TaxRange" value="Homo sapiens"/>
+                                          <property name="taxid" value="9606"/>
+                                          <property name="NrMemberGenes" value="1"/>
+                                          <geneRef id="24438216" LOFT="HOG:F0782425.2c.7a"/>
+                                        </orthologGroup>
+                                        <orthologGroup taxonId="9596" id="HOG:F0782425.2c.7a_9596">
+                                          <score id="CompletenessScore" value="1.000"/>
+                                          <property name="TaxRange" value="Pan"/>
+                                          <property name="NrMemberGenes" value="2"/>
+                                          <orthologGroup taxonId="9597" id="HOG:F0782425.2c.7a_9597">
+                                            <score id="CompletenessScore" value="1.000"/>
+                                            <property name="TaxRange" value="Pan paniscus"/>
+                                            <property name="taxid" value="9597"/>
+                                            <property name="NrMemberGenes" value="1"/>
+                                            <geneRef id="24330257" LOFT="HOG:F0782425.2c.7a"/>
+                                          </orthologGroup>
+                                          <orthologGroup taxonId="9598" id="HOG:F0782425.2c.7a_9598">
+                                            <score id="CompletenessScore" value="1.000"/>
+                                            <property name="TaxRange" value="Pan troglodytes"/>
+                                            <property name="taxid" value="9598"/>
+                                            <property name="NrMemberGenes" value="1"/>
+                                            <geneRef id="24370499" LOFT="HOG:F0782425.2c.7a"/>
+                                          </orthologGroup>
+                                        </orthologGroup>
+                                      </orthologGroup>
+                                    </orthologGroup>
+                                  </orthologGroup>
+                                  <orthologGroup taxonId="9527" id="HOG:F0782425.2c.7a_9527">
+                                    <score id="CompletenessScore" value="0.900"/>
+                                    <property name="TaxRange" value="Cercopithecidae"/>
+                                    <property name="NrMemberGenes" value="9"/>
+                                    <orthologGroup taxonId="9569" id="HOG:F0782425.2c.7a_9569">
+                                      <score id="CompletenessScore" value="1.000"/>
+                                      <property name="TaxRange" value="Colobinae"/>
+                                      <property name="NrMemberGenes" value="3"/>
+                                      <orthologGroup taxonId="336983" id="HOG:F0782425.2c.7a_336983">
+                                        <score id="CompletenessScore" value="1.000"/>
+                                        <property name="TaxRange" value="Colobus angolensis palliatus"/>
+                                        <property name="taxid" value="336983"/>
+                                        <property name="NrMemberGenes" value="1"/>
+                                        <geneRef id="24121724" LOFT="HOG:F0782425.2c.7a"/>
+                                      </orthologGroup>
+                                      <orthologGroup taxonId="542827" id="HOG:F0782425.2c.7a_542827">
+                                        <score id="CompletenessScore" value="1.000"/>
+                                        <property name="TaxRange" value="Rhinopithecus"/>
+                                        <property name="NrMemberGenes" value="2"/>
+                                        <orthologGroup taxonId="61621" id="HOG:F0782425.2c.7a_61621">
+                                          <score id="CompletenessScore" value="1.000"/>
+                                          <property name="TaxRange" value="Rhinopithecus bieti"/>
+                                          <property name="taxid" value="61621"/>
+                                          <property name="NrMemberGenes" value="1"/>
+                                          <geneRef id="24149099" LOFT="HOG:F0782425.2c.7a"/>
+                                        </orthologGroup>
+                                        <orthologGroup taxonId="61622" id="HOG:F0782425.2c.7a_61622">
+                                          <score id="CompletenessScore" value="1.000"/>
+                                          <property name="TaxRange" value="Rhinopithecus roxellana"/>
+                                          <property name="taxid" value="61622"/>
+                                          <property name="NrMemberGenes" value="1"/>
+                                          <geneRef id="24210803" LOFT="HOG:F0782425.2c.7a"/>
+                                        </orthologGroup>
+                                      </orthologGroup>
+                                    </orthologGroup>
+                                    <orthologGroup taxonId="9528" id="HOG:F0782425.2c.7a_9528">
+                                      <score id="CompletenessScore" value="0.857"/>
+                                      <property name="TaxRange" value="Cercopithecinae"/>
+                                      <property name="NrMemberGenes" value="6"/>
+                                      <orthologGroup taxonId="9531" id="HOG:F0782425.2c.7a_9531">
+                                        <score id="CompletenessScore" value="1.000"/>
+                                        <property name="TaxRange" value="Cercocebus atys"/>
+                                        <property name="taxid" value="9531"/>
+                                        <property name="NrMemberGenes" value="1"/>
+                                        <geneRef id="23823910" LOFT="HOG:F0782425.2c.7a"/>
+                                      </orthologGroup>
+                                      <orthologGroup taxonId="60711" id="HOG:F0782425.2c.7a_60711">
+                                        <score id="CompletenessScore" value="1.000"/>
+                                        <property name="TaxRange" value="Chlorocebus sabaeus"/>
+                                        <property name="taxid" value="60711"/>
+                                        <property name="NrMemberGenes" value="1"/>
+                                        <geneRef id="24084263" LOFT="HOG:F0782425.2c.7a"/>
+                                      </orthologGroup>
+                                      <orthologGroup taxonId="9568" id="HOG:F0782425.2c.7a_9568">
+                                        <score id="CompletenessScore" value="1.000"/>
+                                        <property name="TaxRange" value="Mandrillus leucophaeus"/>
+                                        <property name="taxid" value="9568"/>
+                                        <property name="NrMemberGenes" value="1"/>
+                                        <geneRef id="24052901" LOFT="HOG:F0782425.2c.7a"/>
+                                      </orthologGroup>
+                                      <orthologGroup taxonId="9555" id="HOG:F0782425.2c.7a_9555">
+                                        <score id="CompletenessScore" value="1.000"/>
+                                        <property name="TaxRange" value="Papio anubis"/>
+                                        <property name="taxid" value="9555"/>
+                                        <property name="NrMemberGenes" value="1"/>
+                                        <geneRef id="24008903" LOFT="HOG:F0782425.2c.7a"/>
+                                      </orthologGroup>
+                                      <orthologGroup taxonId="9539" id="HOG:F0782425.2c.7a_9539">
+                                        <score id="CompletenessScore" value="0.667"/>
+                                        <property name="TaxRange" value="Macaca"/>
+                                        <property name="NrMemberGenes" value="2"/>
+                                        <orthologGroup taxonId="9541" id="HOG:F0782425.2c.7a_9541">
+                                          <score id="CompletenessScore" value="1.000"/>
+                                          <property name="TaxRange" value="Macaca fascicularis"/>
+                                          <property name="taxid" value="9541"/>
+                                          <property name="NrMemberGenes" value="1"/>
+                                          <geneRef id="23865990" LOFT="HOG:F0782425.2c.7a"/>
+                                        </orthologGroup>
+                                        <orthologGroup taxonId="9544" id="HOG:F0782425.2c.7a_9544">
+                                          <score id="CompletenessScore" value="1.000"/>
+                                          <property name="TaxRange" value="Macaca mulatta"/>
+                                          <property name="taxid" value="9544"/>
+                                          <property name="NrMemberGenes" value="1"/>
+                                          <geneRef id="23913377" LOFT="HOG:F0782425.2c.7a"/>
+                                        </orthologGroup>
+                                      </orthologGroup>
+                                    </orthologGroup>
+                                  </orthologGroup>
+                                </orthologGroup>
+                              </orthologGroup>
+                            </orthologGroup>
+                          </orthologGroup>
+                          <orthologGroup taxonId="9443" id="HOG:F0782425.2c.7b_9443">
+                            <score id="CompletenessScore" value="0.042"/>
+                            <property name="TaxRange" value="Primates"/>
+                            <property name="taxid" value="9443"/>
+                            <property name="NrMemberGenes" value="1"/>
+                            <orthologGroup taxonId="376913" id="HOG:F0782425.2c.7b_376913">
+                              <score id="CompletenessScore" value="0.048"/>
+                              <property name="TaxRange" value="Haplorrhini"/>
+                              <property name="taxid" value="376913"/>
+                              <property name="NrMemberGenes" value="1"/>
+                              <orthologGroup taxonId="314293" id="HOG:F0782425.2c.7b_314293">
+                                <score id="CompletenessScore" value="0.050"/>
+                                <property name="TaxRange" value="Simiiformes"/>
+                                <property name="taxid" value="314293"/>
+                                <property name="NrMemberGenes" value="1"/>
+                                <orthologGroup taxonId="9526" id="HOG:F0782425.2c.7b_9526">
+                                  <score id="CompletenessScore" value="0.062"/>
+                                  <property name="TaxRange" value="Catarrhini"/>
+                                  <property name="taxid" value="9526"/>
+                                  <property name="NrMemberGenes" value="1"/>
+                                  <orthologGroup taxonId="9527" id="HOG:F0782425.2c.7b_9527">
+                                    <score id="CompletenessScore" value="0.100"/>
+                                    <property name="TaxRange" value="Cercopithecidae"/>
+                                    <property name="taxid" value="9527"/>
+                                    <property name="NrMemberGenes" value="1"/>
+                                    <orthologGroup taxonId="9528" id="HOG:F0782425.2c.7b_9528">
+                                      <score id="CompletenessScore" value="0.143"/>
+                                      <property name="TaxRange" value="Cercopithecinae"/>
+                                      <property name="taxid" value="9528"/>
+                                      <property name="NrMemberGenes" value="1"/>
+                                      <orthologGroup taxonId="9539" id="HOG:F0782425.2c.7b_9539">
+                                        <score id="CompletenessScore" value="0.333"/>
+                                        <property name="TaxRange" value="Macaca"/>
+                                        <property name="taxid" value="9539"/>
+                                        <property name="NrMemberGenes" value="1"/>
+                                        <orthologGroup taxonId="9545" id="HOG:F0782425.2c.7b_9545">
+                                          <score id="CompletenessScore" value="1.000"/>
+                                          <property name="TaxRange" value="Macaca nemestrina"/>
+                                          <property name="taxid" value="9545"/>
+                                          <property name="NrMemberGenes" value="1"/>
+                                          <geneRef id="23980028" LOFT="HOG:F0782425.2c.7b"/>
+                                        </orthologGroup>
+                                      </orthologGroup>
+                                    </orthologGroup>
+                                  </orthologGroup>
+                                </orthologGroup>
+                              </orthologGroup>
+                            </orthologGroup>
+                          </orthologGroup>
+                        </paralogGroup>
+                        <orthologGroup taxonId="37347" id="HOG:F0782425.2c_37347">
+                          <score id="CompletenessScore" value="1.000"/>
+                          <property name="TaxRange" value="Tupaia belangeri"/>
+                          <property name="taxid" value="37347"/>
+                          <property name="NrMemberGenes" value="1"/>
+                          <geneRef id="23552025" LOFT="HOG:F0782425.2c"/>
+                        </orthologGroup>
+                        <orthologGroup taxonId="314147" id="HOG:F0782425.2c_314147">
+                          <score id="CompletenessScore" value="1.000"/>
+                          <property name="TaxRange" value="Glires"/>
+                          <property name="NrMemberGenes" value="19"/>
+                          <orthologGroup taxonId="9975" id="HOG:F0782425.2c_9975">
+                            <score id="CompletenessScore" value="1.000"/>
+                            <property name="TaxRange" value="Lagomorpha"/>
+                            <property name="NrMemberGenes" value="3"/>
+                            <paralogGroup>
+                              <orthologGroup taxonId="9986" id="HOG:F0782425.2c.8a_9986">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Oryctolagus cuniculus"/>
+                                <property name="taxid" value="9986"/>
+                                <property name="NrMemberGenes" value="1"/>
+                                <geneRef id="24613906" LOFT="HOG:F0782425.2c.8a"/>
+                              </orthologGroup>
+                              <orthologGroup taxonId="9986" id="HOG:F0782425.2c.8b_9986">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Oryctolagus cuniculus"/>
+                                <property name="taxid" value="9986"/>
+                                <property name="NrMemberGenes" value="1"/>
+                                <geneRef id="24602846" LOFT="HOG:F0782425.2c.8b"/>
+                              </orthologGroup>
+                            </paralogGroup>
+                            <orthologGroup taxonId="9978" id="HOG:F0782425.2c_9978">
+                              <score id="CompletenessScore" value="1.000"/>
+                              <property name="TaxRange" value="Ochotona princeps"/>
+                              <property name="taxid" value="9978"/>
+                              <property name="NrMemberGenes" value="1"/>
+                              <geneRef id="24589396" LOFT="HOG:F0782425.2c"/>
+                            </orthologGroup>
+                          </orthologGroup>
+                          <orthologGroup taxonId="9989" id="HOG:F0782425.2c_9989">
+                            <score id="CompletenessScore" value="1.000"/>
+                            <property name="TaxRange" value="Rodentia"/>
+                            <property name="NrMemberGenes" value="16"/>
+                            <orthologGroup taxonId="10020" id="HOG:F0782425.2c_10020">
+                              <score id="CompletenessScore" value="1.000"/>
+                              <property name="TaxRange" value="Dipodomys ordii"/>
+                              <property name="taxid" value="10020"/>
+                              <property name="NrMemberGenes" value="1"/>
+                              <geneRef id="24790761" LOFT="HOG:F0782425.2c"/>
+                            </orthologGroup>
+                            <orthologGroup taxonId="43179" id="HOG:F0782425.2c_43179">
+                              <score id="CompletenessScore" value="1.000"/>
+                              <property name="TaxRange" value="Ictidomys tridecemlineatus"/>
+                              <property name="taxid" value="43179"/>
+                              <property name="NrMemberGenes" value="1"/>
+                              <geneRef id="24779650" LOFT="HOG:F0782425.2c"/>
+                            </orthologGroup>
+                            <orthologGroup taxonId="33550" id="HOG:F0782425.2c_33550">
+                              <score id="CompletenessScore" value="1.000"/>
+                              <property name="TaxRange" value="Hystricomorpha"/>
+                              <property name="NrMemberGenes" value="6"/>
+                              <orthologGroup taxonId="34839" id="HOG:F0782425.2c_34839">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Chinchilla lanigera"/>
+                                <property name="taxid" value="34839"/>
+                                <property name="NrMemberGenes" value="1"/>
+                                <geneRef id="24675481" LOFT="HOG:F0782425.2c"/>
+                              </orthologGroup>
+                              <orthologGroup taxonId="10160" id="HOG:F0782425.2c_10160">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Octodon degus"/>
+                                <property name="taxid" value="10160"/>
+                                <property name="NrMemberGenes" value="1"/>
+                                <geneRef id="24701654" LOFT="HOG:F0782425.2c"/>
+                              </orthologGroup>
+                              <orthologGroup taxonId="10167" id="HOG:F0782425.2c_10167">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Bathyergidae"/>
+                                <property name="NrMemberGenes" value="2"/>
+                                <orthologGroup taxonId="885580" id="HOG:F0782425.2c_885580">
+                                  <score id="CompletenessScore" value="1.000"/>
+                                  <property name="TaxRange" value="Fukomys damarensis"/>
+                                  <property name="taxid" value="885580"/>
+                                  <property name="NrMemberGenes" value="1"/>
+                                  <geneRef id="24750010" LOFT="HOG:F0782425.2c"/>
+                                </orthologGroup>
+                                <orthologGroup taxonId="10181" id="HOG:F0782425.2c_10181">
+                                  <score id="CompletenessScore" value="1.000"/>
+                                  <property name="TaxRange" value="Heterocephalus glaber"/>
+                                  <property name="taxid" value="10181"/>
+                                  <property name="NrMemberGenes" value="1"/>
+                                  <geneRef id="24714580" LOFT="HOG:F0782425.2c"/>
+                                </orthologGroup>
+                              </orthologGroup>
+                              <orthologGroup taxonId="10140" id="HOG:F0782425.2c_10140">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Cavia"/>
+                                <property name="NrMemberGenes" value="2"/>
+                                <orthologGroup taxonId="37548" id="HOG:F0782425.2c_37548">
+                                  <score id="CompletenessScore" value="1.000"/>
+                                  <property name="TaxRange" value="Cavia aperea"/>
+                                  <property name="taxid" value="37548"/>
+                                  <property name="NrMemberGenes" value="1"/>
+                                  <geneRef id="24654024" LOFT="HOG:F0782425.2c"/>
+                                </orthologGroup>
+                                <orthologGroup taxonId="10141" id="HOG:F0782425.2c_10141">
+                                  <score id="CompletenessScore" value="1.000"/>
+                                  <property name="TaxRange" value="Cavia porcellus"/>
+                                  <property name="taxid" value="10141"/>
+                                  <property name="NrMemberGenes" value="1"/>
+                                  <geneRef id="24633402" LOFT="HOG:F0782425.2c"/>
+                                </orthologGroup>
+                              </orthologGroup>
+                            </orthologGroup>
+                            <orthologGroup taxonId="1963758" id="HOG:F0782425.2c_1963758">
+                              <score id="CompletenessScore" value="1.000"/>
+                              <property name="TaxRange" value="Myomorpha"/>
+                              <property name="NrMemberGenes" value="8"/>
+                              <orthologGroup taxonId="51337" id="HOG:F0782425.2c_51337">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Jaculus jaculus"/>
+                                <property name="taxid" value="51337"/>
+                                <property name="NrMemberGenes" value="1"/>
+                                <geneRef id="25067413" LOFT="HOG:F0782425.2c"/>
+                              </orthologGroup>
+                              <orthologGroup taxonId="337687" id="HOG:F0782425.2c_337687">
+                                <score id="CompletenessScore" value="1.000"/>
+                                <property name="TaxRange" value="Muroidea"/>
+                                <property name="NrMemberGenes" value="7"/>
+                                <orthologGroup taxonId="1026970" id="HOG:F0782425.2c_1026970">
+                                  <score id="CompletenessScore" value="1.000"/>
+                                  <property name="TaxRange" value="Nannospalax galili"/>
+                                  <property name="taxid" value="1026970"/>
+                                  <property name="NrMemberGenes" value="1"/>
+                                  <geneRef id="24956493" LOFT="HOG:F0782425.2c"/>
+                                </orthologGroup>
+                                <orthologGroup taxonId="337677" id="HOG:F0782425.2c_337677">
+                                  <score id="CompletenessScore" value="1.000"/>
+                                  <property name="TaxRange" value="Cricetidae"/>
+                                  <property name="NrMemberGenes" value="2"/>
+                                  <orthologGroup taxonId="79684" id="HOG:F0782425.2c_79684">
+                                    <score id="CompletenessScore" value="1.000"/>
+                                    <property name="TaxRange" value="Microtus ochrogaster"/>
+                                    <property name="taxid" value="79684"/>
+                                    <property name="NrMemberGenes" value="1"/>
+                                    <geneRef id="25017612" LOFT="HOG:F0782425.2c"/>
+                                  </orthologGroup>
+                                  <orthologGroup taxonId="10029" id="HOG:F0782425.2c_10029">
+                                    <score id="CompletenessScore" value="1.000"/>
+                                    <property name="TaxRange" value="Cricetulus griseus"/>
+                                    <property name="taxid" value="10029"/>
+                                    <property name="NrMemberGenes" value="1"/>
+                                    <geneRef id="24984530" LOFT="HOG:F0782425.2c"/>
+                                  </orthologGroup>
+                                </orthologGroup>
+                                <orthologGroup taxonId="39107" id="HOG:F0782425.2c_39107">
+                                  <score id="CompletenessScore" value="1.000"/>
+                                  <property name="TaxRange" value="Murinae"/>
+                                  <property name="NrMemberGenes" value="4"/>
+                                  <paralogGroup>
+                                    <orthologGroup taxonId="10114" id="HOG:F0782425.2c.9a_10114">
+                                      <score id="CompletenessScore" value="1.000"/>
+                                      <property name="TaxRange" value="Rattus"/>
+                                      <property name="NrMemberGenes" value="2"/>
+                                      <orthologGroup taxonId="10116" id="HOG:F0782425.2c.9a_10116">
+                                        <score id="CompletenessScore" value="1.000"/>
+                                        <property name="TaxRange" value="Rattus norvegicus"/>
+                                        <property name="taxid" value="10116"/>
+                                        <property name="NrMemberGenes" value="1"/>
+                                        <geneRef id="24876297" LOFT="HOG:F0782425.2c.9a"/>
+                                      </orthologGroup>
+                                      <orthologGroup taxonId="10117" id="HOG:F0782425.2c.9a_10117">
+                                        <score id="CompletenessScore" value="1.000"/>
+                                        <property name="TaxRange" value="Rattus rattus"/>
+                                        <property name="taxid" value="10117"/>
+                                        <property name="NrMemberGenes" value="1"/>
+                                        <geneRef id="24942736" LOFT="HOG:F0782425.2c.9a"/>
+                                      </orthologGroup>
+                                    </orthologGroup>
+                                    <orthologGroup taxonId="10114" id="HOG:F0782425.2c.9b_10114">
+                                      <score id="CompletenessScore" value="0.500"/>
+                                      <property name="TaxRange" value="Rattus"/>
+                                      <property name="taxid" value="10114"/>
+                                      <property name="NrMemberGenes" value="1"/>
+                                      <orthologGroup taxonId="10117" id="HOG:F0782425.2c.9b_10117">
+                                        <score id="CompletenessScore" value="1.000"/>
+                                        <property name="TaxRange" value="Rattus rattus"/>
+                                        <property name="taxid" value="10117"/>
+                                        <property name="NrMemberGenes" value="1"/>
+                                        <geneRef id="24927884" LOFT="HOG:F0782425.2c.9b"/>
+                                      </orthologGroup>
+                                    </orthologGroup>
+                                  </paralogGroup>
+                                  <orthologGroup taxonId="10090" id="HOG:F0782425.2c_10090">
+                                    <score id="CompletenessScore" value="1.000"/>
+                                    <property name="TaxRange" value="Mus musculus"/>
+                                    <property name="taxid" value="10090"/>
+                                    <property name="NrMemberGenes" value="1"/>
+                                    <geneRef id="24811722" LOFT="HOG:F0782425.2c"/>
+                                  </orthologGroup>
+                                </orthologGroup>
+                              </orthologGroup>
+                            </orthologGroup>
+                          </orthologGroup>
+                        </orthologGroup>
+                      </orthologGroup>
+                    </orthologGroup>
+                  </orthologGroup>
+                </paralogGroup>
+                <orthologGroup taxonId="9263" id="HOG:F0782425_9263">
+                  <score id="CompletenessScore" value="0.833"/>
+                  <property name="TaxRange" value="Metatheria"/>
+                  <property name="NrMemberGenes" value="5"/>
+                  <orthologGroup taxonId="9305" id="HOG:F0782425_9305">
+                    <score id="CompletenessScore" value="1.000"/>
+                    <property name="TaxRange" value="Sarcophilus harrisii"/>
+                    <property name="taxid" value="9305"/>
+                    <property name="NrMemberGenes" value="1"/>
+                    <geneRef id="22351192" LOFT="HOG:F0782425"/>
+                  </orthologGroup>
+                  <orthologGroup taxonId="126287" id="HOG:F0782425_126287">
+                    <score id="CompletenessScore" value="0.500"/>
+                    <property name="TaxRange" value="Didelphinae"/>
+                    <property name="taxid" value="126287"/>
+                    <property name="NrMemberGenes" value="1"/>
+                    <orthologGroup taxonId="191870" id="HOG:F0782425_191870">
+                      <score id="CompletenessScore" value="1.000"/>
+                      <property name="TaxRange" value="Gracilinanus agilis"/>
+                      <property name="taxid" value="191870"/>
+                      <property name="NrMemberGenes" value="1"/>
+                      <geneRef id="22325679" LOFT="HOG:F0782425"/>
+                    </orthologGroup>
+                  </orthologGroup>
+                  <orthologGroup taxonId="38609" id="HOG:F0782425_38609">
+                    <score id="CompletenessScore" value="1.000"/>
+                    <property name="TaxRange" value="Diprotodontia"/>
+                    <property name="NrMemberGenes" value="3"/>
+                    <orthologGroup taxonId="9315" id="HOG:F0782425_9315">
+                      <score id="CompletenessScore" value="1.000"/>
+                      <property name="TaxRange" value="Notamacropus eugenii"/>
+                      <property name="taxid" value="9315"/>
+                      <property name="NrMemberGenes" value="1"/>
+                      <geneRef id="22357503" LOFT="HOG:F0782425"/>
+                    </orthologGroup>
+                    <orthologGroup taxonId="38626" id="HOG:F0782425_38626">
+                      <score id="CompletenessScore" value="1.000"/>
+                      <property name="TaxRange" value="Phascolarctos cinereus"/>
+                      <property name="taxid" value="38626"/>
+                      <property name="NrMemberGenes" value="1"/>
+                      <geneRef id="22428375" LOFT="HOG:F0782425"/>
+                    </orthologGroup>
+                    <orthologGroup taxonId="29139" id="HOG:F0782425_29139">
+                      <score id="CompletenessScore" value="1.000"/>
+                      <property name="TaxRange" value="Vombatus ursinus"/>
+                      <property name="taxid" value="29139"/>
+                      <property name="NrMemberGenes" value="1"/>
+                      <geneRef id="22397334" LOFT="HOG:F0782425"/>
+                    </orthologGroup>
+                  </orthologGroup>
+                </orthologGroup>
+              </orthologGroup>
+            </orthologGroup>
+          </orthologGroup>
+        </orthologGroup>
+      </orthologGroup>
+    </orthologGroup>
+  </groups>
+</orthoXML>
