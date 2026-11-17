@@ -5,6 +5,7 @@ let _hog_header_tooltip;
 
 const tooltip = require('tnt.tooltip');
 const $ = require('jquery');
+const d3 = require('d3');
 
 
 module.exports = {
@@ -119,7 +120,6 @@ module.exports = {
 
             },
             error: function(request,status,errorThrown) {
-              console.log("YES");
                 gene.gene.go_terms = [{id: "N/A", name: "N/A"}];
                 // gene_tooltip_obj.call.display(gene, div, mouseover);
                 var rect = gene_tooltip_obj.getBoundingClientRect();
@@ -167,8 +167,12 @@ module.exports = {
   },
   hog_header_tooltip: {
     display: function (hog, taxa_name, div, show_oma_link, remote_data, augmented_orthoxml) {
+      // Keep the clicked element and mouse event: the tooltip is positioned from
+      // d3.event, which is no longer set once an async request returns.
+      const elem = this;
+      const event = d3.event;
 
-      function create_tooltip(hog, header, hogid, level){
+      function create_tooltip(hog, header, hogid, level, with_links){
 
         var obj = {};
         obj.header = header ;
@@ -179,7 +183,7 @@ module.exports = {
         obj.rows.push({
           value: hog.coverage.toFixed(2) + "% species represented"
         });
-        if (show_oma_link) {
+        if (show_oma_link && with_links) {
 
           obj.rows.push({
             value: "<a href=\"/oma/hog/" + hogid + "/" + level + "/fasta\" target=\"_blank\">Sequences (Fasta)</a>"
@@ -188,24 +192,30 @@ module.exports = {
 
           obj.rows.push({value: "<a href=\"/oma/hog/" + hogid + "/" + level + "/iham/\" target=\"_blank\"> Set focal to "+header+ " </a>"});
 
+          obj.rows.push({value: "<a href=\"/oma/ancestralgenome/" + level + "/chromosome/?query=" + hogid + "\" target=\"_blank\"> Locate in chromosome viewer </a>"});
+
         }
 
-        _hog_header_tooltip = tooltip.list().width(180).id('hog_header_tooltip').container(div).call(this, obj);
+        _hog_header_tooltip = tooltip.list().width(180).id('hog_header_tooltip').container(div).call(elem, obj, event);
 
       }
 
       if (remote_data  && augmented_orthoxml != true){
         $.ajax({
-          url: '/api/hog/' + hog.protid + '/members/?level=' + taxa_name,
-          async: false, //blocks window close
+          url: '/api/hog/' + hog.protid + '/members/?level=' + encodeURIComponent(taxa_name),
+          dataType: 'json',
           success: function(data) {
-            create_tooltip(hog, data.hog_id, encodeURIComponent(data.hog_id), encodeURIComponent(data.level))
+            create_tooltip(hog, data.hog_id, encodeURIComponent(data.hog_id), encodeURIComponent(data.level), true);
+          },
+          error: function () {
+            // still show gene count / coverage, just without links
+            create_tooltip(hog, hog.name, null, null, false);
           }
         });
       }
 
       else{
-        create_tooltip(hog, hog.name, hog.name,  taxa_name.replace(" ", "%20") )
+        create_tooltip(hog, hog.name, hog.name, encodeURIComponent(taxa_name), true);
       }
 
     },

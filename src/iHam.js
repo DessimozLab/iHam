@@ -10,9 +10,19 @@ const {parse_orthoxml} = require('iham-parsers');
 const genes_2_xcoords = require('./xcoords');
 const {gene_tooltip, tree_node_tooltip, hog_header_tooltip} = require('./tooltips');
 
-const dispatch = d3.dispatch("node_selected", "hogs_removed", "click", "updating", "updated");
+// total pixel width of the board for the HOG columns currently shown
+function hogs_width(hog_state_obj) {
+  let w = 0;
+  (hog_state_obj.hogs || []).forEach(hog => {
+    w += hog.max_in_hog * 16;
+  });
+  return w;
+}
 
 function iHam() {
+  // one dispatcher per widget so several widgets on a page don't share events
+  const dispatch = d3.dispatch("node_selected", "hogs_removed", "click", "updating", "updated");
+
   // internal (non API) options
   const state = {
     highlight_condition: () => false,
@@ -94,16 +104,20 @@ function iHam() {
     const maxs = get_maxs(data_per_species);
     const current_hog_state = new hog_state(maxs);
 
-    gene_color = gene => {
+    const default_gene_color = gene => {
       if (config.query_gene && gene.id === config.query_gene.id) {
         return "#27ae60"
       }
-      if (config.query_hog && $.inArray(gene.id, query_members) != -1) {
+      if (config.query_hog && query_members && query_members.indexOf(gene.id) !== -1) {
         return "#27ae60"
       }
 
       return "#95a5a6";
     };
+    // keep a colour callback set via .gene_colors() before rendering
+    if (!gene_color) {
+      gene_color = default_gene_color;
+    }
 
     // todo -30 should be define by margin variables
 
@@ -144,14 +158,7 @@ function iHam() {
         const removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj, hog_metadata);
         dispatch.hogs_removed.call(this, removed_hogs);
 
-        var w = 0;
-        var i = 0, len = current_hog_state.hogs.length;
-        while (i < len) {
-          w += current_hog_state.hogs[i].max_in_hog * 16 ;
-          i++
-        }
-
-        board.width(w);
+        board.width(hogs_width(current_hog_state));
         // update_board();
         board.update();
         dispatch.updated.call(this);
@@ -165,14 +172,7 @@ function iHam() {
       const removed_hogs = current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj, hog_metadata);
       dispatch.hogs_removed.call(this, removed_hogs);
 
-      var w = 0;
-      var i = 0, len = current_hog_state.hogs.length;
-      while (i < len) {
-        w += current_hog_state.hogs[i].max_in_hog * 16 ;
-        i++
-      }
-
-      board.width(w);
+      board.width(hogs_width(current_hog_state));
       board.update();
 
       state.highlight_condition = n => node.id() === n.id();
@@ -286,12 +286,7 @@ function iHam() {
     });
 
     current_hog_state.reset_on(tree, data_per_species, current_opened_taxa_name, column_coverage_threshold, fam_data_obj, hog_metadata);
-    var w = 0;
-    var i = 0, len = current_hog_state.hogs.length;
-    while (i < len) {
-      w += current_hog_state.hogs[i].max_in_hog * 16 ;
-      i++
-    }
+    const w = hogs_width(current_hog_state);
 
     // Board:
     board = tnt.board()
@@ -437,9 +432,12 @@ function iHam() {
     }
     gene_color = cb;
 
-    genes_feature.colors(cb);
-    board.width(board_width);
-    board.update();
+    // before rendering, the callback is picked up when the widget is drawn
+    if (genes_feature) {
+      genes_feature.colors(cb);
+      board.width(board_width);
+      board.update();
+    }
     return this;
   };
 
@@ -448,7 +446,10 @@ function iHam() {
       return column_coverage_threshold;
     }
     column_coverage_threshold = min;
-    update_nodes(curr_node);
+    // before rendering, the threshold is applied when the widget is drawn
+    if (update_nodes) {
+      update_nodes(curr_node || current_opened_node);
+    }
     return this;
   };
 

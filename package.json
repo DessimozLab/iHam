@@ -1,47 +1,38 @@
 {
   "name": "iham",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "interactive HOG Analysis Method visualisation plugin",
-  "main": "index.umd.js",
-  "module": "index.esm.js",
+  "main": "index.js",
+  "browser": "build/iHam.js",
+  "style": "build/iHam.css",
+  "files": [
+    "index.js",
+    "browser.js",
+    "index.scss",
+    "src",
+    "build"
+  ],
   "directories": {
     "example": "examples"
   },
   "dependencies": {
-    "@babel/core": "^7.0.0-0",
-    "axios": "^0.18.0",
-    "d3": "^3.0.0",
-    "iham": "^1.0.6",
+    "d3": "~3.5.17",
     "iham-parsers": "^0.2.1",
-    "jquery": "^3.3.1",
-    "mkdirp": "^0.5.1",
-    "npm-watch": "^0.3.0",
-    "path": "^0.12.7",
+    "jquery": "^3.7.1",
     "tnt.api": "^0.1.1",
-    "tnt.newick": "^0.1.0",
     "tnt.tooltip": "^0.2.0",
     "tntvis": "^0.3.1"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.0.0-beta.46",
-    "@babel/preset-react": "^7.0.0-beta.46",
-    "babel-core": "^6.26.3",
-    "babel-preset-env": "^1.6.1",
-    "babelify": "^8.0.0",
-    "browserify": "^16.2.0",
-    "node-sass": "^4.9.0",
-    "pump": "^3.0.0",
-    "vinyl-buffer": "^1.0.1",
-    "vinyl-source-stream": "^2.0.0"
-  },
-  "watch": {
-    "build": "src/*.js"
+    "esbuild": "^0.25.0",
+    "sass": "^1.80.0"
   },
   "scripts": {
-    "build": "browserify browser.js --standalone iHam -t [ babelify ] > build/iHam.js",
-    "build-css": "node-sass index.scss > build/iHam.css",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "npm-watch"
+    "build": "npm run build-js && npm run build-css",
+    "build-js": "node build.mjs",
+    "build-css": "sass --no-source-map --silence-deprecation=import --quiet-deps --load-path=. index.scss build/iHam.css",
+    "watch": "node build.mjs --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "viewer",

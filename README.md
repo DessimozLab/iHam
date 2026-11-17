@@ -38,7 +38,9 @@ _npm_:
 
 And build using
 
-    $ npm run build && npm run build-css
+    $ npm run build
+
+This writes `build/iHam.js`, a minified `build/iHam.min.js` (with source map) and `build/iHam.css`.
 
 
 ## Usage
