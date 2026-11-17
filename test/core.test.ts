@@ -3,7 +3,7 @@ import { availableSchemes, makeColorScale, QUERY_COLOR, DEFAULT_GENE_COLOR } fro
 import { fillTemplate, omaEndpoints } from "../src/core/links";
 import { parseNewick } from "../src/core/newick";
 import { parseOrthoXml, parseSpeciesTree } from "../src/core/orthoxml";
-import { buildSpeciesTree, layoutTree } from "../src/core/tree";
+import { buildSpeciesTree, cladeRows, layoutTree } from "../src/core/tree";
 
 describe("newick / phyloXML", () => {
   it("parses quoted labels, internal names and branch lengths", () => {
@@ -81,6 +81,18 @@ describe("tree layout", () => {
       ["CDE", true],
     ]);
     expect(cde.leafNames).toEqual(["C", "D", "E"]);
+  });
+
+  it("finds the rows of a clade, also through collapsed nodes", () => {
+    const byName = (n: string) => nodes.find((x) => x.name === n)!;
+    const open = layoutTree(root, new Set());
+    expect(cladeRows(open, byName("CDE"))).toEqual({ start: 2, end: 5 });
+    expect(cladeRows(open, byName("AB"))).toEqual({ start: 0, end: 2 });
+    expect(cladeRows(open, byName("D"))).toEqual({ start: 3, end: 4 });
+    const folded = layoutTree(root, new Set([byName("DE").id]));
+    expect(cladeRows(folded, byName("CDE"))).toEqual({ start: 2, end: 4 });
+    expect(cladeRows(folded, byName("D"))).toEqual({ start: 3, end: 4 });
+    expect(cladeRows(folded, byName("R"))).toEqual({ start: 0, end: 4 });
   });
 });
 

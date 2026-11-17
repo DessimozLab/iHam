@@ -17,6 +17,8 @@ const props = defineProps<{
   rowHeight: number;
   /** visible area in matrix coordinates */
   viewport: { x: number; y: number; width: number; height: number };
+  /** rows [start, end) of the selected clade; HOG boundaries are drawn only there */
+  cladeRows: { start: number; end: number };
 }>();
 
 const emit = defineEmits<{
@@ -101,16 +103,18 @@ function draw() {
     }
   }
 
-  // HOG column boundaries
+  // HOG column boundaries, over the rows of the selected clade (as in iHam 1)
+  const y0 = Math.max(y, props.cladeRows.start * rh);
+  const y1 = Math.min(y + h, props.cladeRows.end * rh);
   ctx.strokeStyle = getComputedStyle(el).getPropertyValue("--iham-separator").trim() || "#000";
   ctx.lineWidth = 2;
   ctx.beginPath();
   const cols = props.view.columns;
   for (let i = 0; i < cols.length - 1; i++) {
     const sx = (cols[i].start + cols[i].maxInHog) * cw;
-    if (sx >= x - 2 && sx <= x + w + 2) {
-      ctx.moveTo(sx, y);
-      ctx.lineTo(sx, y + h);
+    if (y1 > y0 && sx >= x - 2 && sx <= x + w + 2) {
+      ctx.moveTo(sx, y0);
+      ctx.lineTo(sx, y1);
     }
   }
   ctx.stroke();
@@ -162,7 +166,7 @@ function onClick(event: MouseEvent) {
   }
 }
 
-watch(() => [props.view, props.rows, props.color, props.famMap, box.value], scheduleDraw);
+watch(() => [props.view, props.rows, props.color, props.famMap, box.value, props.cladeRows], scheduleDraw);
 onMounted(draw);
 defineExpose({ redraw: scheduleDraw });
 </script>

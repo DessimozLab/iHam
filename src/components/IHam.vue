@@ -3,7 +3,7 @@ import { computed, onBeforeUnmount, ref, shallowRef, toRef, watch, nextTick } fr
 import { availableSchemes, makeColorScale, type ColorSchemeName } from "../core/colors";
 import { computeLevelView, computeMaxima } from "../core/levels";
 import { NO_ENDPOINTS, omaEndpoints, type Endpoints } from "../core/links";
-import { buildSpeciesTree, layoutTree, type SpeciesNode } from "../core/tree";
+import { buildSpeciesTree, cladeRows, layoutTree, type SpeciesNode } from "../core/tree";
 import type { GeneCell, HogColumn } from "../core/types";
 import type { IHamProps } from "./props";
 import { useHogData } from "../composables/useHogData";
@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<IHamProps>(), {
   coverageThreshold: 0,
   colorScheme: "query",
   tooltipTrigger: "click",
-  hideToolbar: false,
+  toolbar: "open",
   preset: "none",
   baseUrl: "",
   treeWidth: 330,
@@ -144,6 +144,9 @@ watch(
 );
 
 const layout = computed(() => (tree.value ? layoutTree(tree.value.root, collapsed.value) : null));
+const selectedRows = computed(() =>
+  layout.value && selected.value ? cladeRows(layout.value, selected.value) : { start: 0, end: 0 },
+);
 
 const schemes = computed(() => availableSchemes(famData.value));
 const colorScale = computed(() =>
@@ -304,7 +307,8 @@ defineExpose({
     </div>
     <template v-else>
       <IHamToolbar
-        v-if="!hideToolbar"
+        v-if="toolbar !== 'hidden'"
+        :collapsible="toolbar === 'collapsed'"
         :level="selected!.name"
         :frozen="frozenAt !== null"
         :schemes="schemes"
@@ -358,6 +362,7 @@ defineExpose({
               :cell-width="CELL"
               :row-height="rowHeight"
               :viewport="viewport"
+              :clade-rows="selectedRows"
               @gene-hover="onGeneHover"
               @gene-click="onGeneClick"
             />

@@ -108,3 +108,20 @@ export function layoutTree(root: SpeciesNode, collapsed: ReadonlySet<number>): T
   rec(root);
   return { nodes, rows, links };
 }
+
+/**
+ * The displayed rows that belong to `node`'s clade, as a half-open range
+ * [start, end). The tree is drawn in order, so they are always contiguous.
+ */
+export function cladeRows(layout: TreeLayout, node: SpeciesNode): { start: number; end: number } {
+  const leaves = new Set(node.leafNames);
+  let start = -1;
+  let end = -1;
+  layout.rows.forEach((r, i) => {
+    if (leaves.has(r.node.leafNames[0])) {
+      if (start < 0) start = i;
+      end = i + 1;
+    }
+  });
+  return start < 0 ? { start: 0, end: 0 } : { start, end };
+}
