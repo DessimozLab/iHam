@@ -1,5 +1,5 @@
 import { flushPromises, mount } from "@vue/test-utils";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 import IHam from "../src/components/IHam.vue";
 import { datasets } from "./helpers";
@@ -25,9 +25,15 @@ async function mountP53(props: Record<string, unknown> = {}) {
     },
     attachTo: document.body,
   });
+  await settled(wrapper);
+  return wrapper;
+}
+
+/** wait until data is parsed and rendered (or failed) */
+async function settled(wrapper: ReturnType<typeof mount>) {
+  await vi.waitUntil(() => wrapper.find(".iham-scroller, .iham-error").exists(), { timeout: 5000 });
   await flushPromises();
   await nextTick();
-  return wrapper;
 }
 
 describe("<IHam>", () => {
@@ -104,9 +110,19 @@ describe("<IHam>", () => {
     w.unmount();
   });
 
+  it("shows a processing message before the (blocking) parse", async () => {
+    const w = mount(IHam, { props: { orthoxml: p53.orthoxml, speciesTree: p53.tree } });
+    await flushPromises();
+    await nextTick();
+    expect(w.find(".iham-message").text()).toBe("Processing HOG…");
+    await settled(w);
+    expect(w.find(".iham-message").exists()).toBe(false);
+    w.unmount();
+  });
+
   it("reports load errors", async () => {
     const w = mount(IHam, { props: { orthoxml: "<not-xml", speciesTree: "(A,B)R;" } });
-    await flushPromises();
+    await settled(w);
     expect(w.find(".iham-error").exists()).toBe(true);
     expect(w.emitted("error")).toBeTruthy();
     w.unmount();

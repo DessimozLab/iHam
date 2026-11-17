@@ -21,11 +21,34 @@ async function fetchText(url: string): Promise<string> {
   return res.text();
 }
 
+/**
+ * Resolves once the browser has had a chance to paint (two animation frames),
+ * so a status change is visible before a long synchronous task. Falls back to
+ * a timeout because animation frames don't fire in background tabs.
+ */
+function afterPaint(): Promise<void> {
+  return new Promise((resolve) => {
+    const timer = setTimeout(resolve, 100);
+    if (typeof requestAnimationFrame === "function") {
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          clearTimeout(timer);
+          resolve();
+        }),
+      );
+    }
+  });
+}
+
+export type LoadPhase = "idle" | "loading" | "processing";
+
 /** Loads (if given as URLs) and parses the HOG data whenever a source changes. */
 export function useHogData(source: Ref<HogDataSource>) {
   const parsed = shallowRef<ParsedHogs | null>(null);
   const famData = shallowRef<FamGene[]>([]);
-  const loading = shallowRef(false);
+  /** "loading": fetching data; "processing": parsing (blocks the page for large HOGs) */
+  const phase = shallowRef<LoadPhase>("idle");
+  const loading = computed(() => phase.value !== "idle");
   const error = shallowRef<Error | null>(null);
   let generation = 0;
 
@@ -39,7 +62,7 @@ export function useHogData(source: Ref<HogDataSource>) {
         return;
       }
       const gen = ++generation;
-      loading.value = true;
+      phase.value = "loading";
       error.value = null;
       try {
         const [orthoxml, tree, fam] = await Promise.all([
@@ -47,6 +70,12 @@ export function useHogData(source: Ref<HogDataSource>) {
           src.speciesTree ?? fetchText(src.speciesTreeUrl!),
           src.famData ?? (src.famDataUrl ? fetchText(src.famDataUrl).then((t) => JSON.parse(t) as FamGene[]) : []),
         ]);
+        if (gen !== generation) {
+          return;
+        }
+        // parsing is synchronous: show "processing" before the page blocks
+        phase.value = "processing";
+        await afterPaint();
         if (gen !== generation) {
           return;
         }
@@ -60,7 +89,7 @@ export function useHogData(source: Ref<HogDataSource>) {
         }
       } finally {
         if (gen === generation) {
-          loading.value = false;
+          phase.value = "idle";
         }
       }
     },
@@ -68,7 +97,7 @@ export function useHogData(source: Ref<HogDataSource>) {
   );
 
   const famMap = computed(() => new Map(famData.value.map((g) => [Number(g.id), g])));
-  return { parsed, famData, famMap, loading, error };
+  return { parsed, famData, famMap, loading, phase, error };
 }
 
 const jsonCache = new Map<string, Promise<unknown>>();
