@@ -11,3 +11,5 @@ npm-debug.log
 user-images/
 _site/
 .idea
+dist/
+dist-playground/

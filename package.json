@@ -1,44 +1,71 @@
 {
   "name": "iham",
-  "version": "1.0.7",
-  "description": "interactive HOG Analysis Method visualisation plugin",
-  "main": "index.js",
-  "browser": "build/iHam.js",
-  "style": "build/iHam.css",
-  "files": [
-    "index.js",
-    "browser.js",
-    "index.scss",
-    "src",
-    "build"
-  ],
-  "directories": {
-    "example": "examples"
-  },
-  "dependencies": {
-    "d3": "~3.5.17",
-    "iham-parsers": "^0.2.1",
-    "jquery": "^3.7.1",
-    "tnt.api": "^0.1.1",
-    "tnt.tooltip": "^0.2.0",
-    "tntvis": "^0.3.1"
-  },
-  "devDependencies": {
-    "esbuild": "^0.25.0",
-    "sass": "^1.80.0"
-  },
-  "scripts": {
-    "build": "npm run build-js && npm run build-css",
-    "build-js": "node build.mjs",
-    "build-css": "sass --no-source-map --silence-deprecation=import --quiet-deps --load-path=. index.scss build/iHam.css",
-    "watch": "node build.mjs --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "version": "2.0.0-alpha.0",
+  "description": "iHam: interactive viewer for hierarchical orthologous groups (HOGs) as a Vue 3 component and <i-ham> web component",
+  "type": "module",
+  "license": "Apache-2.0",
+  "author": "Miguel Pignatelli <emepyc@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DessimozLab/iHam.git"
   },
   "keywords": [
-    "viewer",
-    "interaction",
-    "openTargets"
+    "orthology",
+    "HOG",
+    "phylogeny",
+    "vue",
+    "web-component"
   ],
-  "author": "Miguel Pignatelli <emepyc@gmail.com>",
-  "license": "Apache-2.0"
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/iham.js",
+  "module": "./dist/iham.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/iham.js"
+    },
+    "./style.css": "./dist/iham.css",
+    "./element": {
+      "types": "./dist/types/element.d.ts",
+      "import": "./dist/element/iham-element.js"
+    }
+  },
+  "unpkg": "./dist/element/iham-element.iife.js",
+  "jsdelivr": "./dist/element/iham-element.iife.js",
+  "sideEffects": [
+    "./dist/element/*",
+    "*.css"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run build:lib && npm run build:element && npm run build:types",
+    "build:lib": "vite build --mode lib",
+    "build:element": "vite build --mode element",
+    "build:types": "vue-tsc -p tsconfig.build.json",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  },
+  "dependencies": {
+    "d3-scale": "^4.0.2"
+  },
+  "devDependencies": {
+    "@types/d3-scale": "^4.0.9",
+    "@types/node": "^24.0.0",
+    "@vitejs/plugin-vue": "^6.0.11",
+    "@vue/test-utils": "^2.6.0",
+    "iham-parsers": "^0.2.1",
+    "jsdom": "^31.0.1",
+    "typescript": "~5.9.3",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.0",
+    "vue": "^3.5.45",
+    "vue-tsc": "^3.3.14"
+  }
 }
