@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { availableSchemes, makeColorScale, QUERY_COLOR, DEFAULT_GENE_COLOR } from "../src/core/colors";
 import { fillTemplate, omaEndpoints } from "../src/core/links";
 import { parseNewick } from "../src/core/newick";
-import { parseSpeciesTree } from "../src/core/orthoxml";
+import { parseOrthoXml, parseSpeciesTree } from "../src/core/orthoxml";
 import { buildSpeciesTree, layoutTree } from "../src/core/tree";
 
 describe("newick / phyloXML", () => {
@@ -24,6 +24,38 @@ describe("newick / phyloXML", () => {
       </phylogeny></phyloxml>`;
     const t = parseSpeciesTree(xml);
     expect(t).toEqual({ name: "Root", children: [{ name: "Homo sapiens" }, { name: "Mus" }] });
+  });
+});
+
+describe("augmented OrthoXML detection", () => {
+  const xml = (groupAttrs: string[]) => `<?xml version="1.0"?>
+    <orthoXML xmlns="http://orthoXML.org/2011/" version="0.3">
+      <species name="A"><database name="d"><genes><gene id="1" protId="A1"/></genes></database></species>
+      <species name="B"><database name="d"><genes><gene id="2" protId="B1"/></genes></database></species>
+      <groups>
+        <orthologGroup ${groupAttrs[0]}><property name="TaxRange" value="R"/>
+          <orthologGroup ${groupAttrs[1]}><property name="TaxRange" value="R"/><geneRef id="1"/><geneRef id="2"/></orthologGroup>
+        </orthologGroup>
+      </groups>
+    </orthoXML>`;
+  const tree = "(A,B)R;";
+
+  it("recognises OMA HOG ids with taxid suffix, with or without taxonId", () => {
+    const noTaxonId = parseOrthoXml(tree, xml(['id="HOG:0000001_1"', 'id="HOG:0000001.1a_1"']), {
+      queryHog: "HOG:0000001_1",
+    });
+    expect(noTaxonId.augmented).toBe(true);
+    expect(noTaxonId.queryMembers).toEqual([1, 2]);
+    expect(parseOrthoXml(tree, xml(['id="x" taxonId="1"', 'id="y" taxonId="1"'])).augmented).toBe(true);
+  });
+
+  it("treats numeric top-level ids / missing nested ids as plain OrthoXML", () => {
+    expect(parseOrthoXml(tree, xml(['id="601272"', ""])).augmented).toBe(false);
+    expect(parseOrthoXml(tree, xml(['id="1"', 'id="2"'])).augmented).toBe(false);
+  });
+
+  it("can be forced", () => {
+    expect(parseOrthoXml(tree, xml(['id="601272"', ""]), { augmented: true }).augmented).toBe(true);
   });
 });
 

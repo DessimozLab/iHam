@@ -269,10 +269,14 @@ export function parseOrthoXml(
 }
 
 /**
- * OMA's augmented OrthoXML has an `id` and a `taxonId` on every orthologGroup;
- * plain OrthoXML at most has an id on the top-level groups.
+ * OMA's augmented OrthoXML has an id on every orthologGroup, either with a
+ * `taxonId` attribute or as `<hog id>_<taxid>` (older releases have no
+ * taxonId); plain OrthoXML at most has (numeric) ids on top-level groups.
  */
 function detectAugmented(doc: Document): boolean {
   const groups = Array.from(doc.getElementsByTagNameNS("*", "orthologGroup"));
-  return groups.length > 0 && groups.every((g) => g.hasAttribute("id") && g.hasAttribute("taxonId"));
+  return (
+    groups.length > 0 &&
+    groups.every((g) => g.hasAttribute("taxonId") || /^HOG:.+_\d+$/.test(g.getAttribute("id") ?? ""))
+  );
 }
