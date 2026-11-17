@@ -110,6 +110,25 @@ describe("<IHam>", () => {
     w.unmount();
   });
 
+  it("can start with the settings collapsed, keeping the legend visible", async () => {
+    const w = await mountP53({ toolbar: "collapsed", colorScheme: "sequence_length" });
+    const toggle = w.find(".iham-settings-toggle");
+    expect(toggle.attributes("aria-expanded")).toBe("false");
+    expect(w.find(".iham-toolbar select").exists()).toBe(false);
+    expect(w.find(".iham-legend").exists()).toBe(true);
+    await toggle.trigger("click");
+    expect(toggle.attributes("aria-expanded")).toBe("true");
+    expect(w.findAll(".iham-toolbar select")).toHaveLength(2);
+    expect(w.findAll(".iham-legend")).toHaveLength(1);
+    w.unmount();
+  });
+
+  it("can hide the toolbar", async () => {
+    const w = await mountP53({ toolbar: "hidden" });
+    expect(w.find(".iham-toolbar").exists()).toBe(false);
+    w.unmount();
+  });
+
   it("shows a processing message before the (blocking) parse", async () => {
     const w = mount(IHam, { props: { orthoxml: p53.orthoxml, speciesTree: p53.tree } });
     await flushPromises();

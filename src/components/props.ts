@@ -27,7 +27,12 @@ export interface IHamProps {
   /** custom colouring; overrides `colorScheme` */
   geneColors?: GeneColorFn;
   tooltipTrigger?: "click" | "hover";
-  hideToolbar?: boolean;
+  /**
+   * built-in toolbar: "open" shows all settings, "collapsed" puts them behind
+   * a Settings button (legend and hidden-HOG notice stay visible), "hidden"
+   * leaves it out
+   */
+  toolbar?: "open" | "collapsed" | "hidden";
   /** "oma" fills link and API templates for the OMA browser at `baseUrl` */
   preset?: "oma" | "none";
   baseUrl?: string;

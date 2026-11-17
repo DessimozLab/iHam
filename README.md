@@ -85,7 +85,7 @@ Attributes are the kebab-case form of the property names.
 | `colorScheme` | `query` \| `sequence_length` \| `gc_content` \| `nr_exons` \| `similarity` | `query` | gene colouring (`v-model`) |
 | `geneColors` | `(gene, id) => color` | | custom colouring, overrides `colorScheme` |
 | `tooltipTrigger` | `click` \| `hover` | `click` | how gene info is opened |
-| `hideToolbar` | boolean | `false` | hide the built-in toolbar |
+| `toolbar` | `open` \| `collapsed` \| `hidden` | `open` | built-in toolbar; `collapsed` puts the settings behind a *Settings* button (the colour legend and the hidden-HOG notice stay visible) |
 | `preset` | `oma` \| `none` | `none` | `oma` enables OMA browser links and API lookups (GO terms, HOG ids) |
 | `baseUrl` | string | `""` | base URL for the `oma` preset (relative by default) |
 | `links`, `api` | object | | override individual link/API URL templates, e.g. `{ hogViewer: "/hog/{hogId}/{level}" }`; placeholders `{hogId}`, `{level}`, `{protId}`, `{xref}`, `{geneId}` |
