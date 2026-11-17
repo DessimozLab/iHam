@@ -1,186 +1,120 @@
 # iHam
 
-iHam (“interactive HOG Analysis Method’) is an interactive javascript tool based on the [TnT library](tntvis.github.io/tnt) to visualise the evolutionary history of a specific gene family (HOGs). The viewer is composed of two panels: a species tree which lets the user select a node to focus on a particular taxonomic range of interest, and a matrix that organizes extant genes according to their membership in species (rows) and hierarchical orthologous groups (columns). 
-<br />
-<br />
+iHam ("interactive HOG Analysis Method") is an interactive viewer for the evolutionary history of a gene family organised as hierarchical orthologous groups (HOGs). It has two panels: a species tree, in which you pick the taxonomic range to focus on, and a matrix that places the extant genes by species (rows) and by HOG at the selected level (columns).
 
-![alt text](https://raw.githubusercontent.com/dessimozLab/iHam/master/assets/iHam_screenshot.png)
-<br />
-<br />
+![iHam screenshot](https://raw.githubusercontent.com/dessimozLab/iHam/master/assets/iHam_screenshot.png)
 
-The tree-guided matrix representation of HOGs facilitates: (i) to delineate orthologous groups at given taxonomic ranges, (ii) to identify duplication and loss events in the species tree, (iii) gauge the cumulative effect of duplication and losses on gene repertoires, and to (iv) identify potential mistakes (e.g. if losses are concentrated on terminal branches — indicative of incomplete genomes, or if the species coverage within a HOG is implausible) in genome assembly, annotation, or orthology inference. Users can customize the view in different ways. They can color genes according to protein length or GC-content. Low-confidence HOGs can be masked. Irrelevant clades of species can be collapsed. iHam is a reusable web widget that can be easily embedded into a website, for instance it is used to display HOGs in OMA (http://omabrowser.org; Altenhoff et al. 2018). It merely requires as input HOGs in the standard OrthoXML format (Schmitt et al. 2011), the underlying species tree in newick format and gene family information in JSON format (see below for examples).
+The tree-guided matrix helps to (i) delineate orthologous groups at a given taxonomic range, (ii) identify duplication and loss events along the species tree, (iii) gauge the cumulative effect of duplications and losses on gene repertoires, and (iv) spot potential problems in genome assembly, annotation or orthology inference (e.g. losses concentrated on terminal branches, or implausible species coverage). Genes can be coloured by protein length, GC content, number of exons or function similarity; low-coverage HOGs can be hidden; clades can be collapsed. iHam is used to display HOGs in the [OMA browser](https://omabrowser.org).
 
-A brief video tutorial is available at this URL: https://www.youtube.com/watch?v=6eAoamP7NLo.
+Input: HOGs in [OrthoXML](https://orthoxml.org) (plain, or OMA's augmented flavour), the species tree in newick or phyloXML, and optionally gene family data in JSON.
+
+> **Version 2** is a rewrite as a Vue 3 component and `<i-ham>` web component. iHam 1.x (TnT/d3 v3 based, `iHam()` chainable API) is on the `master` branch and released as `v1.x`.
 
 ## How to cite iHam
 
-If you use iHam in your work, please consider citing:
-
 *Clément-Marie Train, Miguel Pignatelli, Adrian Altenhoff, Christophe Dessimoz; iHam and pyHam: visualizing and processing hierarchical orthologous groups, Bioinformatics, bty994, https://doi.org/10.1093/bioinformatics/bty994*
-
-## Installation
-
-The iHam library can be directly loaded using the following link to the latest release:
-
-    <!-- Load the javascript -->
-    <script src="https://dessimozlab.github.io/iHam/iHam.js"></script>
-
-    <!-- Load the stylesheet -->
-    <link rel="stylesheet" href="https://dessimozlab.github.io/iHam/iHam.css"/>
-
-## For developers: installing iHam as javascript library
-
-As an alternative to dynamic embedding, iHam can be installed using _yarn_ or 
-_npm_:
-
-    $ npm install --save iham
-    $ yarn add iham
-
-And build using
-
-    $ npm run build
-
-This writes `build/iHam.js`, a minified `build/iHam.min.js` (with source map) and `build/iHam.css`.
-
 
 ## Usage
 
-    var iham = iHam()
-        .newick(newick)
-        .orthoxml(orthoxml)
-        .fam_data(fam_data);
-    
-    var container = document.getElementById("container");
-    iham(document.getElementById(container);
+### In a Vue 3 application
 
-See below for a description of each method. The above snippet, assumes that the widget will be rendered in a `div` element with id `container`.
+```sh
+npm install iham
+```
 
-## Table of compatibility
+```vue
+<script setup>
+import { ref } from "vue";
+import { IHam } from "iham";
+import "iham/style.css";
 
-Support by iHam of various HOG inference ressources.
+const level = ref("Homininae");
+</script>
 
-| Resource | Species tree format | OrthoXML  |   Support  |
-| ---------- |:----------:| -----:|  -----:|
-| OMA browser      | PhyloXML and Newick | All HOGs, or one HOG at a time | YES |
-| OMA standalone      | PhyloXML and Newick | All HOGs | YES |
-| Ensembl      | Newick | one HOG at a time | YES |
-| HieranoidDB      | Newick | one HOG at a time | YES |
+<template>
+  <IHam
+    orthoxml-url="/oma/hog/HOG:F0782425.2c.7a/orthoxml/augmented/"
+    species-tree-url="/All/speciestree.nwk"
+    fam-data-url="/oma/hogdata/HUMAN31534/json"
+    query-hog="HOG:F0782425.2c.7a_207598"
+    preset="oma"
+    v-model:level="level"
+    @hogs-removed="(removed) => console.log(removed)"
+  />
+</template>
+```
 
+### In any web page
 
-## Example
+```html
+<script type="module" src="https://cdn.jsdelivr.net/npm/iham@2/dist/element/iham-element.js"></script>
+<!-- or, as a classic script: .../dist/element/iham-element.iife.js -->
 
-[See this example](http://bl.ocks.org/emepyc/ce259dd519f6a60d35d04c78b40ec425) in this repository demonstrating how to use some of the widget options and API calls, like colouring the genes based on sequence length or hiding low coverage HOGs.
+<i-ham
+  orthoxml-url="https://omabrowser.org/oma/hog/HOG:F0782425.2c.7a/orthoxml/augmented/"
+  species-tree-url="https://omabrowser.org/All/speciestree.nwk"
+  level="Homininae"
+  preset="oma"
+  base-url="https://omabrowser.org"
+></i-ham>
 
-# Configuration
+<script>
+  const viewer = document.querySelector("i-ham");
+  viewer.addEventListener("node-selected", (e) => console.log(e.detail[0].name));
+  // objects and functions are set as properties:
+  // viewer.famData = [...]; viewer.geneColors = (gene, id) => "#c00";
+</script>
+```
 
-iHam exposes several methods to set up the widget.
+The element bundles Vue and renders into a shadow root, so page styles don't leak in or out.
 
-## Data input
+## Properties
 
-#### newick or phyloxml
+Attributes are the kebab-case form of the property names.
 
-The tree corresponding to this HOG where species names should matched the one in the orthoxml file in newick or phyloxml format.
-
-For example:
-
-    ((((((((("Plasmodium falciparum (isolate 3D7)")"Plasmodium falciparum")"Plasmodium (Laverania)")"Plasmodium")"Haemosporida")"Aconoidasida")"Apicomplexa")"Alveolata",(((((((((("Schizosaccharomyces pombe (strain 972 / ATCC 24843)")"Schizosaccharomyces pombe")"Schizosaccharomyces")"Schizosaccharomycetaceae")"Schizosaccharomycetales")"Schizosaccharomycetes")"Taphrinomycotina",((((((("Ashbya gossypii (strain ATCC 10895 / CBS 109.51 / FGSC 9923 / NRRL Y-1056)")"Ashbya gossypii")"Eremothecium",(("Saccharomyces cerevisiae (strain ATCC 204508 / S288c)")"Saccharomyces cerevisiae")"Saccharomyces")"Saccharomycetaceae")"Saccharomycetales")"Saccharomycetes")"Saccharomycotina")"saccharomyceta")"Ascomycota")"Dikarya")"Fungi")"Opisthokonta")"Eukaryota")"LUCA";
-
-#### orthoxml
-
-The HOG data in orthoxml format. Examples of these files can be downloaded directly from the OMA Browser website. See for example the [orthoxml file corresponding to the NOX1 gene](https://omabrowser.org/oma/hogs/NOX1_HUMAN/orthoxml/)
-
-#### fam_data
-
-The description of the genes present in the HOG family. Examples of these files can be downloaded directly from the OMA Browser website. See for example the [family file corresponding to the NOX1 gene](https://omabrowser.org/oma/hogdata/NOX1_HUMAN/json)
-    
-    const iham = iHam()
-        .newick(newick)
-        .orthoxml(orthoxml)
-        .fam_data(fam_data)
-
-
-## Options
-
-#### query_gene
-
-This option is just used to highlight a gene in the visualisation. It accepts an object that must have an `id` property. This id has to correspond with the ids in the orthoxml file.
-
-    const iham = iHam()
-        .query_gene({id: 41434})
-
-
-#### gene_colors
-
-This method accepts a callback that will be executed every time a gene is displayed in the visualisation. This callback should return a color that will be used to display each of these genes. Internally, this callback is called with the information provided in the orthoxml file:
-
-    const iham = iHam()
-        .gene_colors(function (d) {
-            return (d.id === 3965 ? "#27ae60" : "#95a5a6");
-         });
-
-#### coverage_threshold
-
-This method can be used to set a coverage threshold for the genes in the visualisation. This threshold refers to the percentage of species (in the provided tree) the HOG is present in.
-
-    const iham = iHam()
-        .coverage_threshold(50); // Only HOGs having genes in at least 50% of the species will be shown
-    
-#### tree_width
-
-Sets the width of the tree side of the widget (in pixels)
-
-    const iham = iHam()
-        .tree_width(400)
-
-#### board_width
-
-Sets the width of the board side of the widget (in pixels)
-
-    const iham = iHam()
-        .board_width(800)
-
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `orthoxml` / `orthoxmlUrl` | string | | OrthoXML content, or a URL to load it from |
+| `speciesTree` / `speciesTreeUrl` | string | | species tree (newick or phyloXML), or a URL |
+| `famData` / `famDataUrl` | array / string | | gene family data (`[{id, protid, xrefid, sequence_length, gc_content, nr_exons, similarity}]`) |
+| `augmented` | boolean | auto | parse as OMA augmented OrthoXML (detected automatically) |
+| `queryHog` | string | | HOG id whose members are highlighted (OMA: `<hog id>_<taxid>`) |
+| `queryGene` | number | | gene id to highlight |
+| `level` | string | root | taxonomic level to open at (`v-model:level`) |
+| `coverageThreshold` | number | `0` | hide HOGs present in fewer than this % of species (`v-model`) |
+| `colorScheme` | `query` \| `sequence_length` \| `gc_content` \| `nr_exons` \| `similarity` | `query` | gene colouring (`v-model`) |
+| `geneColors` | `(gene, id) => color` | | custom colouring, overrides `colorScheme` |
+| `tooltipTrigger` | `click` \| `hover` | `click` | how gene info is opened |
+| `hideToolbar` | boolean | `false` | hide the built-in toolbar |
+| `preset` | `oma` \| `none` | `none` | `oma` enables OMA browser links and API lookups (GO terms, HOG ids) |
+| `baseUrl` | string | `""` | base URL for the `oma` preset (relative by default) |
+| `links`, `api` | object | | override individual link/API URL templates, e.g. `{ hogViewer: "/hog/{hogId}/{level}" }`; placeholders `{hogId}`, `{level}`, `{protId}`, `{xref}`, `{geneId}` |
+| `treeWidth` | number | `330` | width of the tree panel (px) |
+| `rowHeight` | number | `20` | height of a species row (px) |
+| `height` | string | `80vh` | maximum height of the scrollable viewer |
+| `showInternalLabels` | boolean | `true` | label the selected internal node |
 
 ## Events
 
-The widget emits a number of events that allow the host application to response to different situations, for example, to know when the visualisation is updading or when hogs are removed because of the coverage threshold set. It is possible to subscribe to these events using the `on` method:
+| Event | Payload | |
+|---|---|---|
+| `loaded` | `{species, genes, augmented}` | data parsed |
+| `node-selected` | `{name, id, isLeaf, species}` | a tree node was selected (hover or programmatically) |
+| `update:level` | level name | for `v-model:level` |
+| `hogs-removed` | HOG indices | columns hidden by the coverage threshold changed |
+| `update:coverageThreshold`, `update:colorScheme` | value | for `v-model` |
+| `error` | `Error` | loading or parsing failed |
 
-#### node_selected
+On the custom element these are DOM `CustomEvent`s whose `detail` is the array of arguments.
 
-This event is dispatched every time a new node is selected in the tree. The information about the node is passed to the required callback:
+The component also exposes `setLevel(level)`, `freeze(level?)` and `unfreeze()` (Vue template ref). The parsing and layout functions (`parseOrthoXml`, `computeLevelView`, …) are exported from `iham` for use without the UI.
 
-    const iham = iHam()
-      .on('node_selected', function (node) {
-        d3.select('#current-node')
-          .text(node.node_name());
-      })
+## Development
 
-#### updating / updated
-
-The `updating` event is dispatched when the tree and the board have been asked to update. The `updated` event is dispatched when the update has finished. They can be used, for example, to show a spinner while the update is happening.
-
-    .on("updating", function() {
-      d3.select("#updating")
-        .style("display", 'block');
-    })
-    .on("updated", function () {
-      d3.select("#updating")
-        .style("display", "none");
-    })
-
-#### hogs_removed
-
-This method is fired when there are hogs removed based on threshold coverage. The required callback is called passing an array with the removed hogs.
-
-    var iham = iHam()
-      .on("hogs_removed", function (hogs) {
-        console.log(hogs);
-        if (what.length) {
-          d3.select(".alert_remove")
-            .style("display", "block")
-        } else {
-          d3.select(".alert_remove")
-            .style("display", "none");
-        }
-      });
-
-
+```sh
+npm install
+npm run dev        # playground at http://localhost:5173 (proxies /oma, /api, /All to OMA stage; IHAM_OMA_URL to change)
+npm test           # unit, component and v1-parity tests (vitest + jsdom)
+npm run typecheck
+npm run build      # dist/iham.js + iham.css (Vue library), dist/element/* (web component), dist/types
+```
