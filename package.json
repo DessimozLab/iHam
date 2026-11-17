@@ -17,7 +17,8 @@
     "web-component"
   ],
   "files": [
-    "dist"
+    "dist",
+    "!dist/element/*.map"
   ],
   "main": "./dist/iham.js",
   "module": "./dist/iham.js",
@@ -45,6 +46,7 @@
     "build:lib": "vite build --mode lib",
     "build:element": "vite build --mode element",
     "build:types": "vue-tsc -p tsconfig.build.json",
+    "prepack": "npm run build",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
     "test:watch": "vitest"
