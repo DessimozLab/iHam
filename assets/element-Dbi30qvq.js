@@ -1,0 +1,3 @@
+import"./modulepreload-polyfill-P2Xu9kJm.js";var e=document.getElementById(`log`),t=document.getElementById(`viewer`);for(let n of[`loaded`,`node-selected`,`update:level`,`hogs-hidden`,`error`])t.addEventListener(n,t=>{let r=t.detail,i=typeof r==`object`?JSON.stringify(r,(e,t)=>Array.isArray(t)&&t.length>5?`[${t.length} items]`:t):r;e.textContent=`${n}: ${i}\n`+e.textContent.split(`
+`).slice(0,8).join(`
+`)});var n=`https://omabrowser.org`;t.setAttribute(`base-url`,n),t.setAttribute(`orthoxml-url`,`${n}/oma/hog/HOG:F0782425.2c.7a/orthoxml/augmented/`),t.setAttribute(`species-tree-url`,`${n}/All/speciestree.nwk`),t.setAttribute(`gene-data-url`,`${n}/oma/hogdata/PROCO25562/json`);

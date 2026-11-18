@@ -48,20 +48,20 @@ function pe(e) {
 		}
 	}), t;
 }
-function j(e) {
+function me(e) {
 	let t = "";
 	if (g(e)) t = e;
 	else if (d(e)) for (let n = 0; n < e.length; n++) {
-		let r = j(e[n]);
+		let r = me(e[n]);
 		r && (t += r + " ");
 	}
 	else if (v(e)) for (let n in e) e[n] && (t += n + " ");
 	return t.trim();
 }
-function me(e) {
+function j(e) {
 	if (!e) return null;
 	let { class: t, style: n } = e;
-	return t && !g(t) && (e.class = j(t)), n && (e.style = le(n)), e;
+	return t && !g(t) && (e.class = me(t)), n && (e.style = le(n)), e;
 }
 var he = /* @__PURE__ */ e("itemscope,allowfullscreen,disablepictureinpicture,disableremoteplayback,formnovalidate,ismap,nomodule,novalidate,playsinline,readonly");
 function ge(e) {
@@ -2221,16 +2221,16 @@ function Ei(e, i) {
 				e.suspense.unmount(n, r);
 				return;
 			}
-			h && Fn(e, null, t, "beforeUnmount"), u & 64 ? e.type.remove(e, t, n, ye, r) : l && !l.hasOnce && (a !== G || d > 0 && d & 64) ? ge(l, t, n, !1, !0) : (a === G && d & 384 || !i && u & 16) && ge(c, t, n), r && j(e);
+			h && Fn(e, null, t, "beforeUnmount"), u & 64 ? e.type.remove(e, t, n, ye, r) : l && !l.hasOnce && (a !== G || d > 0 && d & 64) ? ge(l, t, n, !1, !0) : (a === G && d & 384 || !i && u & 16) && ge(c, t, n), r && me(e);
 		}
 		let v = m != null && p == null;
 		(g && (_ = o && o.onVnodeUnmounted) || h || v) && W(() => {
 			_ && oa(_, t, e), h && Fn(e, null, t, "unmounted"), v && (e.el = null);
 		}, n);
-	}, j = (e) => {
+	}, me = (e) => {
 		let { type: t, el: n, anchor: r, transition: i } = e, a = t === G;
 		if (a && !i) {
-			me(n, r);
+			j(n, r);
 			return;
 		}
 		if (t === Bi) {
@@ -2238,13 +2238,13 @@ function Ei(e, i) {
 			return;
 		}
 		let o = a ? Yn(e) : e, c = () => {
-			a ? m(n) && me(n, r) : s(n), i && !i.persisted && i.afterLeave && i.afterLeave();
+			a ? m(n) && j(n, r) : s(n), i && !i.persisted && i.afterLeave && i.afterLeave();
 		};
 		if (o && o.shapeFlag & 1 && i && !i.persisted) {
 			let { leave: e, delayLeave: t } = i, n = o.el, r = () => e(n, c);
 			t ? t(n, c, r) : r();
 		} else c();
-	}, me = (e, t) => {
+	}, j = (e, t) => {
 		let n;
 		for (; e !== t;) n = h(e), s(e), e = n;
 		s(t);
@@ -2270,7 +2270,7 @@ function Ei(e, i) {
 		p: v,
 		um: pe,
 		m: fe,
-		r: j,
+		r: me,
 		mt: A,
 		mc: D,
 		pc: le,
@@ -2407,7 +2407,7 @@ function Qi(e, t = null, n = null, r = 0, i = null, a = !1) {
 	if (Ea(e) && (e = e.__vccOpts), t) {
 		t = $i(t);
 		let { class: e, style: n } = t;
-		e && !g(e) && (t.class = j(e)), v(n) && (/* @__PURE__ */ Ut(n) && !d(n) && (n = s({}, n)), t.style = le(n));
+		e && !g(e) && (t.class = me(e)), v(n) && (/* @__PURE__ */ Ut(n) && !d(n) && (n = s({}, n)), t.style = le(n));
 	}
 	let o = g(e) ? 1 : Fi(e) ? 128 : Wn(e) ? 64 : v(e) ? 4 : h(e) ? 2 : 0;
 	return J(e, t, n, r, i, o, a, !0);
@@ -2493,7 +2493,7 @@ function aa(...e) {
 	let t = {};
 	for (let n = 0; n < e.length; n++) {
 		let r = e[n];
-		for (let e in r) if (e === "class") t.class !== r.class && (t.class = j([t.class, r.class]));
+		for (let e in r) if (e === "class") t.class !== r.class && (t.class = me([t.class, r.class]));
 		else if (e === "style") t.style = le([t.style, r.style]);
 		else if (a(e)) {
 			let n = t[e], i = r[e];
@@ -4050,79 +4050,84 @@ function bl(e, t = 6) {
 	return fl().domain(e).ticks(t);
 }
 // src/core/levels.ts
-function xl(e) {
-	let t = {};
-	for (let n of Object.keys(e)) {
-		let r = e[n];
+var xl = /* @__PURE__ */ new WeakMap();
+function Sl(e) {
+	let t = xl.get(e);
+	if (t) return t;
+	let n = {};
+	for (let t of Object.keys(e)) {
+		let r = e[t];
 		for (let e of Object.keys(r)) {
-			let n = t[e] ??= [];
-			r[e].forEach((e, t) => {
-				(n[t] === void 0 || n[t] < e.length) && (n[t] = e.length);
+			let t = n[e] ??= [];
+			r[e].forEach((e, n) => {
+				(t[n] === void 0 || t[n] < e.length) && (t[n] = e.length);
 			});
 		}
 	}
-	return t;
+	return xl.set(e, n), n;
 }
-function Sl(e) {
-	let { perSpecies: t, maxima: n, species: r, level: i, famData: a, hogMetadata: o } = e, s = Number(e.coverageThreshold ?? 0), c, l = 0;
-	for (let e of r) {
-		let n = t[e]?.[i];
-		n && n.length !== 0 && (l += 1, c ??= n.map((e, t) => ({
+function Cl(e) {
+	let { perSpecies: t, level: n, geneData: r, hogMetadata: i } = e, a = e.maxima ?? Sl(t), o = e.species ?? Object.keys(t), s = Number(e.coverageThreshold ?? 0), c, l = 0;
+	for (let e of o) {
+		let r = t[e]?.[n];
+		r && r.length !== 0 && (l += 1, c ??= r.map((e, t) => ({
 			index: t,
 			name: `hog_${t}`,
 			genes: [],
 			numberSpecies: 0,
 			maxInHog: 0
-		})), n.forEach((e, t) => {
+		})), r.forEach((e, t) => {
 			if (e.length > 0) {
 				let n = c[t];
 				n.genes = n.genes.concat(e), n.numberSpecies += 1, n.maxInHog = Math.max(n.maxInHog, e.length);
 			}
 		}));
 	}
-	let u = [], d = [], f = 0;
+	let u = [], d = [], f = [], p = 0;
 	for (let e of c ?? []) {
-		let t = e.numberSpecies * 100 / l;
+		let t = e.numberSpecies * 100 / l, a = i?.[e.genes[0]]?.[n]?.split("_")[0];
 		if (!(t >= s)) {
-			d.push(e.index);
+			d.push(e.index), f.push(a ? {
+				index: e.index,
+				hogId: a
+			} : { index: e.index });
 			continue;
 		}
-		let n = {
+		let o = {
 			...e,
 			coverage: t,
-			start: f
-		}, r = e.genes.map((e) => a?.get(e)?.protid).find((e) => e);
-		r && (n.protId = r);
-		let c = o?.[e.genes[0]]?.[i];
-		c && (n.hogId = c.split("_")[0], n.name = n.hogId), u.push(n), f += e.maxInHog;
+			start: p
+		}, c = e.genes.map((e) => r?.get(e)?.protid).find((e) => e);
+		c && (o.protId = c), a && (o.hogId = a, o.name = a), u.push(o), p += e.maxInHog;
 	}
-	let p = new Set(d), m = n[i] ?? [], h = /* @__PURE__ */ new Map();
+	let m = new Set(d), h = a[n] ?? [], g = /* @__PURE__ */ new Map();
 	return {
-		level: i,
+		level: n,
 		columns: u,
 		removed: d,
+		hidden: f,
 		numberSpecies: l,
-		totalSlots: f,
+		totalSlots: p,
 		row: (e) => {
-			let n = h.get(e);
-			if (n) return n;
-			n = [];
-			let r = 0;
-			return (t[e]?.[i] ?? []).forEach((e, t) => {
-				p.has(t) || ([...e].sort().forEach((e, i) => {
-					n.push({
+			let r = g.get(e);
+			if (r) return r;
+			r = [];
+			let i = 0;
+			return (t[e]?.[n] ?? []).forEach((e, t) => {
+				m.has(t) || ([...e].sort().forEach((e, n) => {
+					r.push({
 						id: e,
 						hog: t,
-						slot: r + i,
-						posInHog: i
+						slot: i + n,
+						posInHog: n
 					});
-				}), r += m[t]);
-			}), h.set(e, n), n;
+				}), i += h[t]);
+			}), g.set(e, r), r;
 		}
 	};
 }
 // src/core/links.ts
-function Cl(e = "") {
+function wl(e = "") {
 	let t = e.replace(/\/$/, "");
 	return {
 		links: {
@@ -4138,24 +4143,24 @@ function Cl(e = "") {
 		}
 	};
 }
-var wl = {
+var Tl = {
 	links: {},
 	api: {}
 };
-function Tl(e, t) {
+function El(e, t) {
 	if (!e) return;
 	let n = !1, r = e.replace(/\{(\w+)\}/g, (e, r) => {
 		let i = t[r];
 		return i === void 0 || i === "" ? (n = !0, "") : encodeURIComponent(String(i));
 	});
-	return n || !El(r) ? void 0 : r;
+	return n || !Dl(r) ? void 0 : r;
 }
-function El(e) {
+function Dl(e) {
 	let t = /^([a-z][a-z0-9+.-]*):/i.exec(e);
 	return !t || /^https?$/i.test(t[1]);
 }
 // src/core/tree.ts
-function Dl(e) {
+function Ol(e) {
 	let t = {}, n = (e) => {
 		if (e?.children) {
 			for (let n of e.children) t[n.name] = e.name;
@@ -4164,7 +4169,7 @@ function Dl(e) {
 	};
 	return n(e), t;
 }
-function Ol(e) {
+function kl(e) {
 	let t = (e) => {
 		if (!e.children) return {
 			cnts: 1,
@@ -4178,7 +4183,7 @@ function Ol(e) {
 	};
 	return t(e).data;
 }
-function kl(e) {
+function Al(e) {
 	let t = [], n = (e, r, i) => {
 		let a = {
 			id: t.length,
@@ -4195,7 +4200,7 @@ function kl(e) {
 		nodes: t
 	};
 }
-function Al(e, t) {
+function jl(e, t) {
 	let n = [], r = [], i = [], a = /* @__PURE__ */ new Map(), o = (e) => {
 		let n = !e.children.length || t.has(e.id) ? 0 : 1 + Math.max(...e.children.map(o));
 		return a.set(e.id, n), n;
@@ -4224,7 +4229,7 @@ function Al(e, t) {
 		links: i
 	};
 }
-function jl(e, t) {
+function Ml(e, t) {
 	let n = new Set(t.leafNames), r = -1, i = -1;
 	return e.rows.forEach((e, t) => {
 		n.has(e.node.leafNames[0]) && (r < 0 && (r = t), i = t + 1);
@@ -4237,7 +4242,7 @@ function jl(e, t) {
 	};
 }
 // src/core/newick.ts
-function Ml(e) {
+function Nl(e) {
 	let t = [], n = {}, r = e.split(/(\s*;|\(|\)|,|:|"\s*)/), i = !1;
 	for (let e = 0; e < r.length; e++) {
 		let a = r[e];
@@ -4269,41 +4274,41 @@ function Ml(e) {
 	return n;
 }
 // src/core/phyloxml.ts
-function Nl(e) {
+function Pl(e) {
 	let t = new DOMParser().parseFromString(e, "application/xml"), n = t.getElementsByTagName("parsererror")[0];
 	if (n) throw Error(`Invalid phyloXML: ${n.textContent?.trim()}`);
-	let r = Il(Il(t.documentElement, "phylogeny") ?? t.documentElement, "clade");
+	let r = Ll(Ll(t.documentElement, "phylogeny") ?? t.documentElement, "clade");
 	if (!r) throw Error("phyloXML contains no clade");
-	return Pl(r);
+	return Fl(r);
 }
-function Pl(e) {
-	let t = {}, n = Il(e, "name")?.textContent?.trim();
+function Fl(e) {
+	let t = {}, n = Ll(e, "name")?.textContent?.trim();
 	if (n) t.name = n;
 	else {
-		let n = Il(e, "taxonomy"), r = n && Il(n, "scientific_name")?.textContent?.trim();
+		let n = Ll(e, "taxonomy"), r = n && Ll(n, "scientific_name")?.textContent?.trim();
 		r && (t.name = r);
 	}
-	let r = Il(e, "branch_length")?.textContent ?? e.getAttribute("branch_length");
+	let r = Ll(e, "branch_length")?.textContent ?? e.getAttribute("branch_length");
 	r && (t.branch_length = parseFloat(r));
-	let i = Fl(e, "clade").map(Pl);
+	let i = Il(e, "clade").map(Fl);
 	return i.length && (t.children = i), t;
 }
-function Fl(e, t) {
+function Il(e, t) {
 	return Array.from(e.children).filter((e) => e.localName === t);
 }
-function Il(e, t) {
-	return Fl(e, t)[0];
+function Ll(e, t) {
+	return Il(e, t)[0];
 }
 // src/core/orthoxml.ts
-function Ll(e) {
+function Rl(e) {
 	if (typeof e != "string") return e;
 	let t = e.trimStart();
-	return t.startsWith("<?xml") || t.startsWith("<phyloxml") ? Nl(t) : Ml(t);
+	return t.startsWith("<?xml") || t.startsWith("<phyloxml") ? Pl(t) : Nl(t);
 }
-function Rl(e, t, n = {}) {
+function zl(e, t, n = {}) {
 	let r = new DOMParser().parseFromString(t, "application/xml"), i = r.getElementsByTagName("parsererror")[0];
 	if (i) throw Error(`Invalid OrthoXML: ${i.textContent?.trim()}`);
-	let a = n.augmented ?? zl(r), o = n.queryHog ?? null, s = {}, c = {}, l = [], u = {}, d = {}, f = [], p, m = {}, h = 0, g = "", _ = [], v = /* @__PURE__ */ new Set(), y = {}, b = (e) => (y[e] = y[e] === void 0 ? 0 : y[e] + 1, y[e]), x = Ll(e), S = () => {
+	let a = n.augmented ?? Bl(r), o = n.queryHog ?? null, s = {}, c = {}, l = [], u = {}, d = {}, f = [], p, m = {}, h = 0, g = "", _ = [], v = /* @__PURE__ */ new Set(), y = {}, b = (e) => (y[e] = y[e] === void 0 ? 0 : y[e] + 1, y[e]), x = Rl(e), S = () => {
 		let e = (t) => {
 			if (t !== void 0 && t.children !== void 0) {
 				let n = t.children.map(e).filter((e) => e !== void 0);
@@ -4376,7 +4381,7 @@ function Rl(e, t, n = {}) {
 			case "property":
 				e.getAttribute("name") === "TaxRange" && t && (t.lev = e.getAttribute("value") ?? void 0);
 				break;
-			case "groups": p = S(), m = Dl(p);
+			case "groups": p = S(), m = Ol(p);
 		}
 	}, D = (e) => {
 		if (e.localName !== "orthologGroup") return;
@@ -4406,22 +4411,22 @@ function Rl(e, t, n = {}) {
 		perSpecies: s,
 		hogMetadata: c,
 		queryMembers: l,
-		tree: Ol(p),
+		tree: kl(p),
 		xrefs: d,
 		augmented: a
 	};
 }
-function zl(e) {
+function Bl(e) {
 	let t = Array.from(e.getElementsByTagNameNS("*", "orthologGroup"));
 	return t.length > 0 && t.every((e) => e.hasAttribute("taxonId") || /^HOG:.+_\d+$/.test(e.getAttribute("id") ?? ""));
 }
 // src/composables/useHogData.ts
-async function Bl(e) {
+async function Vl(e) {
 	let t = await fetch(e);
 	if (!t.ok) throw Error(`${t.status} ${t.statusText} while loading ${e}`);
 	return t.text();
 }
-function Vl() {
+function Hl() {
 	return new Promise((e) => {
 		let t = setTimeout(e, 100);
 		typeof requestAnimationFrame == "function" && requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -4429,7 +4434,7 @@ function Vl() {
 		}));
 	});
 }
-function Hl(e) {
+function Ul(e) {
 	let t = /* @__PURE__ */ qt(null), n = /* @__PURE__ */ qt([]), r = /* @__PURE__ */ qt("idle"), i = Q(() => r.value !== "idle"), a = /* @__PURE__ */ qt(null), o = /* @__PURE__ */ qt(null), s = 0;
 	return H(e, async (e) => {
 		let i = e.orthoxml || e.orthoxmlUrl, c = e.speciesTree || e.speciesTreeUrl;
@@ -4439,15 +4444,15 @@ function Hl(e) {
 		}
 		let l = ++s;
 		r.value = "loading", a.value = null, o.value = null;
-		let u = null, d = e.famData ? Promise.resolve(e.famData) : e.famDataUrl ? Bl(e.famDataUrl).then((e) => JSON.parse(e)).catch((e) => (u = e instanceof Error ? e : Error(String(e)), [])) : Promise.resolve([]);
+		let u = null, d = e.geneData ? Promise.resolve(e.geneData) : e.geneDataUrl ? Vl(e.geneDataUrl).then((e) => JSON.parse(e)).catch((e) => (u = e instanceof Error ? e : Error(String(e)), [])) : Promise.resolve([]);
 		try {
 			let [i, a, c] = await Promise.all([
-				e.orthoxml ?? Bl(e.orthoxmlUrl),
-				e.speciesTree ?? Bl(e.speciesTreeUrl),
+				e.orthoxml ?? Vl(e.orthoxmlUrl),
+				e.speciesTree ?? Vl(e.speciesTreeUrl),
 				d
 			]);
-			if (l !== s || (r.value = "processing", await Vl(), l !== s)) return;
-			let f = Rl(a, i, {
+			if (l !== s || (r.value = "processing", await Hl(), l !== s)) return;
+			let f = zl(a, i, {
 				augmented: e.augmented,
 				queryHog: e.queryHog
 			});
@@ -4462,33 +4467,33 @@ function Hl(e) {
 		deep: !0
 	}), {
 		parsed: t,
-		famData: n,
-		famMap: Q(() => new Map(n.value.map((e) => [Number(e.id), e]))),
+		geneData: n,
+		geneMap: Q(() => new Map(n.value.map((e) => [Number(e.id), e]))),
 		loading: i,
 		phase: r,
 		error: a,
-		famError: o
+		geneDataError: o
 	};
 }
-var Ul = /* @__PURE__ */ new Map();
-function Wl(e) {
-	let t = Ul.get(e);
+var Wl = /* @__PURE__ */ new Map();
+function Gl(e) {
+	let t = Wl.get(e);
 	return t || (t = fetch(e).then((e) => {
 		if (!e.ok) throw Error(`${e.status} ${e.statusText}`);
 		return e.json();
-	}), t.catch(() => Ul.delete(e)), Ul.set(e, t)), t;
+	}), t.catch(() => Wl.delete(e)), Wl.set(e, t)), t;
 }
 // src/components/GeneInfo.vue?vue&type=script&setup=true&lang.ts
-var Gl = ["href"], Kl = { key: 1 }, ql = {
+var Kl = ["href"], ql = { key: 1 }, Jl = {
 	key: 0,
 	class: "iham-muted"
-}, Jl = {
+}, Yl = {
 	key: 1,
 	class: "iham-muted"
-}, Yl = {
+}, Xl = {
 	key: 2,
 	class: "iham-muted"
-}, Xl = { key: 3 }, Zl = { class: "iham-muted" }, Ql = /* @__PURE__ */ Xn({
+}, Zl = { key: 3 }, Ql = { class: "iham-muted" }, $l = /* @__PURE__ */ Xn({
 	__name: "GeneInfo",
 	props: {
 		geneId: { type: Number },
@@ -4497,17 +4502,17 @@ var Gl = ["href"], Kl = { key: 1 }, ql = {
 		endpoints: { type: Object }
 	},
 	setup(e) {
-		let t = e, n = Q(() => t.gene?.xrefid ?? t.xref), r = Q(() => Tl(t.endpoints.links.gene, {
+		let t = e, n = Q(() => t.gene?.xrefid ?? t.xref), r = Q(() => El(t.endpoints.links.gene, {
 			xref: n.value,
 			protId: t.gene?.protid,
 			geneId: t.geneId
-		})), i = Q(() => Tl(t.endpoints.api.goAnnotations, { protId: t.gene?.protid })), a = /* @__PURE__ */ R(null), o = /* @__PURE__ */ R("idle");
+		})), i = Q(() => El(t.endpoints.api.goAnnotations, { protId: t.gene?.protid })), a = /* @__PURE__ */ R(null), o = /* @__PURE__ */ R("idle");
 		H(i, async (e) => {
 			if (a.value = null, !e) o.value = "idle";
 			else {
 				o.value = "loading";
 				try {
-					let t = await Wl(e);
+					let t = await Gl(e);
 					if (e !== i.value) return;
 					let n = /* @__PURE__ */ new Set();
 					a.value = t.filter((e) => !n.has(e.GO_term) && n.add(e.GO_term)).map((e) => ({
@@ -4533,17 +4538,17 @@ var Gl = ["href"], Kl = { key: 1 }, ql = {
 				href: r.value,
 				target: "_blank",
 				rel: "noopener"
-			}, M(n.value), 9, Gl)) : (K(), q("span", Kl, M(n.value), 1))])], 64)) : X("", !0),
+			}, M(n.value), 9, Kl)) : (K(), q("span", ql, M(n.value), 1))])], 64)) : X("", !0),
 			(K(!0), q(G, null, Sr(s.value, ([e, t]) => (K(), q(G, { key: e }, [J("dt", null, M(e), 1), J("dd", null, M(t), 1)], 64))), 128)),
-			o.value === "idle" ? X("", !0) : (K(), q(G, { key: 1 }, [t[1] ||= J("dt", null, "GO annotations", -1), o.value === "loading" ? (K(), q("dd", ql, "loading…")) : o.value === "error" ? (K(), q("dd", Jl, "could not be loaded")) : a.value?.length ? (K(), q("dd", Xl, [J("ul", null, [(K(!0), q(G, null, Sr(a.value, (e) => (K(), q("li", { key: e.id }, [J("span", Zl, M(e.id), 1), ta(" " + M(e.name), 1)]))), 128))])])) : (K(), q("dd", Yl, "none"))], 64))
+			o.value === "idle" ? X("", !0) : (K(), q(G, { key: 1 }, [t[1] ||= J("dt", null, "GO annotations", -1), o.value === "loading" ? (K(), q("dd", Jl, "loading…")) : o.value === "error" ? (K(), q("dd", Yl, "could not be loaded")) : a.value?.length ? (K(), q("dd", Zl, [J("ul", null, [(K(!0), q(G, null, Sr(a.value, (e) => (K(), q("li", { key: e.id }, [J("span", Ql, M(e.id), 1), ta(" " + M(e.name), 1)]))), 128))])])) : (K(), q("dd", Xl, "none"))], 64))
 		]));
 	}
-}), $l = ["width", "height"], eu = [
+}), eu = ["width", "height"], tu = [
 	"aria-label",
 	"transform",
 	"onClick",
 	"onKeydown"
-], tu = /*@__PURE__*/ Xn({
+], nu = /*@__PURE__*/ Xn({
 	__name: "HogHeader",
 	props: {
 		columns: { type: Array },
@@ -4563,7 +4568,7 @@ var Gl = ["href"], Kl = { key: 1 }, ql = {
 			"aria-label": "HOG columns"
 		}, [(K(!0), q(G, null, Sr(e.columns, (t) => (K(), q("g", {
 			key: t.index,
-			class: j(["iham-header-col", { "is-active": t.index === e.activeIndex }]),
+			class: me(["iham-header-col", { "is-active": t.index === e.activeIndex }]),
 			role: "listitem",
 			tabindex: "0",
 			"aria-label": `${t.name}: ${t.genes.length} genes, ${t.coverage.toFixed(0)}% of species`,
@@ -4574,16 +4579,16 @@ var Gl = ["href"], Kl = { key: 1 }, ql = {
 			J("title", null, M(t.name), 1),
 			r[0] ||= J("circle", { r: "7" }, null, -1),
 			r[1] ||= J("text", { dy: "0.35em" }, "?", -1)
-		], 42, eu))), 128))], 8, $l));
+		], 42, tu))), 128))], 8, eu));
 	}
-}), nu = ".iham-header{display:block}.iham-header-col{cursor:pointer}.iham-header-col circle{fill:var(--iham-bg,#fff);stroke:var(--iham-muted,#95a5a6)}.iham-header-col text{fill:var(--iham-muted,#95a5a6);text-anchor:middle;-webkit-user-select:none;user-select:none;font-size:9px}.iham-header-col:hover circle,.iham-header-col.is-active circle,.iham-header-col:focus-visible circle{stroke:var(--iham-accent,#2c3e50);stroke-width:2px}.iham-header-col:focus{outline:none}", ru = (e, t) => {
+}), ru = ".iham-header{display:block}.iham-header-col{cursor:pointer}.iham-header-col circle{fill:var(--iham-bg,#fff);stroke:var(--iham-muted,#7f8c8d)}.iham-header-col text{fill:var(--iham-muted,#7f8c8d);text-anchor:middle;-webkit-user-select:none;user-select:none;font-size:9px}.iham-header-col:hover circle,.iham-header-col.is-active circle,.iham-header-col:focus-visible circle{stroke:var(--iham-accent,#2c3e50);stroke-width:2px}.iham-header-col:focus{outline:none}", iu = (e, t) => {
 	let n = e.__vccOpts || e;
 	for (let [e, r] of t) n[e] = r;
 	return n;
-}, iu = /*#__PURE__*/ ru(tu, [["styles", [nu]]]), au = {
+}, au = /*#__PURE__*/ iu(nu, [["styles", [ru]]]), ou = {
 	key: 0,
 	class: "iham-muted"
-}, ou = ["href"], su = /* @__PURE__ */ Xn({
+}, su = ["href"], cu = /* @__PURE__ */ Xn({
 	__name: "HogInfo",
 	props: {
 		column: { type: Object },
@@ -4598,14 +4603,14 @@ var Gl = ["href"], Kl = { key: 1 }, ql = {
 				hogId: e.hogId,
 				level: t
 			} : null, a.value = "idle";
-			let o = !e.hogId && Tl(n.endpoints.api.hogLookup, {
+			let o = !e.hogId && El(n.endpoints.api.hogLookup, {
 				protId: e.protId,
 				level: t
 			});
 			if (o) {
 				a.value = "loading";
 				try {
-					let t = await Wl(o);
+					let t = await Gl(o);
 					if (e !== n.column) return;
 					i.value = {
 						hogId: t.hog_id,
@@ -4626,39 +4631,39 @@ var Gl = ["href"], Kl = { key: 1 }, ql = {
 			return [
 				{
 					label: "Sequences (FASTA)",
-					href: Tl(r.hogFasta, t)
+					href: El(r.hogFasta, t)
 				},
 				{
 					label: `Show ${e.hogId} members`,
-					href: Tl(r.hogMembers, t)
+					href: El(r.hogMembers, t)
 				},
 				{
 					label: `Set focal to ${e.hogId}`,
-					href: Tl(r.hogViewer, t)
+					href: El(r.hogViewer, t)
 				},
 				{
 					label: "Locate in chromosome viewer",
-					href: Tl(r.hogChromosome, t)
+					href: El(r.hogChromosome, t)
 				}
 			].filter((e) => !!e.href);
 		});
 		return (t, n) => (K(), q("ul", null, [
 			J("li", null, M(e.column.genes.length) + " " + M(e.column.genes.length === 1 ? "gene" : "genes"), 1),
 			J("li", null, M(e.column.coverage.toFixed(2)) + "% species represented", 1),
-			a.value === "loading" ? (K(), q("li", au, "resolving HOG…")) : X("", !0),
+			a.value === "loading" ? (K(), q("li", ou, "resolving HOG…")) : X("", !0),
 			(K(!0), q(G, null, Sr(o.value, (e) => (K(), q("li", { key: e.label }, [J("a", {
 				href: e.href,
 				target: "_blank",
 				rel: "noopener"
-			}, M(e.label), 9, ou)]))), 128))
+			}, M(e.label), 9, su)]))), 128))
 		]));
 	}
-}), cu = ["aria-label"], lu = /*#__PURE__*/ ru(/* @__PURE__ */ Xn({
+}), lu = ["aria-label"], uu = /*#__PURE__*/ iu(/* @__PURE__ */ Xn({
 	__name: "HogMatrix",
 	props: {
 		view: { type: Object },
 		rows: { type: Array },
-		famMap: { type: Map },
+		geneMap: { type: Map },
 		color: { type: Function },
 		cellWidth: { type: Number },
 		rowHeight: { type: Number },
@@ -4703,7 +4708,7 @@ var Gl = ["href"], Kl = { key: 1 }, ql = {
 				let n = u(r.rows[e]);
 				for (let i = d(n, b); i < n.length && n[i].slot <= x; i++) {
 					let a = n[i];
-					t.fillStyle = r.color(r.famMap.get(a.id), a.id), t.fillRect(a.slot * h + _, e * g + _, h - 2 * _, g - 2 * _);
+					t.fillStyle = r.color(r.geneMap.get(a.id), a.id), t.fillRect(a.slot * h + _, e * g + _, h - 2 * _, g - 2 * _);
 				}
 			}
 			let S = Math.max(i, r.cladeRows.start * g), C = Math.min(i + c, r.cladeRows.end * g);
@@ -4741,7 +4746,7 @@ var Gl = ["href"], Kl = { key: 1 }, ql = {
 			r.view,
 			r.rows,
 			r.color,
-			r.famMap,
+			r.geneMap,
 			l.value,
 			r.cladeRows
 		], p), fr(m), t({ redraw: p }), (t, n) => (K(), q("div", {
@@ -4753,7 +4758,7 @@ var Gl = ["href"], Kl = { key: 1 }, ql = {
 		}, [J("canvas", {
 			ref_key: "canvas",
 			ref: a,
-			class: j(["iham-matrix-canvas", { "is-pointer": o.value }]),
+			class: me(["iham-matrix-canvas", { "is-pointer": o.value }]),
 			style: le({
 				width: `${l.value.w}px`,
 				height: `${l.value.h}px`,
@@ -4764,9 +4769,9 @@ var Gl = ["href"], Kl = { key: 1 }, ql = {
 			onMousemove: g,
 			onMouseleave: _,
 			onClick: v
-		}, null, 46, cu)], 4));
+		}, null, 46, lu)], 4));
 	}
-}), [["styles", [".iham-matrix{position:relative}.iham-matrix-canvas{display:block;position:absolute;top:0;left:0}.iham-matrix-canvas.is-pointer{cursor:pointer}"]]]), uu = ["aria-label"], du = { class: "iham-popover-title" }, fu = { class: "iham-popover-body" }, pu = /*#__PURE__*/ ru(/* @__PURE__ */ Xn({
+}), [["styles", [".iham-matrix{position:relative}.iham-matrix-canvas{display:block;position:absolute;top:0;left:0}.iham-matrix-canvas.is-pointer{cursor:pointer}"]]]), du = ["aria-label"], fu = { class: "iham-popover-title" }, pu = { class: "iham-popover-body" }, mu = /*#__PURE__*/ iu(/* @__PURE__ */ Xn({
 	__name: "IHamPopover",
 	props: {
 		x: { type: Number },
@@ -4791,7 +4796,7 @@ var Gl = ["href"], Kl = { key: 1 }, ql = {
 		return fr(() => window.addEventListener("keydown", s)), hr(() => window.removeEventListener("keydown", s)), (t, n) => (K(), q("div", {
 			ref_key: "el",
 			ref: i,
-			class: j(["iham-popover", { "is-passive": e.passive }]),
+			class: me(["iham-popover", { "is-passive": e.passive }]),
 			style: le({
 				left: `${a.value}px`,
 				top: `${e.y + 8}px`
@@ -4799,15 +4804,15 @@ var Gl = ["href"], Kl = { key: 1 }, ql = {
 			role: "dialog",
 			"aria-label": e.title,
 			tabindex: "-1"
-		}, [J("div", du, [J("span", null, M(e.title), 1), e.passive ? X("", !0) : (K(), q("button", {
+		}, [J("div", fu, [J("span", null, M(e.title), 1), e.passive ? X("", !0) : (K(), q("button", {
 			key: 0,
 			type: "button",
 			class: "iham-popover-close",
 			"aria-label": "Close",
 			onClick: n[0] ||= (e) => r("close")
-		}, "×"))]), J("div", fu, [Cr(t.$slots, "default")])], 14, uu));
+		}, "×"))]), J("div", pu, [Cr(t.$slots, "default")])], 14, du));
 	}
-}), [["styles", [".iham-popover{z-index:20;background:var(--iham-bg,#fff);min-width:160px;max-width:320px;color:var(--iham-fg,#222);border:1px solid var(--iham-border,#ccc);border-radius:4px;font-size:12px;position:absolute;box-shadow:0 4px 14px #0000002e}.iham-popover:focus{outline:none}.iham-popover.is-passive{pointer-events:none}.iham-popover-title{background:var(--iham-header-bg,#2c3e50);color:var(--iham-header-fg,#fff);word-break:break-all;border-radius:3px 3px 0 0;justify-content:space-between;align-items:center;gap:8px;padding:6px 8px;font-weight:600;display:flex}.iham-popover-close{color:inherit;cursor:pointer;background:0 0;border:none;padding:0 2px;font-size:16px;line-height:1}.iham-popover-body{max-height:260px;padding:6px 8px;overflow:auto}.iham-popover-body ul{margin:0;padding:0;list-style:none}.iham-popover-body li{padding:2px 0}.iham-popover-body a{color:var(--iham-link,#2a6ebb)}.iham-popover-body button.iham-link-button{color:var(--iham-link,#2a6ebb);cursor:pointer;font:inherit;text-align:left;background:0 0;border:none;padding:2px 0}.iham-popover-body button.iham-link-button:hover{text-decoration:underline}.iham-popover-body dt{margin-top:4px;font-weight:600}.iham-popover-body dd{margin:0}.iham-muted{color:var(--iham-muted,#7f8c8d)}"]]]), mu = ["aria-label"], hu = { class: "iham-legend-label" }, gu = ["width"], _u = ["stop-color"], vu = ["stop-color"], yu = ["fill"], bu = ["transform"], xu = { y: "14" }, Su = 200, Cu = /*#__PURE__*/ ru(/* @__PURE__ */ Xn({
+}), [["styles", [".iham-popover{z-index:20;background:var(--iham-bg,#fff);min-width:160px;max-width:320px;color:var(--iham-fg,#222);border:1px solid var(--iham-border,#ddd);border-radius:4px;font-size:12px;position:absolute;box-shadow:0 4px 14px #0000002e}.iham-popover:focus{outline:none}.iham-popover.is-passive{pointer-events:none}.iham-popover-title{background:var(--iham-popover-title-bg,#2c3e50);color:var(--iham-popover-title-fg,#fff);word-break:break-all;border-radius:3px 3px 0 0;justify-content:space-between;align-items:center;gap:8px;padding:6px 8px;font-weight:600;display:flex}.iham-popover-close{color:inherit;cursor:pointer;background:0 0;border:none;padding:0 2px;font-size:16px;line-height:1}.iham-popover-body{max-height:260px;padding:6px 8px;overflow:auto}.iham-popover-body ul{margin:0;padding:0;list-style:none}.iham-popover-body li{padding:2px 0}.iham-popover-body a{color:var(--iham-link,#2a6ebb)}.iham-popover-body button.iham-link-button{color:var(--iham-link,#2a6ebb);cursor:pointer;font:inherit;text-align:left;background:0 0;border:none;padding:2px 0}.iham-popover-body button.iham-link-button:hover{text-decoration:underline}.iham-popover-body dt{margin-top:4px;font-weight:600}.iham-popover-body dd{margin:0}.iham-muted{color:var(--iham-muted,#7f8c8d)}"]]]), hu = ["aria-label"], gu = { class: "iham-legend-label" }, _u = ["width"], vu = ["stop-color"], yu = ["stop-color"], bu = ["fill"], xu = ["transform"], Su = { y: "14" }, Cu = 200, wu = /*#__PURE__*/ iu(/* @__PURE__ */ Xn({
 	__name: "ColorLegend",
 	props: {
 		label: { type: String },
@@ -4817,51 +4822,51 @@ var Gl = ["href"], Kl = { key: 1 }, ql = {
 	setup(e) {
 		let t = e, n = `iham-legend-${Zn()}`, r = Q(() => bl(t.domain, 5).map((e) => ({
 			value: e,
-			x: (e - t.domain[0]) / (t.domain[1] - t.domain[0]) * Su
+			x: (e - t.domain[0]) / (t.domain[1] - t.domain[0]) * Cu
 		}))), i = (e) => Math.abs(e) < 1 && e !== 0 ? e.toFixed(2) : String(Math.round(e * 100) / 100);
 		return (t, a) => (K(), q("div", {
 			class: "iham-legend",
 			role: "img",
 			"aria-label": `${e.label} from ${i(e.domain[0])} to ${i(e.domain[1])}`
-		}, [J("span", hu, M(e.label), 1), (K(), q("svg", {
+		}, [J("span", gu, M(e.label), 1), (K(), q("svg", {
 			width: 220,
 			height: "30"
 		}, [
 			J("defs", null, [J("linearGradient", { id: n }, [J("stop", {
 				offset: "0",
 				"stop-color": e.colors[0]
-			}, null, 8, _u), J("stop", {
+			}, null, 8, vu), J("stop", {
 				offset: "1",
 				"stop-color": e.colors[1]
-			}, null, 8, vu)])]),
+			}, null, 8, yu)])]),
 			J("rect", {
 				x: "10",
 				y: "2",
-				width: Su,
+				width: Cu,
 				height: "10",
 				fill: `url(#${n})`
-			}, null, 8, yu),
+			}, null, 8, bu),
 			(K(!0), q(G, null, Sr(r.value, (e) => (K(), q("g", {
 				key: e.value,
 				transform: `translate(${10 + e.x},12)`
-			}, [a[0] ||= J("line", { y2: "4" }, null, -1), J("text", xu, M(i(e.value)), 1)], 8, bu))), 128))
-		], 8, gu))], 8, mu));
+			}, [a[0] ||= J("line", { y2: "4" }, null, -1), J("text", Su, M(i(e.value)), 1)], 8, xu))), 128))
+		], 8, _u))], 8, hu));
 	}
-}), [["styles", [".iham-legend{align-items:center;gap:8px;display:inline-flex}.iham-legend svg line{stroke:currentColor}.iham-legend svg text{fill:currentColor;text-anchor:middle;font-size:10px}"]]]), wu = { class: "iham-toolbar" }, Tu = { class: "iham-toolbar-row" }, Eu = { class: "iham-toolbar-level" }, Du = {
+}), [["styles", [".iham-legend{align-items:center;gap:8px;display:inline-flex}.iham-legend svg line{stroke:currentColor}.iham-legend svg text{fill:currentColor;text-anchor:middle;font-size:10px}"]]]), Tu = { class: "iham-toolbar" }, Eu = { class: "iham-toolbar-row" }, Du = { class: "iham-toolbar-level" }, Ou = {
 	key: 0,
 	class: "iham-badge"
-}, Ou = {
+}, ku = {
 	key: 0,
 	class: "iham-notice",
 	role: "status"
-}, ku = ["aria-expanded"], Au = { "aria-hidden": "true" }, ju = {
+}, Au = ["aria-expanded"], ju = { "aria-hidden": "true" }, Mu = {
 	key: 0,
 	class: "iham-toolbar-row iham-toolbar-settings"
-}, Mu = { key: 0 }, Nu = ["value"], Pu = ["value"], Fu = ["value"], Iu = ["value"], Lu = {
+}, Nu = { key: 0 }, Pu = ["value"], Fu = ["value"], Iu = ["value"], Lu = ["value"], Ru = {
 	key: 1,
 	class: "iham-notice",
 	role: "status"
-}, Ru = /*#__PURE__*/ ru(/* @__PURE__ */ Xn({
+}, zu = /*#__PURE__*/ iu(/* @__PURE__ */ Xn({
 	__name: "IHamToolbar",
 	props: {
 		level: { type: String },
@@ -4886,40 +4891,40 @@ var Gl = ["href"], Kl = { key: 1 }, ql = {
 			let t = Number(e.target.value);
 			r("update:coverageThreshold", Number.isFinite(t) ? Math.min(100, Math.max(0, t)) : 0);
 		}
-		return (t, n) => (K(), q("div", wu, [J("div", Tu, [
-			J("div", Eu, [
+		return (t, n) => (K(), q("div", Tu, [J("div", Eu, [
+			J("div", Du, [
 				n[7] ||= ta(" Level: ", -1),
 				J("strong", null, M(e.level), 1),
-				e.frozen ? (K(), q("span", Du, [n[6] ||= ta(" frozen ", -1), J("button", {
+				e.frozen ? (K(), q("span", Ou, [n[6] ||= ta(" frozen ", -1), J("button", {
 					type: "button",
 					class: "iham-badge-button",
 					onClick: n[0] ||= (e) => r("unfreeze")
 				}, "unfreeze")])) : X("", !0)
 			]),
-			i.value ? X("", !0) : (K(), q(G, { key: 0 }, [e.removedCount > 0 ? (K(), q("span", Ou, [ta(M(e.removedCount) + " " + M(e.removedCount === 1 ? "HOG" : "HOGs") + " hidden ", 1), J("button", {
+			i.value ? X("", !0) : (K(), q(G, { key: 0 }, [e.removedCount > 0 ? (K(), q("span", ku, [ta(M(e.removedCount) + " " + M(e.removedCount === 1 ? "HOG" : "HOGs") + " hidden ", 1), J("button", {
 				type: "button",
 				class: "iham-badge-button",
 				onClick: n[1] ||= (e) => r("update:coverageThreshold", 0)
-			}, "show all")])) : X("", !0), e.legend ? (K(), qi(Cu, me(aa({ key: 1 }, e.legend)), null, 16)) : X("", !0)], 64)),
+			}, "show all")])) : X("", !0), e.legend ? (K(), qi(wu, j(aa({ key: 1 }, e.legend)), null, 16)) : X("", !0)], 64)),
 			e.collapsible ? (K(), q("button", {
 				key: 1,
 				type: "button",
 				class: "iham-settings-toggle",
 				"aria-expanded": i.value,
 				onClick: n[2] ||= (e) => i.value = !i.value
-			}, [n[8] ||= ta(" Settings ", -1), J("span", Au, M(i.value ? "▴" : "▾"), 1)], 8, ku)) : X("", !0)
-		]), i.value ? (K(), q("div", ju, [
-			e.colorScheme === null ? X("", !0) : (K(), q("label", Mu, [n[9] ||= ta(" Colour ", -1), J("select", {
+			}, [n[8] ||= ta(" Settings ", -1), J("span", ju, M(i.value ? "▴" : "▾"), 1)], 8, Au)) : X("", !0)
+		]), i.value ? (K(), q("div", Mu, [
+			e.colorScheme === null ? X("", !0) : (K(), q("label", Nu, [n[9] ||= ta(" Colour ", -1), J("select", {
 				value: e.colorScheme,
 				onChange: n[3] ||= (e) => r("update:colorScheme", e.target.value)
 			}, [(K(!0), q(G, null, Sr(e.schemes, (e) => (K(), q("option", {
 				key: e,
 				value: e
-			}, M(z(gl)[e].label), 9, Pu))), 128))], 40, Nu)])),
+			}, M(z(gl)[e].label), 9, Fu))), 128))], 40, Pu)])),
 			J("label", null, [n[11] ||= ta(" Gene info on ", -1), J("select", {
 				value: e.tooltipTrigger,
 				onChange: n[4] ||= (e) => r("update:tooltipTrigger", e.target.value)
-			}, [...n[10] ||= [J("option", { value: "click" }, "click", -1), J("option", { value: "hover" }, "hover", -1)]], 40, Fu)]),
+			}, [...n[10] ||= [J("option", { value: "click" }, "click", -1), J("option", { value: "hover" }, "hover", -1)]], 40, Iu)]),
 			J("label", null, [
 				n[12] ||= ta(" Hide HOGs in fewer than ", -1),
 				J("input", {
@@ -4929,18 +4934,18 @@ var Gl = ["href"], Kl = { key: 1 }, ql = {
 					step: "10",
 					value: e.coverageThreshold,
 					onInput: a
-				}, null, 40, Iu),
+				}, null, 40, Lu),
 				n[13] ||= ta(" % of species ", -1)
 			]),
-			e.removedCount > 0 ? (K(), q("span", Lu, [ta(M(e.removedCount) + " " + M(e.removedCount === 1 ? "HOG" : "HOGs") + " hidden ", 1), J("button", {
+			e.removedCount > 0 ? (K(), q("span", Ru, [ta(M(e.removedCount) + " " + M(e.removedCount === 1 ? "HOG" : "HOGs") + " hidden ", 1), J("button", {
 				type: "button",
 				class: "iham-badge-button",
 				onClick: n[5] ||= (e) => r("update:coverageThreshold", 0)
 			}, "show all")])) : X("", !0),
-			e.legend ? (K(), qi(Cu, me(aa({ key: 2 }, e.legend)), null, 16)) : X("", !0)
+			e.legend ? (K(), qi(wu, j(aa({ key: 2 }, e.legend)), null, 16)) : X("", !0)
 		])) : X("", !0)]));
 	}
-}), [["styles", [".iham-toolbar{padding:6px 0 8px;font-size:13px}.iham-toolbar-row{flex-wrap:wrap;align-items:center;gap:6px 16px;display:flex}.iham-toolbar-settings{margin-top:6px}.iham-settings-toggle{font:inherit;border:1px solid var(--iham-muted,#95a5a6);color:inherit;cursor:pointer;background:0 0;border-radius:3px;padding:1px 8px}.iham-toolbar label{align-items:center;gap:4px;display:inline-flex}.iham-toolbar select,.iham-toolbar input{font:inherit;padding:1px 4px}.iham-toolbar input[type=number]{width:4.5em}.iham-toolbar-level{margin-right:auto}.iham-badge,.iham-notice{background:var(--iham-notice-bg,#d6eaf8);color:var(--iham-notice-fg,#1b4f72);border-radius:3px;align-items:center;gap:4px;padding:1px 6px;font-size:12px;display:inline-flex}.iham-badge-button{font:inherit;color:inherit;cursor:pointer;background:0 0;border:none;padding:0;text-decoration:underline}"]]]), zu = { key: 0 }, Bu = { key: 1 }, Vu = { key: 0 }, Hu = { class: "iham-muted" }, Uu = /* @__PURE__ */ Xn({
+}), [["styles", [".iham-toolbar{padding:6px 0 8px;font-size:13px}.iham-toolbar-row{flex-wrap:wrap;align-items:center;gap:6px 16px;display:flex}.iham-toolbar-settings{margin-top:6px}.iham-settings-toggle{font:inherit;border:1px solid var(--iham-muted,#7f8c8d);color:inherit;cursor:pointer;background:0 0;border-radius:3px;padding:1px 8px}.iham-toolbar label{align-items:center;gap:4px;display:inline-flex}.iham-toolbar select,.iham-toolbar input{font:inherit;padding:1px 4px}.iham-toolbar input[type=number]{width:4.5em}.iham-toolbar-level{margin-right:auto}.iham-badge,.iham-notice{background:var(--iham-notice-bg,#d6eaf8);color:var(--iham-notice-fg,#1b4f72);border-radius:3px;align-items:center;gap:4px;padding:1px 6px;font-size:12px;display:inline-flex}.iham-badge-button{font:inherit;color:inherit;cursor:pointer;background:0 0;border:none;padding:0;text-decoration:underline}"]]]), Bu = { key: 0 }, Vu = { key: 1 }, Hu = { key: 0 }, Uu = { class: "iham-muted" }, Wu = /* @__PURE__ */ Xn({
 	__name: "NodeMenu",
 	props: {
 		node: { type: Object },
@@ -4955,12 +4960,12 @@ var Gl = ["href"], Kl = { key: 1 }, ql = {
 	setup(e, { emit: t }) {
 		let n = t;
 		return (t, r) => (K(), q("ul", null, [
-			e.node.children.length ? (K(), q("li", zu, [J("button", {
+			e.node.children.length ? (K(), q("li", Bu, [J("button", {
 				type: "button",
 				class: "iham-link-button",
 				onClick: r[0] ||= (e) => n("toggleCollapse")
 			}, M(e.collapsed ? "Expand node" : "Collapse node"), 1)])) : X("", !0),
-			e.frozenAt === null ? (K(), q("li", Bu, [J("button", {
+			e.frozenAt === null ? (K(), q("li", Vu, [J("button", {
 				type: "button",
 				class: "iham-link-button",
 				onClick: r[1] ||= (e) => n("freeze")
@@ -4968,26 +4973,26 @@ var Gl = ["href"], Kl = { key: 1 }, ql = {
 				type: "button",
 				class: "iham-link-button",
 				onClick: r[2] ||= (e) => n("unfreeze")
-			}, "Unfreeze the tree")]), e.frozenAt === e.node.id ? X("", !0) : (K(), q("li", Vu, [J("button", {
+			}, "Unfreeze the tree")]), e.frozenAt === e.node.id ? X("", !0) : (K(), q("li", Hu, [J("button", {
 				type: "button",
 				class: "iham-link-button",
 				onClick: r[3] ||= (e) => n("freeze")
 			}, "Re-freeze tree at this node")]))], 64)),
-			J("li", Hu, M(e.node.leafNames.length) + " species", 1)
+			J("li", Uu, M(e.node.leafNames.length) + " species", 1)
 		]));
 	}
-}), Wu = "bold 12px sans-serif", Gu = (e) => e.length * 7.5;
-function Ku(e) {
+}), Gu = "bold 12px sans-serif", Ku = (e) => e.length * 7.5;
+function qu(e) {
 	let t = typeof document < "u" ? document.createElement("canvas").getContext("2d") : null;
-	if (!t) return Gu;
-	t.font = Wu, t.font = e;
+	if (!t) return Ku;
+	t.font = Gu, t.font = e;
 	let n = /* @__PURE__ */ new Map();
 	return (e) => {
 		let r = n.get(e);
 		return r === void 0 && (r = t.measureText(e).width, n.set(e, r)), r;
 	};
 }
-function qu(e, t, n) {
+function Ju(e, t, n) {
 	if (n(e) <= t) return e;
 	let r = 0, i = e.length;
 	for (; r < i;) {
@@ -4996,30 +5001,30 @@ function qu(e, t, n) {
 	}
 	return r > 0 ? `${e.slice(0, r).trimEnd()}…` : "…";
 }
-function Ju(e, t, n, r, i) {
-	let a = qu(e, Math.max(0, r - n), i), o = i(a), s = t - 6;
+function Yu(e, t, n, r, i) {
+	let a = Ju(e, Math.max(0, r - n), i), o = i(a), s = t - 6;
 	return {
 		text: a,
 		right: Math.min(r, Math.max(s, n + o)) - t
 	};
 }
 // src/components/SpeciesTree.vue?vue&type=script&setup=true&lang.ts
-var Yu = ["width", "height"], Xu = { class: "iham-tree-links" }, Zu = ["d"], Qu = [
+var Xu = ["width", "height"], Zu = { class: "iham-tree-links" }, Qu = ["d"], $u = [
 	"transform",
 	"aria-label",
 	"aria-selected",
 	"onMouseenter",
 	"onClick"
-], $u = ["y", "height"], ed = {
+], ed = ["y", "height"], td = {
 	key: 0,
 	class: "iham-tree-marker",
 	d: "M-4,0L4,-5L4,5Z"
-}, td = ["r"], nd = {
+}, nd = ["r"], rd = {
 	key: 2,
 	class: "iham-tree-label",
 	x: "9",
 	dy: "0.35em"
-}, rd = ["x", "y"], id = 30, ad = 10, od = /*#__PURE__*/ ru(/* @__PURE__ */ Xn({
+}, id = ["x", "y"], ad = 30, od = 10, sd = /*#__PURE__*/ iu(/* @__PURE__ */ Xn({
 	__name: "SpeciesTree",
 	props: {
 		layout: { type: Object },
@@ -5031,16 +5036,16 @@ var Yu = ["width", "height"], Xu = { class: "iham-tree-links" }, Zu = ["d"], Qu 
 	},
 	emits: ["hover", "click"],
 	setup(e, { emit: t }) {
-		let n = e, r = t, i = Q(() => Math.min(210, n.width * .6)), a = Q(() => Math.max(20, n.width - i.value - 20)), o = Q(() => n.layout.rows.length * n.rowHeight), s = (e) => ad + e.x * a.value, c = (e) => e.y * n.rowHeight + n.rowHeight / 2, l = (e) => e.node.name.replace(/_/g, " ");
+		let n = e, r = t, i = Q(() => Math.min(210, n.width * .6)), a = Q(() => Math.max(20, n.width - i.value - 20)), o = Q(() => n.layout.rows.length * n.rowHeight), s = (e) => od + e.x * a.value, c = (e) => e.y * n.rowHeight + n.rowHeight / 2, l = (e) => e.node.name.replace(/_/g, " ");
 		function u(e) {
 			let t = l(e);
-			return e.collapsed ? `[Collapsed taxa] ${t.length > 14 ? `${t.slice(0, 11)}...` : t}` : e.isRow ? t.length > id ? `${t.slice(0, 27)}...` : t : "";
+			return e.collapsed ? `[Collapsed taxa] ${t.length > 14 ? `${t.slice(0, 11)}...` : t}` : e.isRow ? t.length > ad ? `${t.slice(0, 27)}...` : t : "";
 		}
-		let d = /* @__PURE__ */ R(null), f = /* @__PURE__ */ qt(Gu), p = "";
+		let d = /* @__PURE__ */ R(null), f = /* @__PURE__ */ qt(Ku), p = "";
 		function m() {
 			if (!d.value) return;
-			let e = getComputedStyle(d.value), t = e.fontFamily ? `bold ${e.fontSize || "12px"} ${e.fontFamily}` : Wu;
-			t !== p && (p = t, f.value = Ku(t));
+			let e = getComputedStyle(d.value), t = e.fontFamily ? `bold ${e.fontSize || "12px"} ${e.fontFamily}` : Gu;
+			t !== p && (p = t, f.value = qu(t));
 		}
 		function h() {
 			p = "", m();
@@ -5053,7 +5058,7 @@ var Yu = ["width", "height"], Xu = { class: "iham-tree-links" }, Zu = ["d"], Qu 
 			if (!n.showInternalLabels) return null;
 			let e = n.layout.nodes.find((e) => e.node.id === n.selectedId);
 			if (!e || e.isRow) return null;
-			let t = ad + a.value, { text: r, right: i } = Ju(l(e), s(e), 2, t - 4, f.value);
+			let t = od + a.value, { text: r, right: i } = Yu(l(e), s(e), 2, t - 4, f.value);
 			return {
 				node: e.node,
 				text: r,
@@ -5073,13 +5078,13 @@ var Yu = ["width", "height"], Xu = { class: "iham-tree-links" }, Zu = ["d"], Qu 
 			role: "tree",
 			"aria-label": "Species tree"
 		}, [
-			J("g", Xu, [(K(!0), q(G, null, Sr(v.value, (e) => (K(), q("path", {
+			J("g", Zu, [(K(!0), q(G, null, Sr(v.value, (e) => (K(), q("path", {
 				key: e.key,
 				d: e.d
-			}, null, 8, Zu))), 128))]),
+			}, null, 8, Qu))), 128))]),
 			(K(!0), q(G, null, Sr(e.layout.nodes, (t) => (K(), q("g", {
 				key: t.node.id,
-				class: j(["iham-tree-node", {
+				class: me(["iham-tree-node", {
 					"is-selected": t.node.id === e.selectedId,
 					"is-leaf": t.isRow && !t.collapsed,
 					"is-collapsed": t.collapsed,
@@ -5099,14 +5104,14 @@ var Yu = ["width", "height"], Xu = { class: "iham-tree-links" }, Zu = ["d"], Qu 
 					y: -e.rowHeight / 2,
 					width: 12,
 					height: e.rowHeight
-				}, null, 8, $u),
-				t.collapsed ? (K(), q("path", ed)) : (K(), q("circle", {
+				}, null, 8, ed),
+				t.collapsed ? (K(), q("path", td)) : (K(), q("circle", {
 					key: 1,
 					class: "iham-tree-marker",
 					r: t.node.id === e.selectedId ? 6 : 4
-				}, null, 8, td)),
-				u(t) ? (K(), q("text", nd, M(u(t)), 1)) : X("", !0)
-			], 42, Qu))), 128)),
+				}, null, 8, nd)),
+				u(t) ? (K(), q("text", rd, M(u(t)), 1)) : X("", !0)
+			], 42, $u))), 128)),
 			_.value ? (K(), q("text", {
 				key: 0,
 				class: "iham-tree-label iham-tree-internal-label",
@@ -5115,444 +5120,477 @@ var Yu = ["width", "height"], Xu = { class: "iham-tree-links" }, Zu = ["d"], Qu 
 				"text-anchor": "end",
 				onMouseenter: n[0] ||= (e) => r("hover", _.value.node),
 				onClick: n[1] ||= (e) => r("click", _.value.node, e)
-			}, M(_.value.text), 41, rd)) : X("", !0)
-		], 8, Yu));
+			}, M(_.value.text), 41, id)) : X("", !0)
+		], 8, Xu));
 	}
-}), [["styles", [".iham-tree{-webkit-user-select:none;user-select:none;font-size:12px;display:block}.iham-tree-links path{fill:none;stroke:var(--iham-tree-branch,#222);stroke-width:1px}.iham-tree-node{cursor:pointer}.iham-tree-hit{fill:#0000}.iham-tree-marker{fill:var(--iham-tree-node,#34495e)}.iham-tree-node.is-leaf .iham-tree-marker{fill:var(--iham-tree-leaf,#2c3e50)}.iham-tree-node.is-collapsed .iham-tree-marker{fill:gray}.iham-tree-node.is-selected .iham-tree-marker{fill:var(--iham-selected,#e74c3c)}.iham-tree-node.is-frozen .iham-tree-marker{stroke:var(--iham-selected,#e74c3c);stroke-width:2px;fill:var(--iham-bg,#fff)}.iham-tree-label{fill:var(--iham-fg,#000);paint-order:stroke;stroke:var(--iham-bg,#fff);stroke-width:3px;stroke-linejoin:round}.iham-tree-internal-label{cursor:pointer;font-weight:700}.iham-tree-internal-label:hover{text-decoration:underline}.iham-tree-node.is-collapsed .iham-tree-label{fill:gray}.iham-tree-node.is-selected .iham-tree-label{font-weight:700}.iham-tree-node:hover .iham-tree-label{text-decoration:underline}"]]]), sd = {
+}), [["styles", [".iham-tree{-webkit-user-select:none;user-select:none;font-size:12px;display:block}.iham-tree-links path{fill:none;stroke:var(--iham-tree-branch,#222);stroke-width:1px}.iham-tree-node{cursor:pointer}.iham-tree-hit{fill:#0000}.iham-tree-marker{fill:var(--iham-tree-node,#34495e)}.iham-tree-node.is-leaf .iham-tree-marker{fill:var(--iham-tree-leaf,#2c3e50)}.iham-tree-node.is-collapsed .iham-tree-marker{fill:gray}.iham-tree-node.is-selected .iham-tree-marker{fill:var(--iham-selected,#e74c3c)}.iham-tree-node.is-frozen .iham-tree-marker{stroke:var(--iham-selected,#e74c3c);stroke-width:2px;fill:var(--iham-bg,#fff)}.iham-tree-label{fill:var(--iham-fg,#222);paint-order:stroke;stroke:var(--iham-bg,#fff);stroke-width:3px;stroke-linejoin:round}.iham-tree-internal-label{cursor:pointer;font-weight:700}.iham-tree-internal-label:hover{text-decoration:underline}.iham-tree-node.is-collapsed .iham-tree-label{fill:gray}.iham-tree-node.is-selected .iham-tree-label{font-weight:700}.iham-tree-node:hover .iham-tree-label{text-decoration:underline}"]]]), cd = {
 	key: 0,
 	class: "iham-message iham-error",
 	role: "alert"
-}, cd = {
+}, ld = {
 	key: 1,
 	class: "iham-message",
 	role: "status"
-}, ld = {
+}, ud = {
 	key: 1,
 	class: "iham-message iham-warning",
 	role: "status"
-}, ud = { class: "iham-header-cell" }, dd = { class: "iham-tree-cell" }, fd = { class: "iham-matrix-cell" }, pd = 16, md = 30, hd = /* @__PURE__ */ ho(/* @__PURE__ */ ru(/* @__PURE__ */ Xn({
-	__name: "IHam",
-	props: {
-		orthoxml: { type: String },
-		orthoxmlUrl: { type: String },
-		speciesTree: { type: String },
-		speciesTreeUrl: { type: String },
-		famData: { type: Array },
-		famDataUrl: { type: String },
-		augmented: {
-			type: Boolean,
-			default: void 0
+}, dd = { class: "iham-header-cell" }, fd = { class: "iham-tree-cell" }, pd = { class: "iham-matrix-cell" }, md = 16, hd = 30, gd = /* @__PURE__ */ ho({
+	.../* @__PURE__ */ iu(/* @__PURE__ */ Xn({
+		__name: "IHam",
+		props: {
+			orthoxml: { type: String },
+			orthoxmlUrl: { type: String },
+			speciesTree: { type: String },
+			speciesTreeUrl: { type: String },
+			geneData: { type: Array },
+			geneDataUrl: { type: String },
+			augmented: {
+				type: Boolean,
+				default: void 0
+			},
+			queryHog: { type: String },
+			queryGene: { type: [Number, String] },
+			level: { type: String },
+			coverageThreshold: {
+				default: 0,
+				type: Number
+			},
+			colorScheme: {
+				default: "query",
+				type: null
+			},
+			geneColors: { type: Function },
+			tooltipTrigger: {
+				default: "click",
+				type: String
+			},
+			toolbar: {
+				default: "open",
+				type: String
+			},
+			preset: {
+				default: "none",
+				type: String
+			},
+			baseUrl: {
+				default: "",
+				type: String
+			},
+			links: { type: Object },
+			api: { type: Object },
+			treeWidth: {
+				default: 330,
+				type: Number
+			},
+			rowHeight: {
+				default: 20,
+				type: Number
+			},
+			maxHeight: {
+				default: "80vh",
+				type: String
+			},
+			showInternalLabels: {
+				type: Boolean,
+				default: !0
+			}
 		},
-		queryHog: { type: String },
-		queryGene: { type: [Number, String] },
-		level: { type: String },
-		coverageThreshold: {
-			default: 0,
-			type: Number
-		},
-		colorScheme: {
-			default: "query",
-			type: null
-		},
-		geneColors: { type: Function },
-		tooltipTrigger: {
-			default: "click",
-			type: String
-		},
-		toolbar: {
-			default: "open",
-			type: String
-		},
-		preset: {
-			default: "none",
-			type: String
-		},
-		baseUrl: {
-			default: "",
-			type: String
-		},
-		links: { type: Object },
-		api: { type: Object },
-		treeWidth: {
-			default: 330,
-			type: Number
-		},
-		rowHeight: {
-			default: 20,
-			type: Number
-		},
-		height: {
-			default: "80vh",
-			type: String
-		},
-		showInternalLabels: {
-			type: Boolean,
-			default: !0
-		}
-	},
-	emits: [
-		"update:level",
-		"update:coverageThreshold",
-		"update:colorScheme",
-		"node-selected",
-		"hogs-removed",
-		"loaded",
-		"error"
-	],
-	setup(e, { expose: t, emit: n }) {
-		let r = e, i = n, { parsed: a, famData: o, famMap: s, loading: c, phase: l, error: u, famError: d } = Hl(Q(() => ({
-			orthoxml: r.orthoxml,
-			orthoxmlUrl: r.orthoxmlUrl,
-			speciesTree: r.speciesTree,
-			speciesTreeUrl: r.speciesTreeUrl,
-			famData: r.famData,
-			famDataUrl: r.famDataUrl,
-			augmented: r.augmented,
-			queryHog: r.queryHog
-		}))), f = Q(() => a.value ? kl(a.value.tree) : null), p = Q(() => new Map(f.value?.nodes.map((e) => [e.name, e]) ?? [])), m = Q(() => a.value ? xl(a.value.perSpecies) : {});
-		H(a, (e) => {
-			e && f.value && i("loaded", {
-				species: f.value.root.leafNames.length,
-				genes: Object.keys(e.xrefs).length,
-				augmented: e.augmented
+		emits: [
+			"update:level",
+			"update:coverageThreshold",
+			"update:colorScheme",
+			"update:tooltipTrigger",
+			"node-selected",
+			"hogs-hidden",
+			"loaded",
+			"error"
+		],
+		setup(e, { expose: t, emit: n }) {
+			let r = e, i = n, { parsed: a, geneData: o, geneMap: s, loading: c, phase: l, error: u, geneDataError: d } = Ul(Q(() => ({
+				orthoxml: r.orthoxml,
+				orthoxmlUrl: r.orthoxmlUrl,
+				speciesTree: r.speciesTree,
+				speciesTreeUrl: r.speciesTreeUrl,
+				geneData: r.geneData,
+				geneDataUrl: r.geneDataUrl,
+				augmented: r.augmented,
+				queryHog: r.queryHog
+			}))), f = Q(() => a.value ? Al(a.value.tree) : null), p = Q(() => new Map(f.value?.nodes.map((e) => [e.name, e]) ?? [])), m = Q(() => a.value ? Sl(a.value.perSpecies) : {});
+			H(a, (e) => {
+				e && f.value && i("loaded", {
+					species: f.value.root.leafNames.length,
+					genes: Object.keys(e.xrefs).length,
+					augmented: e.augmented
+				});
+			}), H(u, (e) => e && i("error", e));
+			let h = /* @__PURE__ */ qt(null), g = /* @__PURE__ */ R(null), _ = /* @__PURE__ */ R(/* @__PURE__ */ new Set()), v = /* @__PURE__ */ R(r.coverageThreshold), y = /* @__PURE__ */ R(r.colorScheme), b = /* @__PURE__ */ R(r.tooltipTrigger);
+			H(/* @__PURE__ */ en(r, "coverageThreshold"), (e) => v.value = e), H(/* @__PURE__ */ en(r, "colorScheme"), (e) => y.value = e), H(/* @__PURE__ */ en(r, "tooltipTrigger"), (e) => b.value = e);
+			function x(e, { force: t = !1 } = {}) {
+				(g.value === null || t) && h.value?.id !== e.id && (h.value = e, i("update:level", e.name), i("node-selected", {
+					name: e.name,
+					isLeaf: !e.children.length,
+					species: e.leafNames
+				}));
+			}
+			function S(e) {
+				return e ? p.value.get(e) : void 0;
+			}
+			function C(e) {
+				x(e, { force: !0 }), ce = e.id, xn(ue);
+			}
+			H(f, (e) => {
+				_.value = /* @__PURE__ */ new Set(), g.value = null, h.value = null, e && C(S(r.level) ?? e.root);
+			}), H(/* @__PURE__ */ en(r, "level"), (e) => {
+				let t = S(e);
+				t && t.id !== h.value?.id && C(t);
 			});
-		}), H(u, (e) => e && i("error", e));
-		let h = /* @__PURE__ */ qt(null), g = /* @__PURE__ */ R(null), _ = /* @__PURE__ */ R(/* @__PURE__ */ new Set()), v = /* @__PURE__ */ R(r.coverageThreshold), y = /* @__PURE__ */ R(r.colorScheme), b = /* @__PURE__ */ R(r.tooltipTrigger);
-		H(/* @__PURE__ */ en(r, "coverageThreshold"), (e) => v.value = e), H(/* @__PURE__ */ en(r, "colorScheme"), (e) => y.value = e), H(/* @__PURE__ */ en(r, "tooltipTrigger"), (e) => b.value = e);
-		function x(e, { force: t = !1 } = {}) {
-			(g.value === null || t) && h.value?.id !== e.id && (h.value = e, i("update:level", e.name), i("node-selected", {
-				name: e.name,
-				id: e.id,
-				isLeaf: !e.children.length,
-				species: e.leafNames
-			}));
-		}
-		function S(e) {
-			return e ? p.value.get(e) : void 0;
-		}
-		function C(e) {
-			x(e, { force: !0 }), se = e.id, xn(ce);
-		}
-		H(f, (e) => {
-			_.value = /* @__PURE__ */ new Set(), g.value = null, h.value = null, e && C(S(r.level) ?? e.root);
-		}), H(/* @__PURE__ */ en(r, "level"), (e) => {
-			let t = S(e);
-			t && t.id !== h.value?.id && C(t);
-		});
-		let w = Q(() => {
-			let e = new Set(a.value?.queryMembers ?? []);
-			return r.queryGene !== void 0 && r.queryGene !== "" && e.add(Number(r.queryGene)), e;
-		}), T = Q(() => {
-			let e = a.value, t = f.value, n = h.value;
-			return !e || !t || !n ? null : Sl({
-				perSpecies: e.perSpecies,
-				maxima: m.value,
-				species: t.root.leafNames,
-				level: n.name,
-				coverageThreshold: v.value,
-				famData: s.value,
-				hogMetadata: e.augmented ? e.hogMetadata : null
+			let w = Q(() => {
+				let e = new Set(a.value?.queryMembers ?? []);
+				return r.queryGene !== void 0 && r.queryGene !== "" && e.add(Number(r.queryGene)), e;
+			}), T = Q(() => {
+				let e = a.value, t = f.value, n = h.value;
+				return !e || !t || !n ? null : Cl({
+					perSpecies: e.perSpecies,
+					maxima: m.value,
+					species: t.root.leafNames,
+					level: n.name,
+					coverageThreshold: v.value,
+					geneData: s.value,
+					hogMetadata: e.augmented ? e.hogMetadata : null
+				});
 			});
-		});
-		H(() => T.value?.removed, (e, t) => {
-			e && e.join() !== t?.join() && i("hogs-removed", e);
-		});
-		let E = Q(() => f.value ? Al(f.value.root, _.value) : null), ee = Q(() => E.value && h.value ? jl(E.value, h.value) : {
-			start: 0,
-			end: 0
-		}), D = Q(() => {
-			let e = ee.value.start;
-			if (e === 0) return 0;
-			let t = md + (e - .5) * r.rowHeight - ae.value.top;
-			return Math.max(0, Math.round(t - md / 2));
-		}), te = Q(() => vl(o.value)), O = Q(() => r.geneColors ? { color: r.geneColors } : yl(y.value, o.value, (e) => w.value.has(e))), ne = Q(() => {
-			let e = r.preset === "oma" ? Cl(r.baseUrl) : wl;
-			return {
-				links: {
-					...e.links,
-					...r.links
-				},
-				api: {
-					...e.api,
-					...r.api
-				}
-			};
-		});
-		function re(e) {
-			v.value = e, i("update:coverageThreshold", e);
-		}
-		function k(e) {
-			y.value = e, i("update:colorScheme", e);
-		}
-		let ie = /* @__PURE__ */ R(null), A = /* @__PURE__ */ R(null), ae = /* @__PURE__ */ R({
-			left: 0,
-			top: 0,
-			width: 0,
-			height: 0
-		}), oe, se = null;
-		function ce() {
-			let e = ie.value, t = E.value?.nodes.find((e) => e.node.id === se);
-			if (!e || !t) return;
-			se = null;
-			let n = e.clientHeight - md;
-			e.scrollTop = Math.max(0, t.y * r.rowHeight + r.rowHeight / 2 - n / 2), ue();
-		}
-		function ue() {
-			let e = ie.value;
-			e && (ae.value = {
-				left: e.scrollLeft,
-				top: e.scrollTop,
-				width: e.clientWidth,
-				height: e.clientHeight
+			H(() => T.value, (e, t) => {
+				e && (e.level !== t?.level || e.removed.join() !== t.removed.join()) && (e.removed.length || t?.removed.length) && i("hogs-hidden", {
+					level: e.level,
+					hogs: e.hidden
+				});
 			});
-		}
-		H(ie, (e, t) => {
-			oe?.disconnect(), t?.removeEventListener("scroll", ue), e && (e.addEventListener("scroll", ue, { passive: !0 }), oe = new ResizeObserver(ue), oe.observe(e), xn(() => {
-				ue(), ce();
-			}));
-		}), hr(() => oe?.disconnect());
-		let de = Q(() => Math.max((T.value?.totalSlots ?? 0) * pd, 1)), fe = Q(() => (E.value?.rows.length ?? 0) * r.rowHeight), pe = Q(() => ({
-			x: ae.value.left,
-			y: ae.value.top,
-			width: Math.max(0, ae.value.width - r.treeWidth),
-			height: Math.max(0, ae.value.height - md)
-		})), j = /* @__PURE__ */ qt(null), me = /* @__PURE__ */ R(0);
-		function he(e) {
-			let t = A.value.getBoundingClientRect();
-			if (me.value = t.width, !e.clientX && !e.clientY && e.target instanceof Element) {
-				let n = e.target.getBoundingClientRect();
+			let E = Q(() => f.value ? jl(f.value.root, _.value) : null), ee = Q(() => E.value && h.value ? Ml(E.value, h.value) : {
+				start: 0,
+				end: 0
+			}), D = Q(() => {
+				let e = ee.value.start;
+				if (e === 0) return 0;
+				let t = hd + (e - .5) * r.rowHeight - oe.value.top;
+				return Math.max(0, Math.round(t - hd / 2));
+			}), te = Q(() => vl(o.value)), O = Q(() => r.geneColors ? { color: r.geneColors } : yl(y.value, o.value, (e) => w.value.has(e))), ne = Q(() => {
+				let e = r.preset === "oma" ? wl(r.baseUrl) : Tl;
 				return {
-					x: n.left - t.left + n.width / 2,
-					y: n.bottom - t.top
+					links: {
+						...e.links,
+						...r.links
+					},
+					api: {
+						...e.api,
+						...r.api
+					}
+				};
+			});
+			function re(e) {
+				v.value = e, i("update:coverageThreshold", e);
+			}
+			function k(e) {
+				y.value = e, i("update:colorScheme", e);
+			}
+			function ie(e) {
+				b.value = e, i("update:tooltipTrigger", e);
+			}
+			let A = /* @__PURE__ */ R(null), ae = /* @__PURE__ */ R(null), oe = /* @__PURE__ */ R({
+				left: 0,
+				top: 0,
+				width: 0,
+				height: 0
+			}), se, ce = null;
+			function ue() {
+				let e = A.value, t = E.value?.nodes.find((e) => e.node.id === ce);
+				if (!e || !t) return;
+				ce = null;
+				let n = e.clientHeight - hd;
+				e.scrollTop = Math.max(0, t.y * r.rowHeight + r.rowHeight / 2 - n / 2), de();
+			}
+			function de() {
+				let e = A.value;
+				e && (oe.value = {
+					left: e.scrollLeft,
+					top: e.scrollTop,
+					width: e.clientWidth,
+					height: e.clientHeight
+				});
+			}
+			H(A, (e, t) => {
+				se?.disconnect(), t?.removeEventListener("scroll", de), e && (e.addEventListener("scroll", de, { passive: !0 }), se = new ResizeObserver(de), se.observe(e), xn(() => {
+					de(), ue();
+				}));
+			}), hr(() => se?.disconnect());
+			let fe = Q(() => Math.max((T.value?.totalSlots ?? 0) * md, 1)), pe = Q(() => (E.value?.rows.length ?? 0) * r.rowHeight), me = Q(() => ({
+				x: oe.value.left,
+				y: oe.value.top,
+				width: Math.max(0, oe.value.width - r.treeWidth),
+				height: Math.max(0, oe.value.height - hd)
+			})), j = /* @__PURE__ */ qt(null), he = /* @__PURE__ */ R(0);
+			function ge(e) {
+				let t = ae.value.getBoundingClientRect();
+				if (he.value = t.width, !e.clientX && !e.clientY && e.target instanceof Element) {
+					let n = e.target.getBoundingClientRect();
+					return {
+						x: n.left - t.left + n.width / 2,
+						y: n.bottom - t.top
+					};
+				}
+				return {
+					x: e.clientX - t.left,
+					y: e.clientY - t.top
 				};
 			}
-			return {
-				x: e.clientX - t.left,
-				y: e.clientY - t.top
-			};
-		}
-		function ge(e, t) {
-			j.value = {
-				kind: "node",
-				node: e,
-				...he(t)
-			};
-		}
-		function _e(e) {
-			let t = new Set(_.value);
-			t.has(e.id) ? t.delete(e.id) : t.add(e.id), _.value = t, j.value = null;
-		}
-		function ve(e) {
-			g.value = null, x(e, { force: !0 }), g.value = e.id, j.value = null;
-		}
-		function ye() {
-			g.value = null, j.value = null;
-		}
-		function be(e, t) {
-			b.value === "hover" && (j.value = e ? {
-				kind: "gene",
-				cell: e,
-				passive: !0,
-				...he(t)
-			} : null);
-		}
-		function xe(e, t) {
-			b.value === "click" && (j.value = {
-				kind: "gene",
-				cell: e,
-				passive: !1,
-				...he(t)
+			function _e(e, t) {
+				j.value = {
+					kind: "node",
+					node: e,
+					...ge(t)
+				};
+			}
+			function ve(e) {
+				let t = new Set(_.value);
+				t.has(e.id) ? t.delete(e.id) : t.add(e.id), _.value = t, j.value = null;
+			}
+			function ye(e) {
+				g.value = null, x(e, { force: !0 }), g.value = e.id, j.value = null;
+			}
+			function be() {
+				g.value = null, j.value = null;
+			}
+			function xe(e, t) {
+				b.value === "hover" && (j.value = e ? {
+					kind: "gene",
+					cell: e,
+					passive: !0,
+					...ge(t)
+				} : null);
+			}
+			function Se(e, t) {
+				b.value === "click" && (j.value = {
+					kind: "gene",
+					cell: e,
+					passive: !1,
+					...ge(t)
+				});
+			}
+			function Ce(e, t) {
+				j.value = {
+					kind: "hog",
+					column: e,
+					level: h.value.name,
+					title: e.name,
+					...ge(t)
+				};
+			}
+			function we(e) {
+				let t = j.value;
+				t?.kind === "hog" && (j.value = {
+					...t,
+					title: e
+				});
+			}
+			H(h, () => {
+				j.value?.kind !== "node" && (j.value = null);
 			});
-		}
-		function Se(e, t) {
-			j.value = {
-				kind: "hog",
-				column: e,
-				level: h.value.name,
-				title: e.name,
-				...he(t)
-			};
-		}
-		function Ce(e) {
-			let t = j.value;
-			t?.kind === "hog" && (j.value = {
-				...t,
-				title: e
-			});
-		}
-		H(h, () => {
-			j.value?.kind !== "node" && (j.value = null);
-		});
-		let we = (e) => s.value.get(e.id)?.protid ?? a.value?.xrefs[e.id] ?? String(e.id);
-		return t({
-			setLevel(e) {
-				let t = S(e);
-				return t && C(t), !!t;
-			},
-			freeze: (e) => {
-				let t = e ? S(e) : h.value;
-				t && ve(t);
-			},
-			unfreeze: ye
-		}), (t, n) => (K(), q("div", {
-			ref_key: "rootEl",
-			ref: A,
-			class: "iham"
-		}, [z(u) ? (K(), q("div", sd, "Could not load the HOG: " + M(z(u).message), 1)) : z(c) || !T.value || !E.value ? (K(), q("div", cd, [z(c) ? (K(), q(G, { key: 0 }, [n[4] ||= J("span", {
-			class: "iham-spinner",
-			"aria-hidden": "true"
-		}, null, -1), ta(" " + M(z(l) === "processing" ? "Processing HOG…" : "Loading…"), 1)], 64)) : (K(), q(G, { key: 1 }, [ta("No data")], 64))])) : (K(), q(G, { key: 2 }, [
-			e.toolbar === "hidden" ? X("", !0) : (K(), qi(Ru, {
-				key: 0,
-				collapsible: e.toolbar === "collapsed",
-				level: h.value.name,
-				frozen: g.value !== null,
-				schemes: te.value,
-				"color-scheme": e.geneColors ? null : y.value,
-				legend: "legend" in O.value ? O.value.legend : void 0,
-				"tooltip-trigger": b.value,
-				"coverage-threshold": v.value,
-				"removed-count": T.value.removed.length,
-				"onUpdate:colorScheme": k,
-				"onUpdate:tooltipTrigger": n[0] ||= (e) => b.value = e,
-				"onUpdate:coverageThreshold": re,
-				onUnfreeze: ye
-			}, null, 8, [
-				"collapsible",
-				"level",
-				"frozen",
-				"schemes",
-				"color-scheme",
-				"legend",
-				"tooltip-trigger",
-				"coverage-threshold",
-				"removed-count"
-			])),
-			z(d) ? (K(), q("div", ld, " Gene data could not be loaded (" + M(z(d).message) + "); genes are shown without their details. ", 1)) : X("", !0),
-			J("div", {
-				ref_key: "scroller",
-				ref: ie,
-				class: "iham-scroller",
-				style: le({ maxHeight: e.height })
-			}, [J("div", {
-				class: "iham-grid",
-				style: le({
-					gridTemplateColumns: `${e.treeWidth}px ${de.value}px`,
-					gridTemplateRows: `${md}px ${fe.value}px`
-				})
-			}, [
-				n[5] ||= J("div", { class: "iham-corner" }, null, -1),
-				J("div", ud, [Y(iu, {
-					class: "iham-header-markers",
-					style: le(D.value ? { transform: `translateY(${D.value}px)` } : void 0),
-					columns: T.value.columns,
-					"cell-width": pd,
-					height: md,
-					width: de.value,
-					"active-index": j.value?.kind === "hog" ? j.value.column.index : null,
-					onSelect: Se
-				}, null, 8, [
-					"style",
-					"columns",
-					"width",
-					"active-index"
-				])]),
-				J("div", dd, [Y(od, {
-					layout: E.value,
-					width: e.treeWidth,
-					"row-height": e.rowHeight,
-					"selected-id": h.value?.id ?? null,
-					frozen: g.value !== null,
-					"show-internal-labels": e.showInternalLabels,
-					onHover: x,
-					onClick: ge
-				}, null, 8, [
-					"layout",
-					"width",
-					"row-height",
-					"selected-id",
-					"frozen",
-					"show-internal-labels"
-				])]),
-				J("div", fd, [Y(lu, {
-					view: T.value,
-					rows: E.value.rows,
-					"fam-map": z(s),
-					color: O.value.color,
-					"cell-width": pd,
-					"row-height": e.rowHeight,
-					viewport: pe.value,
-					"clade-rows": ee.value,
-					onGeneHover: be,
-					onGeneClick: xe
-				}, null, 8, [
-					"view",
-					"rows",
-					"fam-map",
-					"color",
-					"row-height",
-					"viewport",
-					"clade-rows"
-				])])
-			], 4)], 4),
-			j.value ? (K(), qi(pu, {
-				key: j.value.kind,
-				x: j.value.x,
-				y: j.value.y,
-				"container-width": me.value,
-				passive: j.value.kind === "gene" && j.value.passive,
-				title: j.value.kind === "node" ? j.value.node.name : j.value.kind === "gene" ? we(j.value.cell) : j.value.title,
-				onClose: n[3] ||= (e) => j.value = null
-			}, {
-				default: Pn(() => [j.value.kind === "node" ? (K(), qi(Uu, {
+			let N = (e) => s.value.get(e.id)?.protid ?? a.value?.xrefs[e.id] ?? String(e.id);
+			return t({
+				setLevel(e) {
+					let t = S(e);
+					return t && C(t), !!t;
+				},
+				freeze: (e) => {
+					let t = e ? S(e) : h.value;
+					t && ye(t);
+				},
+				unfreeze: be
+			}), (t, n) => (K(), q("div", {
+				ref_key: "rootEl",
+				ref: ae,
+				class: "iham"
+			}, [z(u) ? (K(), q("div", cd, "Could not load the HOG: " + M(z(u).message), 1)) : z(c) || !T.value || !E.value ? (K(), q("div", ld, [z(c) ? (K(), q(G, { key: 0 }, [n[3] ||= J("span", {
+				class: "iham-spinner",
+				"aria-hidden": "true"
+			}, null, -1), ta(" " + M(z(l) === "processing" ? "Processing HOG…" : "Loading…"), 1)], 64)) : (K(), q(G, { key: 1 }, [ta("No data")], 64))])) : (K(), q(G, { key: 2 }, [
+				e.toolbar === "hidden" ? X("", !0) : (K(), qi(zu, {
 					key: 0,
-					node: j.value.node,
-					collapsed: _.value.has(j.value.node.id),
-					"frozen-at": g.value,
-					onToggleCollapse: n[1] ||= (e) => _e(j.value.node),
-					onFreeze: n[2] ||= (e) => ve(j.value.node),
-					onUnfreeze: ye
+					collapsible: e.toolbar === "collapsed",
+					level: h.value.name,
+					frozen: g.value !== null,
+					schemes: te.value,
+					"color-scheme": e.geneColors ? null : y.value,
+					legend: "legend" in O.value ? O.value.legend : void 0,
+					"tooltip-trigger": b.value,
+					"coverage-threshold": v.value,
+					"removed-count": T.value.removed.length,
+					"onUpdate:colorScheme": k,
+					"onUpdate:tooltipTrigger": ie,
+					"onUpdate:coverageThreshold": re,
+					onUnfreeze: be
 				}, null, 8, [
-					"node",
-					"collapsed",
-					"frozen-at"
-				])) : j.value.kind === "gene" ? (K(), qi(Ql, {
-					key: 1,
-					"gene-id": j.value.cell.id,
-					gene: z(s).get(j.value.cell.id),
-					xref: z(a)?.xrefs[j.value.cell.id],
-					endpoints: ne.value
-				}, null, 8, [
-					"gene-id",
-					"gene",
-					"xref",
-					"endpoints"
-				])) : (K(), qi(su, {
-					key: 2,
-					column: j.value.column,
-					level: j.value.level,
-					endpoints: ne.value,
-					onResolved: Ce
-				}, null, 8, [
-					"column",
+					"collapsible",
 					"level",
-					"endpoints"
-				]))]),
-				_: 1
-			}, 8, [
-				"x",
-				"y",
-				"container-width",
-				"passive",
-				"title"
-			])) : X("", !0)
-		], 64))], 512));
+					"frozen",
+					"schemes",
+					"color-scheme",
+					"legend",
+					"tooltip-trigger",
+					"coverage-threshold",
+					"removed-count"
+				])),
+				z(d) ? (K(), q("div", ud, " Gene data could not be loaded (" + M(z(d).message) + "); genes are shown without their details. ", 1)) : X("", !0),
+				J("div", {
+					ref_key: "scroller",
+					ref: A,
+					class: "iham-scroller",
+					style: le({ maxHeight: e.maxHeight })
+				}, [J("div", {
+					class: "iham-grid",
+					style: le({
+						gridTemplateColumns: `${e.treeWidth}px ${fe.value}px`,
+						gridTemplateRows: `${hd}px ${pe.value}px`
+					})
+				}, [
+					n[4] ||= J("div", { class: "iham-corner" }, null, -1),
+					J("div", dd, [Y(au, {
+						class: "iham-header-markers",
+						style: le(D.value ? { transform: `translateY(${D.value}px)` } : void 0),
+						columns: T.value.columns,
+						"cell-width": md,
+						height: hd,
+						width: fe.value,
+						"active-index": j.value?.kind === "hog" ? j.value.column.index : null,
+						onSelect: Ce
+					}, null, 8, [
+						"style",
+						"columns",
+						"width",
+						"active-index"
+					])]),
+					J("div", fd, [Y(sd, {
+						layout: E.value,
+						width: e.treeWidth,
+						"row-height": e.rowHeight,
+						"selected-id": h.value?.id ?? null,
+						frozen: g.value !== null,
+						"show-internal-labels": e.showInternalLabels,
+						onHover: x,
+						onClick: _e
+					}, null, 8, [
+						"layout",
+						"width",
+						"row-height",
+						"selected-id",
+						"frozen",
+						"show-internal-labels"
+					])]),
+					J("div", pd, [Y(uu, {
+						view: T.value,
+						rows: E.value.rows,
+						"gene-map": z(s),
+						color: O.value.color,
+						"cell-width": md,
+						"row-height": e.rowHeight,
+						viewport: me.value,
+						"clade-rows": ee.value,
+						onGeneHover: xe,
+						onGeneClick: Se
+					}, null, 8, [
+						"view",
+						"rows",
+						"gene-map",
+						"color",
+						"row-height",
+						"viewport",
+						"clade-rows"
+					])])
+				], 4)], 4),
+				j.value ? (K(), qi(mu, {
+					key: j.value.kind,
+					x: j.value.x,
+					y: j.value.y,
+					"container-width": he.value,
+					passive: j.value.kind === "gene" && j.value.passive,
+					title: j.value.kind === "node" ? j.value.node.name : j.value.kind === "gene" ? N(j.value.cell) : j.value.title,
+					onClose: n[2] ||= (e) => j.value = null
+				}, {
+					default: Pn(() => [j.value.kind === "node" ? (K(), qi(Wu, {
+						key: 0,
+						node: j.value.node,
+						collapsed: _.value.has(j.value.node.id),
+						"frozen-at": g.value,
+						onToggleCollapse: n[0] ||= (e) => ve(j.value.node),
+						onFreeze: n[1] ||= (e) => ye(j.value.node),
+						onUnfreeze: be
+					}, null, 8, [
+						"node",
+						"collapsed",
+						"frozen-at"
+					])) : j.value.kind === "gene" ? (K(), qi($l, {
+						key: 1,
+						"gene-id": j.value.cell.id,
+						gene: z(s).get(j.value.cell.id),
+						xref: z(a)?.xrefs[j.value.cell.id],
+						endpoints: ne.value
+					}, null, 8, [
+						"gene-id",
+						"gene",
+						"xref",
+						"endpoints"
+					])) : (K(), qi(cu, {
+						key: 2,
+						column: j.value.column,
+						level: j.value.level,
+						endpoints: ne.value,
+						onResolved: we
+					}, null, 8, [
+						"column",
+						"level",
+						"endpoints"
+					]))]),
+					_: 1
+				}, 8, [
+					"x",
+					"y",
+					"container-width",
+					"passive",
+					"title"
+				])) : X("", !0)
+			], 64))], 512));
+		}
+	}), [["styles", [".iham{font-family:var(--iham-font,system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif);color:var(--iham-fg,#222);background:var(--iham-bg,#fff);--iham-separator:#000;position:relative}.iham-scroller{border-top:1px solid var(--iham-border,#ddd);position:relative;overflow:auto}.iham-grid{display:grid}.iham-corner,.iham-header-cell,.iham-tree-cell{background:var(--iham-bg,#fff);position:sticky}.iham-corner{z-index:3;top:0;left:0}.iham-header-cell{z-index:2;border-bottom:1px solid var(--iham-border,#ddd);top:0}.iham-tree-cell{z-index:2;border-right:1px solid var(--iham-border,#ddd);left:0}.iham-matrix-cell{z-index:1;position:relative}.iham-header-markers{pointer-events:none}.iham-header-markers .iham-header-col{pointer-events:all}.iham-message{color:var(--iham-muted,#7f8c8d);padding:16px}.iham-error{color:#c0392b}.iham-warning{color:sienna;padding:4px 8px}.iham-spinner{vertical-align:-2px;border:2px solid;border-right-color:#0000;border-radius:50%;width:12px;height:12px;animation:.8s linear infinite iham-spin;display:inline-block}@keyframes iham-spin{to{transform:rotate(360deg)}}"]]]),
+	inheritAttrs: !1
+}), _d = {
+	"update:level": "level",
+	"update:coverageThreshold": "coverageThreshold",
+	"update:colorScheme": "colorScheme",
+	"update:tooltipTrigger": "tooltipTrigger"
+}, vd = (e) => e.replace(/\B([A-Z])/g, "-$1").toLowerCase(), yd = new Set([
+	"update:level",
+	"update:coverageThreshold",
+	"update:colorScheme",
+	"update:tooltipTrigger",
+	"node-selected",
+	"hogs-hidden",
+	"loaded",
+	"error"
+].flatMap((e) => [e, vd(e)])), bd = class extends gd {
+	constructor(...e) {
+		super(...e);
+		for (let [e, t] of Object.entries(_d)) this.addEventListener(e, (e) => {
+			this[t] = e.detail;
+		});
 	}
-}), [["styles", [".iham{font-family:var(--iham-font,system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif);color:var(--iham-fg,#222);background:var(--iham-bg,#fff);--iham-separator:#000;position:relative}.iham-scroller{border-top:1px solid var(--iham-border,#e5e5e5);position:relative;overflow:auto}.iham-grid{display:grid}.iham-corner,.iham-header-cell,.iham-tree-cell{background:var(--iham-bg,#fff);position:sticky}.iham-corner{z-index:3;top:0;left:0}.iham-header-cell{z-index:2;border-bottom:1px solid var(--iham-border,#e5e5e5);top:0}.iham-tree-cell{z-index:2;border-right:1px solid var(--iham-border,#e5e5e5);left:0}.iham-matrix-cell{z-index:1;position:relative}.iham-header-markers{pointer-events:none}.iham-header-markers .iham-header-col{pointer-events:all}.iham-message{color:var(--iham-muted,#7f8c8d);padding:16px}.iham-error{color:#c0392b}.iham-warning{color:sienna;padding:4px 8px}.iham-spinner{vertical-align:-2px;border:2px solid;border-right-color:#0000;border-radius:50%;width:12px;height:12px;animation:.8s linear infinite iham-spin;display:inline-block}@keyframes iham-spin{to{transform:rotate(360deg)}}"]]]));
-function gd(e = "i-ham") {
-	customElements.get(e) || customElements.define(e, hd);
+	dispatchEvent(e) {
+		return e instanceof CustomEvent && yd.has(e.type) && Array.isArray(e.detail) && (e = new CustomEvent(e.type, { detail: e.detail[0] })), super.dispatchEvent(e);
+	}
+};
+function xd(e = "i-ham") {
+	customElements.get(e) || customElements.define(e, e === "i-ham" ? bd : class extends bd {});
 }
-gd();
-export { hd as IHamElement, Tl as fillTemplate, Cl as omaEndpoints, gd as register };
+xd();
+export { bd as IHamElement, El as fillTemplate, wl as omaEndpoints, xd as register };
 
 //# sourceMappingURL=iham-element.js.map
