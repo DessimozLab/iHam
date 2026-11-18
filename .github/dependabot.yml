@@ -1,17 +1,14 @@
-# Dependabot reads this file from the default branch (master) only; it is kept
-# here as well so that both copies stay the same. Updates target v2: master is
-# iHam 1, which is no longer developed.
+# Updates target the default branch (master, iHam 2); v1 is no longer developed.
 version: 2
 updates:
   - package-ecosystem: npm
     directory: /
-    target-branch: v2
     schedule:
       interval: weekly
       day: monday
     open-pull-requests-limit: 5
     commit-message:
-      prefix: "v2: deps"
+      prefix: "deps"
     groups:
       # one PR for all minor and patch updates; majors come one by one
       minor-and-patch:
@@ -19,12 +16,11 @@ updates:
 
   - package-ecosystem: github-actions
     directory: /
-    target-branch: v2
     schedule:
       interval: weekly
       day: monday
     commit-message:
-      prefix: "v2: ci"
+      prefix: "ci"
     groups:
       actions:
         patterns: ["*"]

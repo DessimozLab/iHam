@@ -8,7 +8,7 @@ The tree-guided matrix helps to (i) delineate orthologous groups at a given taxo
 
 Input: HOGs in [OrthoXML](https://orthoxml.org) (plain, or OMA's augmented flavour), the species tree in newick or phyloXML, and optionally gene family data in JSON.
 
-> **Version 2** is a rewrite as a Vue 3 component and `<i-ham>` web component. iHam 1.x (TnT/d3 v3 based, `iHam()` chainable API) is on the `master` branch and released as `v1.x`.
+> **Version 2** is a rewrite as a Vue 3 component and `<i-ham>` web component. iHam 1.x (TnT/d3 v3 based, `iHam()` chainable API) is on the `v1` branch and released as `v1.x`; this branch keeps its last bundles in `build/` for older pyham versions only.
 
 ## How to cite iHam
 

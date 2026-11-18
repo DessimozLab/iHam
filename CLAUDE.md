@@ -7,8 +7,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 iHam ("interactive HOG Analysis Method") visualises hierarchical orthologous groups (HOGs): a species tree on the left and a gene matrix (species rows × HOG columns at the selected taxonomic level) on the right. Its main user is the OMA browser (pyomabrowser, `oma/templates/hog_ihamviewer.html`).
 
 Two lines of development:
-- **`master` / tags `v1.x`**: iHam 1 (TnT + d3 v3 + jQuery, chainable `iHam()` API, committed `build/` bundles). pyomabrowser vendors `build/iHam.js` as `oma/static/js/iHam.js`; pyham loads it from jsDelivr by tag. pyomabrowser has patched its vendored copy directly before (commit 8463a0e3): diff it against the previous `build/iHam.js` before replacing it.
-- **`v2` branch**: rewrite as a Vue 3 component (`<IHam>`) plus an `<i-ham>` custom element, built with Vite. Everything below describes v2.
+- **`v1` / tags `v1.x`**: iHam 1 (TnT + d3 v3 + jQuery, chainable `iHam()` API, committed `build/` bundles). pyomabrowser vendors `build/iHam.js` as `oma/static/js/iHam.js`; pyham loads it from jsDelivr by tag. pyomabrowser has patched its vendored copy directly before (commit 8463a0e3): diff it against the previous `build/iHam.js` before replacing it.
+- **`master`, tags `v2.x`**: rewrite as a Vue 3 component (`<IHam>`) plus an `<i-ham>` custom element, built with Vite. Everything below describes v2. `build/` holds v1.0.7's bundles, frozen, because pyham < 2.0.1 loads `@master/build/iHam.js` from jsDelivr: never build into it or delete it without checking.
 
 ## Commands
 
@@ -20,7 +20,7 @@ npm run build        # build:lib (dist/iham.js + iham.css, vue external) + build
 npm run build:demo   # the playground with the fixtures only (no proxy) as a static site in dist-playground/
 ```
 
-Releases: push a tag `v2.x.y[-pre]` equal to package.json's version; `.github/workflows/release.yml` publishes to npm (trusted publishing; pre-releases under dist-tag `next`), creates the GitHub release and puts the demo on the `gh-pages` branch, keeping v1's `iHam.js`/`iHam.css` there. Dependabot targets `v2` but its config must also be on `master` to take effect.
+Releases: push a tag `v2.x.y[-pre]` equal to package.json's version; `.github/workflows/release.yml` publishes to npm (trusted publishing; pre-releases under dist-tag `next`), creates the GitHub release and puts the demo on the `gh-pages` branch, keeping v1's `iHam.js`/`iHam.css` there.
 
 `vite.config.ts` switches on `--mode`: `lib`, `element`, or the dev playground (root `dev/`). The element build compiles SFCs with `features.customElement` so their `<style>` blocks are inlined into the shadow root; served from source the element would be unstyled. So `npm run dev` also runs the element build in watch mode as a child process (plugin `iham:element-watch-build`; in-process it corrupts plugin-vue's cache for the dev server), serves `dist/element/` as the public dir and reloads `element.html` after each rebuild: `element.html` always exercises the real bundle. HTML pages in `dev/` can't reference modules outside `dev/` directly; go through a `dev/*.ts` entry.
 

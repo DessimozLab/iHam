@@ -1,7 +1,7 @@
 # Release iHam 2: push a tag v2.x.y[-pre] that matches package.json's version.
 #
 #   npm version 2.0.0-alpha.7 --no-git-tag-version   # or edit package.json
-#   git commit -am "..." && git tag v2.0.0-alpha.7 && git push origin v2 v2.0.0-alpha.7
+#   git commit -am "..." && git tag v2.0.0-alpha.7 && git push origin master v2.0.0-alpha.7
 #
 # Then: tests and build, publish to npm (pre-releases under the dist-tag
 # "next", so that "latest" is not moved), a GitHub release with the bundles,
