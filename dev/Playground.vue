@@ -9,8 +9,11 @@ import p53Xml from "../test/fixtures/p53.orthoxml?raw";
 import p53Fam from "../test/fixtures/p53_famdata.json";
 
 type Source = "simple" | "p53" | "oma";
+// live OMA data needs the dev-server proxy; the published demo has the fixtures only
+const live = import.meta.env.DEV;
 const params = new URLSearchParams(location.search);
-const source = ref<Source>((params.get("source") as Source) ?? "p53");
+const requested = (params.get("source") as Source | null) ?? "p53";
+const source = ref<Source>(requested === "oma" && !live ? "p53" : requested);
 
 // OMA (through the dev-server proxy to oma-stage, see vite.config.ts)
 const hogId = ref(params.get("hog") ?? "HOG:F0782425.2c.7a");
@@ -77,7 +80,7 @@ function setSource(s: Source) {
   <section class="controls">
     <label><input type="radio" :checked="source === 'simple'" @change="setSource('simple')" /> Example (plain OrthoXML)</label>
     <label><input type="radio" :checked="source === 'p53'" @change="setSource('p53')" /> P53 fixture (augmented)</label>
-    <label><input type="radio" :checked="source === 'oma'" @change="setSource('oma')" /> OMA stage (proxied)</label>
+    <label v-if="live"><input type="radio" :checked="source === 'oma'" @change="setSource('oma')" /> OMA stage (proxied)</label>
     <form v-if="source === 'oma'" @submit.prevent="loadOma">
       <input v-model="hogId" size="28" aria-label="HOG id" />
       <input v-model="omaLevel" size="14" aria-label="Level" />

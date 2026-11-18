@@ -18,29 +18,26 @@
         color: #555;
       }
     </style>
-    <!-- the real element build (dist/element), rebuilt in watch mode by the dev server -->
-    <script src="/iham-element.iife.js"></script>
+    <!-- the real element build (dist/element): rebuilt in watch mode by the dev server, copied into the demo build -->
+    <script src="./iham-element.iife.js"></script>
   </head>
   <body>
-    <nav><strong>iHam 2 playground</strong> · <a href="/">Vue component</a><a href="/element.html">&lt;i-ham&gt; element</a></nav>
+    <nav><strong>iHam 2 playground</strong> · <a href="./">Vue component</a><a href="./element.html">&lt;i-ham&gt; element</a></nav>
     <p>
-      Plain HTML usage of the production bundle <code>dist/element/iham-element.iife.js</code> (rebuilt on every change;
-      this page reloads afterwards). Data is loaded from URLs (OMA stage, through the dev-server proxy).
+      Plain HTML usage of the production bundle <code>dist/element/iham-element.iife.js</code>, with the data loaded
+      from URLs: from OMA stage (through the proxy) on the dev server, which rebuilds the bundle on every change and
+      reloads this page; from the P53 fixture files in the published demo.
     </p>
 
-    <i-ham
-      id="viewer"
-      orthoxml-url="/oma/hog/HOG:F0782425.2c.7a/orthoxml/augmented/"
-      species-tree-url="/All/speciestree.nwk"
-      fam-data-url="/oma/hogdata/PROCO25562/json"
-      query-hog="HOG:F0782425.2c.7a_207598"
-      level="Homininae"
-      preset="oma"
-      height="60vh"
-    ></i-ham>
+    <!-- the data URLs are set below -->
+    <i-ham id="viewer" query-hog="HOG:F0782425.2c.7a_207598" level="Homininae" preset="oma" height="60vh"></i-ham>
 
     <pre id="log"></pre>
     <script type="module">
+      import orthoxmlFixture from "../test/fixtures/p53.orthoxml?url";
+      import treeFixture from "../test/fixtures/oma_speciestree.nwk?url";
+      import famFixture from "../test/fixtures/p53_famdata.json?url";
+
       const log = document.getElementById("log");
       const viewer = document.getElementById("viewer");
       for (const name of ["loaded", "node-selected", "update:level", "hogs-removed", "error"]) {
@@ -54,6 +51,15 @@
           log.textContent = `${name}: ${text}\n` + log.textContent.split("\n").slice(0, 8).join("\n");
         });
       }
+
+      const urls = import.meta.env.DEV
+        ? {
+            "orthoxml-url": "/oma/hog/HOG:F0782425.2c.7a/orthoxml/augmented/",
+            "species-tree-url": "/All/speciestree.nwk",
+            "fam-data-url": "/oma/hogdata/PROCO25562/json",
+          }
+        : { "orthoxml-url": orthoxmlFixture, "species-tree-url": treeFixture, "fam-data-url": famFixture };
+      for (const [name, url] of Object.entries(urls)) viewer.setAttribute(name, url);
     </script>
   </body>
 </html>

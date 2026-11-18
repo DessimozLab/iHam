@@ -51,6 +51,7 @@
     "build:lib": "vite build --mode lib",
     "build:element": "vite build --mode element",
     "build:types": "vue-tsc -p tsconfig.build.json",
+    "build:demo": "npm run build:element && vite build",
     "prepack": "npm run build",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",
     "test": "vitest run",

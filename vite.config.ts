@@ -52,6 +52,9 @@ function elementWatchBuild(): Plugin {
 
 export default defineConfig(({ mode, command }) => {
   const isElement = mode === "element";
+  const isLibrary = mode === "lib" || isElement;
+  // the playground, served (`npm run dev`) or built as the demo (`npm run build:demo`)
+  const isDemo = !isLibrary && mode !== "test";
   // `vite` dev server only (vitest also "serves", in mode "test")
   const isPlayground = command === "serve" && mode === "development";
 
@@ -64,8 +67,11 @@ export default defineConfig(({ mode, command }) => {
       }),
       isPlayground && elementWatchBuild(),
     ],
-    // the playground's element.html loads the watch-built element from here
-    publicDir: isPlayground ? ELEMENT_OUT : false,
+    // the playground's element.html loads the (watch-)built element from here;
+    // the demo build copies it, so build:element must run first (see build:demo)
+    publicDir: isDemo ? ELEMENT_OUT : false,
+    // the demo is published in a subdirectory (GitHub Pages)
+    base: isDemo ? "./" : undefined,
     define: isElement ? { "process.env.NODE_ENV": JSON.stringify("production") } : {},
     resolve: {
       alias: { "@": resolve(import.meta.dirname, "src") },
@@ -111,8 +117,15 @@ export default defineConfig(({ mode, command }) => {
               },
             }
           : {
+              // the demo: the playground with the fixtures (no proxy for live OMA data)
               outDir: resolve(import.meta.dirname, "dist-playground"),
               emptyOutDir: true,
+              rolldownOptions: {
+                input: {
+                  index: resolve(import.meta.dirname, "dev/index.html"),
+                  element: resolve(import.meta.dirname, "dev/element.html"),
+                },
+              },
             },
     test: {
       root: import.meta.dirname,
