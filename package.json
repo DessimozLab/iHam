@@ -70,7 +70,7 @@
     "@vue/test-utils": "^2.6.0",
     "iham-parsers": "^0.2.1",
     "jsdom": "^31.0.1",
-    "typescript": "~5.9.3",
+    "typescript": "~6.0.3",
     "vite": "^8.3.8",
     "vitest": "^5.1.0",
     "vue": "^3.5.45",

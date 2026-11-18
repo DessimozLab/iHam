@@ -37,7 +37,7 @@ jobs:
       # no dependency cache here: a release must not build from a cache that another workflow wrote
       - uses: actions/setup-node@v7
         with:
-          node-version: 24
+          node-version: 26
       - name: Check that the tag matches package.json
         id: version
         run: |
@@ -81,7 +81,7 @@ jobs:
     steps:
       - uses: actions/setup-node@v7
         with:
-          node-version: 24
+          node-version: 26
           registry-url: https://registry.npmjs.org
       - name: npm with trusted publishing support (>= 11.5.1)
         run: npm install -g npm@^11.5.1
