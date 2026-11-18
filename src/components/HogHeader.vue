@@ -22,7 +22,7 @@ const emit = defineEmits<{ select: [column: HogColumn, event: MouseEvent] }>();
       role="listitem"
       tabindex="0"
       :aria-label="`${c.name}: ${c.genes.length} genes, ${c.coverage.toFixed(0)}% of species`"
-      :transform="`translate(${(c.start + c.maxInHog / 2) * cellWidth},${height / 2 + 2})`"
+      :transform="`translate(${(c.start + c.maxInHog / 2) * cellWidth},${height / 2})`"
       @click="emit('select', c, $event)"
       @keydown.enter="emit('select', c, $event as unknown as MouseEvent)"
     >

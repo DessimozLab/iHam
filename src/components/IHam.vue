@@ -147,6 +147,8 @@ const layout = computed(() => (tree.value ? layoutTree(tree.value.root, collapse
 const selectedRows = computed(() =>
   layout.value && selected.value ? cladeRows(layout.value, selected.value) : { start: 0, end: 0 },
 );
+/** HOG column markers go into the (empty) row above the selected clade, or the sticky header for the top clade */
+const markersInMatrix = computed(() => selectedRows.value.start > 0);
 
 const schemes = computed(() => availableSchemes(famData.value));
 const colorScale = computed(() =>
@@ -333,6 +335,7 @@ defineExpose({
           <div class="iham-corner" />
           <div class="iham-header-cell">
             <HogHeader
+              v-if="!markersInMatrix"
               :columns="view.columns"
               :cell-width="CELL"
               :height="HEADER"
@@ -365,6 +368,18 @@ defineExpose({
               :clade-rows="selectedRows"
               @gene-hover="onGeneHover"
               @gene-click="onGeneClick"
+            />
+            <!-- column markers right above the selected level's rows (as in iHam 1); those rows are empty -->
+            <HogHeader
+              v-if="markersInMatrix"
+              class="iham-header-inline"
+              :style="{ top: `${(selectedRows.start - 1) * rowHeight}px` }"
+              :columns="view.columns"
+              :cell-width="CELL"
+              :height="rowHeight"
+              :width="matrixWidth"
+              :active-index="popover?.kind === 'hog' ? popover.column.index : null"
+              @select="onHogSelect"
             />
           </div>
         </div>
@@ -449,6 +464,14 @@ defineExpose({
 .iham-matrix-cell {
   position: relative;
   z-index: 1;
+}
+.iham-header-inline {
+  position: absolute;
+  left: 0;
+  pointer-events: none;
+}
+.iham-header-inline .iham-header-col {
+  pointer-events: all;
 }
 .iham-message {
   padding: 16px;

@@ -110,6 +110,22 @@ describe("<IHam>", () => {
     w.unmount();
   });
 
+  it("puts the HOG column markers right above the selected level's rows", async () => {
+    const root = await mountP53({ level: "Euteleostomi" });
+    expect(root.find(".iham-header-cell .iham-header-col").exists()).toBe(true);
+    expect(root.find(".iham-header-inline").exists()).toBe(false);
+    root.unmount();
+
+    const w = await mountP53({ level: "Primates" });
+    expect(w.find(".iham-header-cell .iham-header-col").exists()).toBe(false);
+    const inline = w.find(".iham-header-inline");
+    const top = parseFloat((inline.element as HTMLElement).style.top);
+    expect(top).toBeGreaterThanOrEqual(0);
+    expect(top % 20).toBe(0);
+    expect(inline.findAll(".iham-header-col").length).toBeGreaterThan(0);
+    w.unmount();
+  });
+
   it("can start with the settings collapsed, keeping the legend visible", async () => {
     const w = await mountP53({ toolbar: "collapsed", colorScheme: "sequence_length" });
     const toggle = w.find(".iham-settings-toggle");
