@@ -37,19 +37,30 @@ test("hovering a tree node selects its level", async ({ page }) => {
   await expect(treeNode(page, "Primates")).toHaveAttribute("aria-selected", "true");
 });
 
+/**
+ * Horizontal extent of an SVG text in the tree's coordinates, from the glyph
+ * advances (what the label placement computes with). Bounding boxes would
+ * include glyph overhang and, in WebKit, the white outline (stroke).
+ */
+const textExtent = (text: Locator) =>
+  text.evaluate((el: SVGTextElement) => {
+    const n = el.getNumberOfChars();
+    const toTree = (p: DOMPoint) => p.matrixTransform(el.getCTM()!).x;
+    return { left: toTree(el.getStartPositionOfChar(0)), right: toTree(el.getEndPositionOfChar(n - 1)) };
+  });
+
 test("the internal node label fits between the tree's edge and the leaf names", async ({ page }) => {
   await openP53(page);
-  const tree = page.locator(".iham-tree");
   const leafLabels = page.locator(".iham-tree-node.is-leaf .iham-tree-label");
-  for (const name of ["Primates", "Homininae"]) {
+  const leafLeft = Math.min(...(await Promise.all((await leafLabels.all()).map(async (l) => (await textExtent(l)).left))));
+  // near the leaves, and (shifted right, possibly shortened) near the root
+  for (const name of ["Homininae", "Primates", "Euarchontoglires", "Eutheria"]) {
     await treeNode(page, name).hover();
     const label = page.locator(".iham-tree-internal-label");
-    await expect(label).toHaveText(name);
-    const lb = (await label.boundingBox())!;
-    const tb = (await tree.boundingBox())!;
-    const leafLeft = Math.min(...(await leafLabels.evaluateAll((els) => els.map((e) => e.getBoundingClientRect().left))));
-    expect(lb.x).toBeGreaterThanOrEqual(tb.x);
-    expect(lb.x + lb.width).toBeLessThanOrEqual(leafLeft);
+    await expect(label).toHaveText(new RegExp(`^${name.slice(0, 3)}`));
+    const { left, right } = await textExtent(label);
+    expect(left).toBeGreaterThanOrEqual(-0.5);
+    expect(right).toBeLessThanOrEqual(leafLeft + 0.5);
   }
 });
 
