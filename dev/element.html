@@ -25,8 +25,8 @@
     <nav><strong>iHam 2 playground</strong> · <a href="./">Vue component</a><a href="./element.html">&lt;i-ham&gt; element</a></nav>
     <p>
       Plain HTML usage of the production bundle <code>dist/element/iham-element.iife.js</code>, with the data loaded
-      from URLs: from OMA stage (through the proxy) on the dev server, which rebuilds the bundle on every change and
-      reloads this page; from the P53 fixture files in the published demo.
+      live from the OMA browser (on the dev server through its proxy; the dev server also rebuilds the bundle on every
+      change and reloads this page).
     </p>
 
     <!-- the data URLs are set below -->
@@ -34,10 +34,6 @@
 
     <pre id="log"></pre>
     <script type="module">
-      import orthoxmlFixture from "../test/fixtures/p53.orthoxml?url";
-      import treeFixture from "../test/fixtures/oma_speciestree.nwk?url";
-      import famFixture from "../test/fixtures/p53_famdata.json?url";
-
       const log = document.getElementById("log");
       const viewer = document.getElementById("viewer");
       for (const name of ["loaded", "node-selected", "update:level", "hogs-removed", "error"]) {
@@ -52,14 +48,12 @@
         });
       }
 
-      const urls = import.meta.env.DEV
-        ? {
-            "orthoxml-url": "/oma/hog/HOG:F0782425.2c.7a/orthoxml/augmented/",
-            "species-tree-url": "/All/speciestree.nwk",
-            "fam-data-url": "/oma/hogdata/PROCO25562/json",
-          }
-        : { "orthoxml-url": orthoxmlFixture, "species-tree-url": treeFixture, "fam-data-url": famFixture };
-      for (const [name, url] of Object.entries(urls)) viewer.setAttribute(name, url);
+      // through the dev-server proxy, or straight from omabrowser.org in the demo build
+      const oma = import.meta.env.DEV ? "" : "https://omabrowser.org";
+      viewer.setAttribute("base-url", oma);
+      viewer.setAttribute("orthoxml-url", `${oma}/oma/hog/HOG:F0782425.2c.7a/orthoxml/augmented/`);
+      viewer.setAttribute("species-tree-url", `${oma}/All/speciestree.nwk`);
+      viewer.setAttribute("fam-data-url", `${oma}/oma/hogdata/PROCO25562/json`);
     </script>
   </body>
 </html>

@@ -13,11 +13,11 @@ Two lines of development:
 ## Commands
 
 ```
-npm run dev          # playground (dev/), proxies /oma /api /All to OMA stage (IHAM_OMA_URL overrides)
+npm run dev          # playground (dev/), proxies /oma /api /All to omabrowser.org (IHAM_OMA_URL overrides, e.g. for OMA stage)
 npm test             # vitest (jsdom); single file: npx vitest run test/parity.test.ts; filter: -t "pattern"
 npm run typecheck    # vue-tsc over src, test, dev
 npm run build        # build:lib (dist/iham.js + iham.css, vue external) + build:element (dist/element/*.js, Vue bundled) + build:types
-npm run build:demo   # the playground with the fixtures only (no proxy) as a static site in dist-playground/
+npm run build:demo   # the playground as a static site in dist-playground/; live data straight from omabrowser.org (CORS)
 ```
 
 Releases: push a tag `v2.x.y[-pre]` equal to package.json's version; `.github/workflows/release.yml` publishes to npm (trusted publishing; pre-releases under dist-tag `next`), creates the GitHub release and puts the demo on the `gh-pages` branch, keeping v1's `iHam.js`/`iHam.css` there.

@@ -113,7 +113,7 @@ The component also exposes `setLevel(level)`, `freeze(level?)` and `unfreeze()` 
 
 ```sh
 npm install
-npm run dev        # playground at http://localhost:5173 (proxies /oma, /api, /All to OMA stage; IHAM_OMA_URL to change)
+npm run dev        # playground at http://localhost:5173 (proxies /oma, /api, /All to omabrowser.org; IHAM_OMA_URL to change, e.g. to OMA stage)
 npm test           # unit, component and v1-parity tests (vitest + jsdom)
 npm run typecheck
 npm run build      # dist/iham.js + iham.css (Vue library), dist/element/* (web component), dist/types

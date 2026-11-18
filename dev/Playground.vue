@@ -9,13 +9,12 @@ import p53Xml from "../test/fixtures/p53.orthoxml?raw";
 import p53Fam from "../test/fixtures/p53_famdata.json";
 
 type Source = "simple" | "p53" | "oma";
-// live OMA data needs the dev-server proxy; the published demo has the fixtures only
-const live = import.meta.env.DEV;
 const params = new URLSearchParams(location.search);
-const requested = (params.get("source") as Source | null) ?? "p53";
-const source = ref<Source>(requested === "oma" && !live ? "p53" : requested);
+const source = ref<Source>((params.get("source") as Source | null) ?? "p53");
 
-// OMA (through the dev-server proxy to oma-stage, see vite.config.ts)
+// Live OMA data: through the dev-server proxy (omabrowser.org unless IHAM_OMA_URL
+// says otherwise, see vite.config.ts), straight from omabrowser.org in the demo build
+const OMA = import.meta.env.DEV ? "" : "https://omabrowser.org";
 const hogId = ref(params.get("hog") ?? "HOG:F0782425.2c.7a");
 const omaLevel = ref(params.get("level") ?? "Homininae");
 const omaEntry = ref<string | null>(null);
@@ -25,7 +24,7 @@ async function loadOma() {
   omaError.value = null;
   omaEntry.value = null;
   try {
-    const res = await fetch(`/api/hog/${encodeURIComponent(hogId.value)}/members/`);
+    const res = await fetch(`${OMA}/api/hog/${encodeURIComponent(hogId.value)}/members/`);
     if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
     const data = await res.json();
     omaEntry.value = data.members[0].omaid;
@@ -60,10 +59,11 @@ const props = computed(() => {
     case "oma":
       return omaEntry.value
         ? {
-            orthoxmlUrl: `/oma/hog/${hogId.value}/orthoxml/augmented/`,
-            speciesTreeUrl: "/All/speciestree.nwk",
-            famDataUrl: `/oma/hogdata/${omaEntry.value}/json`,
+            orthoxmlUrl: `${OMA}/oma/hog/${hogId.value}/orthoxml/augmented/`,
+            speciesTreeUrl: `${OMA}/All/speciestree.nwk`,
+            famDataUrl: `${OMA}/oma/hogdata/${omaEntry.value}/json`,
             preset: "oma" as const,
+            baseUrl: OMA || undefined,
           }
         : {};
   }
@@ -80,7 +80,7 @@ function setSource(s: Source) {
   <section class="controls">
     <label><input type="radio" :checked="source === 'simple'" @change="setSource('simple')" /> Example (plain OrthoXML)</label>
     <label><input type="radio" :checked="source === 'p53'" @change="setSource('p53')" /> P53 fixture (augmented)</label>
-    <label v-if="live"><input type="radio" :checked="source === 'oma'" @change="setSource('oma')" /> OMA stage (proxied)</label>
+    <label><input type="radio" :checked="source === 'oma'" @change="setSource('oma')" /> Live from OMA</label>
     <form v-if="source === 'oma'" @submit.prevent="loadOma">
       <input v-model="hogId" size="28" aria-label="HOG id" />
       <input v-model="omaLevel" size="14" aria-label="Level" />

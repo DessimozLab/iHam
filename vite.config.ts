@@ -5,11 +5,11 @@ import { defineConfig, type Plugin } from "vite";
 import vue from "@vitejs/plugin-vue";
 
 // Modes:
-//   (dev)     `npm run dev`  – playground in dev/, proxies OMA stage for real data
+//   (dev)     `npm run dev`  – playground in dev/, proxies the OMA browser for live data
 //   lib       Vue 3 library: dist/iham.js + dist/iham.css, `vue` stays external
 //   element   <i-ham> custom element: dist/element/iham-element.{js,iife.js},
 //             Vue bundled in, component styles injected into the shadow root
-const OMA_UPSTREAM = process.env.IHAM_OMA_URL ?? "https://oma-stage.vital-it.ch";
+const OMA_UPSTREAM = process.env.IHAM_OMA_URL ?? "https://omabrowser.org";
 const ELEMENT_OUT = resolve(import.meta.dirname, "dist/element");
 
 /**
@@ -117,7 +117,7 @@ export default defineConfig(({ mode, command }) => {
               },
             }
           : {
-              // the demo: the playground with the fixtures (no proxy for live OMA data)
+              // the demo: the playground, loading live data straight from omabrowser.org
               outDir: resolve(import.meta.dirname, "dist-playground"),
               emptyOutDir: true,
               rolldownOptions: {
