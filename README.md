@@ -51,7 +51,7 @@ const level = ref("Homininae");
 ```html
 <script type="module" src="https://cdn.jsdelivr.net/npm/iham@next/dist/element/iham-element.js"></script>
 <!-- or, as a classic script: .../dist/element/iham-element.iife.js;
-     pin an exact version (e.g. iham@2.0.0-alpha.6) in production, and use iham@2 once 2.0.0 is out -->
+     pin an exact version (e.g. iham@2.0.0-alpha.7) in production, and use iham@2 once 2.0.0 is out -->
 
 <i-ham
   orthoxml-url="https://omabrowser.org/oma/hog/HOG:F0782425.2c.7a/orthoxml/augmented/"

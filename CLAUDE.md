@@ -21,7 +21,7 @@ npm run build        # build:lib (dist/iham.js + iham.css, vue external) + build
 npm run build:demo   # the playground as a static site in dist-playground/; live data straight from omabrowser.org (CORS)
 ```
 
-Releases: push a tag `v2.x.y[-pre]` equal to package.json's version; `.github/workflows/release.yml` publishes to npm (trusted publishing; pre-releases under dist-tag `next`), creates the GitHub release and puts the demo on the `gh-pages` branch, keeping v1's `iHam.js`/`iHam.css` there.
+Releases: add a `## [x.y.z] - date` section to CHANGELOG.md (required; it becomes the GitHub release notes), then push a tag `v2.x.y[-pre]` equal to package.json's version; `.github/workflows/release.yml` publishes to npm (trusted publishing; pre-releases under dist-tag `next`), creates the GitHub release and puts the demo on the `gh-pages` branch, keeping v1's `iHam.js`/`iHam.css` there.
 
 `vite.config.ts` switches on `--mode`: `lib`, `element`, or the dev playground (root `dev/`). The element build compiles SFCs with `features.customElement` so their `<style>` blocks are inlined into the shadow root; served from source the element would be unstyled. So `npm run dev` also runs the element build in watch mode as a child process (plugin `iham:element-watch-build`; in-process it corrupts plugin-vue's cache for the dev server), serves `dist/element/` as the public dir and reloads `element.html` after each rebuild: `element.html` always exercises the real bundle. HTML pages in `dev/` can't reference modules outside `dev/` directly; go through a `dev/*.ts` entry.
 
