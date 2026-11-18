@@ -17,7 +17,10 @@ npm run dev          # playground (dev/), proxies /oma /api /All to OMA stage (I
 npm test             # vitest (jsdom); single file: npx vitest run test/parity.test.ts; filter: -t "pattern"
 npm run typecheck    # vue-tsc over src, test, dev
 npm run build        # build:lib (dist/iham.js + iham.css, vue external) + build:element (dist/element/*.js, Vue bundled) + build:types
+npm run build:demo   # the playground with the fixtures only (no proxy) as a static site in dist-playground/
 ```
+
+Releases: push a tag `v2.x.y[-pre]` equal to package.json's version; `.github/workflows/release.yml` publishes to npm (trusted publishing; pre-releases under dist-tag `next`), creates the GitHub release and puts the demo on the `gh-pages` branch, keeping v1's `iHam.js`/`iHam.css` there. Dependabot targets `v2` but its config must also be on `master` to take effect.
 
 `vite.config.ts` switches on `--mode`: `lib`, `element`, or the dev playground (root `dev/`). The element build compiles SFCs with `features.customElement` so their `<style>` blocks are inlined into the shadow root; served from source the element would be unstyled. So `npm run dev` also runs the element build in watch mode as a child process (plugin `iham:element-watch-build`; in-process it corrupts plugin-vue's cache for the dev server), serves `dist/element/` as the public dir and reloads `element.html` after each rebuild: `element.html` always exercises the real bundle. HTML pages in `dev/` can't reference modules outside `dev/` directly; go through a `dev/*.ts` entry.
 

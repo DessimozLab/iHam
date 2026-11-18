@@ -1,0 +1,141 @@
+# Release iHam 2: push a tag v2.x.y[-pre] that matches package.json's version.
+#
+#   npm version 2.0.0-alpha.7 --no-git-tag-version   # or edit package.json
+#   git commit -am "..." && git tag v2.0.0-alpha.7 && git push origin v2 v2.0.0-alpha.7
+#
+# Then: tests and build, publish to npm (pre-releases under the dist-tag
+# "next", so that "latest" is not moved), a GitHub release with the bundles,
+# and the demo on GitHub Pages (gh-pages branch).
+#
+# npm publishing uses trusted publishing (OIDC), no token: on npmjs.com,
+# package iham > Settings > Trusted publisher > GitHub Actions, with
+# DessimozLab / iHam / release.yml and the environment "npm".
+name: Release
+
+on:
+  push:
+    tags: ["v2.*"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      dist-tag: ${{ steps.version.outputs.dist-tag }}
+      prerelease: ${{ steps.version.outputs.prerelease }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - name: Check that the tag matches package.json
+        id: version
+        run: |
+          version=$(node -p 'require("./package.json").version')
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match package.json version $version"
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          case "$version" in
+            *-*) echo "dist-tag=next" >> "$GITHUB_OUTPUT"; echo "prerelease=true" >> "$GITHUB_OUTPUT" ;;
+            *) echo "dist-tag=latest" >> "$GITHUB_OUTPUT"; echo "prerelease=false" >> "$GITHUB_OUTPUT" ;;
+          esac
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      # runs the build through prepack
+      - run: npm pack
+      - run: npm run build:demo
+      - uses: actions/upload-artifact@v4
+        with:
+          name: package
+          path: |
+            iham-*.tgz
+            dist/element/iham-element.js
+            dist/element/iham-element.iife.js
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: demo
+          path: dist-playground/
+          if-no-files-found: error
+
+  npm:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write # trusted publishing and provenance
+    steps:
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - name: npm with trusted publishing support (>= 11.5.1)
+        run: npm install -g npm@^11.5.1
+      - uses: actions/download-artifact@v4
+        with:
+          name: package
+      - run: npm publish ./iham-${{ needs.build.outputs.version }}.tgz --tag ${{ needs.build.outputs.dist-tag }}
+
+  github-release:
+    needs: [build, npm]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: package
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PRERELEASE: ${{ needs.build.outputs.prerelease }}
+        run: |
+          flags=()
+          if [ "$PRERELEASE" = true ]; then flags+=(--prerelease --latest=false); fi
+          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --verify-tag \
+            --title "$GITHUB_REF_NAME" --generate-notes "${flags[@]}" \
+            iham-*.tgz dist/element/iham-element.js dist/element/iham-element.iife.js
+
+  pages:
+    needs: [build, npm]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: gh-pages
+          path: site
+      - uses: actions/download-artifact@v4
+        with:
+          name: demo
+          path: demo
+      - name: Replace the demo on gh-pages
+        run: |
+          cd site
+          # keep iHam 1's iHam.js and iHam.css: other sites may load them from here
+          find . -mindepth 1 -maxdepth 1 ! -name .git ! -name iHam.js ! -name iHam.css \
+            ! -name .gitignore ! -name .babelrc -exec rm -rf {} +
+          cp -R ../demo/. .
+          touch .nojekyll
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "demo unchanged"
+          else
+            git commit -m "Demo of iHam $GITHUB_REF_NAME"
+            git push origin gh-pages
+          fi
