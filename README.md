@@ -63,7 +63,7 @@ const level = ref("Homininae");
 
 <script>
   const viewer = document.querySelector("i-ham");
-  viewer.addEventListener("node-selected", (e) => console.log(e.detail[0].name));
+  viewer.addEventListener("node-selected", (e) => console.log(e.detail.name));
   // objects and functions are set as properties:
   // viewer.famData = [...]; viewer.geneColors = (gene, id) => "#c00";
 </script>
@@ -108,9 +108,21 @@ Attributes are the kebab-case form of the property names.
 | `update:coverageThreshold`, `update:colorScheme` | value | for `v-model` |
 | `error` | `Error` | loading or parsing failed |
 
-On the custom element these are DOM `CustomEvent`s whose `detail` is the array of arguments.
+On the custom element these are DOM `CustomEvent`s whose `detail` is the payload (`e.detail.name` for `node-selected`; in 2.0.0-alpha.6 and earlier it was `e.detail[0]`). The camelCase events are also dispatched in kebab-case (`update:coverage-threshold`). They don't bubble: listen on the element itself.
 
-The component also exposes `setLevel(level)`, `freeze(level?)` and `unfreeze()` (Vue template ref). The parsing and layout functions (`parseOrthoXml`, `computeLevelView`, …) are exported from `iham` for use without the UI.
+## Methods
+
+The component (through a template ref) and the element have:
+
+| Method | |
+|---|---|
+| `setLevel(level)` | open at a taxonomic level and scroll it into view; `false` if the level is not in the tree, or the data is not loaded yet (set `level` for the initial level) |
+| `freeze(level?)` | freeze at a level, or at the selected one: hovering the tree no longer changes the level |
+| `unfreeze()` | |
+
+On the element, `level`, `coverageThreshold` and `colorScheme` (and their attributes) follow the viewer, like `v-model`: they always hold the current value, and setting them always takes effect. The types `IHamProps`, `IHamEvents` and `IHamMethods` are exported; `iham/element` also types `<i-ham>` (`document.querySelector("i-ham")`, `addEventListener`).
+
+The parsing and layout functions (`parseOrthoXml`, `computeLevelView`, …) are exported from `iham` for use without the UI.
 
 ## Development
 

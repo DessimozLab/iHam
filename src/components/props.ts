@@ -46,3 +46,27 @@ export interface IHamProps {
   height?: string;
   showInternalLabels?: boolean;
 }
+
+/** methods of the component (template ref) and of the `<i-ham>` element */
+export interface IHamMethods {
+  /**
+   * open the viewer at a taxonomic level and scroll it into view; returns
+   * false if the level is not in the tree (also before the data is loaded:
+   * set the `level` prop/attribute for the initial level)
+   */
+  setLevel(level: string): boolean;
+  /** freeze at a level, or at the selected one; hovering then no longer changes the level */
+  freeze(level?: string): void;
+  unfreeze(): void;
+}
+
+/** events of the component (arguments); on `<i-ham>`, `CustomEvent`s whose `detail` is the (only) argument */
+export interface IHamEvents {
+  "update:level": [level: string];
+  "update:coverageThreshold": [value: number];
+  "update:colorScheme": [value: ColorSchemeName];
+  "node-selected": [node: { name: string; id: number; isLeaf: boolean; species: string[] }];
+  "hogs-removed": [removed: number[]];
+  loaded: [info: { species: number; genes: number; augmented: boolean }];
+  error: [error: Error];
+}

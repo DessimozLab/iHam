@@ -5,7 +5,7 @@ import { computeLevelView, computeMaxima } from "../core/levels";
 import { NO_ENDPOINTS, omaEndpoints, type Endpoints } from "../core/links";
 import { buildSpeciesTree, cladeRows, layoutTree, type SpeciesNode } from "../core/tree";
 import type { GeneCell, HogColumn } from "../core/types";
-import type { IHamProps } from "./props";
+import type { IHamEvents, IHamMethods, IHamProps } from "./props";
 import { useHogData } from "../composables/useHogData";
 import GeneInfo from "./GeneInfo.vue";
 import HogHeader from "./HogHeader.vue";
@@ -31,15 +31,7 @@ const props = withDefaults(defineProps<IHamProps>(), {
   showInternalLabels: true,
 });
 
-const emit = defineEmits<{
-  "update:level": [level: string];
-  "update:coverageThreshold": [value: number];
-  "update:colorScheme": [value: ColorSchemeName];
-  "node-selected": [node: { name: string; id: number; isLeaf: boolean; species: string[] }];
-  "hogs-removed": [removed: number[]];
-  loaded: [info: { species: number; genes: number; augmented: boolean }];
-  error: [error: Error];
-}>();
+const emit = defineEmits<IHamEvents>();
 
 const CELL = 16;
 const HEADER = 30;
@@ -292,7 +284,6 @@ watch(selected, () => {
 const geneTitle = (cell: GeneCell) => famMap.value.get(cell.id)?.protid ?? parsed.value?.xrefs[cell.id] ?? String(cell.id);
 
 defineExpose({
-  /** open the viewer at a taxonomic level; returns false if the level is not in the tree */
   setLevel(level: string) {
     const node = nodeForLevel(level);
     if (node) openAt(node);
@@ -303,7 +294,7 @@ defineExpose({
     if (node) freeze(node);
   },
   unfreeze,
-});
+} satisfies IHamMethods);
 </script>
 
 <template>

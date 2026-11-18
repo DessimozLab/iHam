@@ -38,7 +38,7 @@
       const viewer = document.getElementById("viewer");
       for (const name of ["loaded", "node-selected", "update:level", "hogs-removed", "error"]) {
         viewer.addEventListener(name, (e) => {
-          const detail = e.detail?.[0];
+          const detail = e.detail;
           // abbreviate long arrays (e.g. the species list of node-selected)
           const text =
             typeof detail === "object"
