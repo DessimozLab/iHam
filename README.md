@@ -19,8 +19,10 @@ Input: HOGs in [OrthoXML](https://orthoxml.org) (plain, or OMA's augmented flavo
 ### In a Vue 3 application
 
 ```sh
-npm install iham
+npm install iham@next
 ```
+
+While iHam 2 is in pre-release, its versions are published under the npm dist-tag `next`; `npm install iham` still installs iHam 1.
 
 ```vue
 <script setup>
@@ -47,8 +49,9 @@ const level = ref("Homininae");
 ### In any web page
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/iham@2/dist/element/iham-element.js"></script>
-<!-- or, as a classic script: .../dist/element/iham-element.iife.js -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/iham@next/dist/element/iham-element.js"></script>
+<!-- or, as a classic script: .../dist/element/iham-element.iife.js;
+     pin an exact version (e.g. iham@2.0.0-alpha.6) in production, and use iham@2 once 2.0.0 is out -->
 
 <i-ham
   orthoxml-url="https://omabrowser.org/oma/hog/HOG:F0782425.2c.7a/orthoxml/augmented/"
