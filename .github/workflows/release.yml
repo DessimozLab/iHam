@@ -1,11 +1,13 @@
 # Release iHam 2: push a tag v2.x.y[-pre] that matches package.json's version.
 #
-#   npm version 2.0.0-alpha.7 --no-git-tag-version   # or edit package.json
-#   git commit -am "..." && git tag v2.0.0-alpha.7 && git push origin master v2.0.0-alpha.7
+#   npm version 2.0.0-alpha.8 --no-git-tag-version   # or edit package.json
+#   # add a section "## [2.0.0-alpha.8] - <date>" to CHANGELOG.md
+#   git commit -am "..." && git tag v2.0.0-alpha.8 && git push origin master v2.0.0-alpha.8
 #
 # Then: tests and build, publish to npm (pre-releases under the dist-tag
-# "next", so that "latest" is not moved), a GitHub release with the bundles,
-# and the demo on GitHub Pages (gh-pages branch).
+# "next", so that "latest" is not moved), a GitHub release with the bundles
+# and the version's CHANGELOG section as notes, and the demo on GitHub Pages
+# (gh-pages branch).
 #
 # npm publishing uses trusted publishing (OIDC), no token: on npmjs.com,
 # package iham > Settings > Trusted publisher > GitHub Actions, with
@@ -44,6 +46,10 @@ jobs:
           version=$(node -p 'require("./package.json").version')
           if [ "v$version" != "$GITHUB_REF_NAME" ]; then
             echo "::error::tag $GITHUB_REF_NAME does not match package.json version $version"
+            exit 1
+          fi
+          if ! grep -q "^## \[$version\]" CHANGELOG.md; then
+            echo "::error::CHANGELOG.md has no section \"## [$version]\""
             exit 1
           fi
           echo "version=$version" >> "$GITHUB_OUTPUT"
@@ -94,6 +100,11 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          sparse-checkout: CHANGELOG.md
+          sparse-checkout-cone-mode: false
       - uses: actions/download-artifact@v8
         with:
           name: package
@@ -102,10 +113,15 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           PRERELEASE: ${{ needs.build.outputs.prerelease }}
         run: |
+          # the version's section of CHANGELOG.md, without its heading
+          awk -v v="${GITHUB_REF_NAME#v}" '
+            /^## \[/ { on = index($0, "## [" v "]") == 1; next }
+            /^\[[^]]+\]: / { next }
+            on' CHANGELOG.md > notes.md
           flags=()
           if [ "$PRERELEASE" = true ]; then flags+=(--prerelease --latest=false); fi
           gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --verify-tag \
-            --title "$GITHUB_REF_NAME" --generate-notes "${flags[@]}" \
+            --title "$GITHUB_REF_NAME" --notes-file notes.md "${flags[@]}" \
             iham-*.tgz dist/element/iham-element.js dist/element/iham-element.iife.js
 
   pages:
