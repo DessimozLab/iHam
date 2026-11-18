@@ -5,12 +5,23 @@ export type MeasureText = (text: string) => number;
 /** gap between the node marker and its label */
 export const LABEL_GAP = 6;
 
-/** text width measured with a canvas in `font`; falls back to an estimate without canvas support (jsdom) */
+/** font used when the requested one can't be parsed by canvas */
+export const FALLBACK_FONT = "bold 12px sans-serif";
+
+/** rough width of `text` in FALLBACK_FONT, used before mount and without canvas support (jsdom) */
+export const estimateWidth: MeasureText = (text) => text.length * 7.5;
+
+/**
+ * Text width measured with a canvas in `font`; falls back to an estimate
+ * without canvas support (jsdom). Canvas silently ignores a font string it
+ * can't parse, so FALLBACK_FONT is set first and stays in effect then.
+ */
 export function textMeasurer(font: string): MeasureText {
   const ctx = typeof document !== "undefined" ? document.createElement("canvas").getContext("2d") : null;
   if (!ctx) {
-    return (text) => text.length * 7.5;
+    return estimateWidth;
   }
+  ctx.font = FALLBACK_FONT;
   ctx.font = font;
   const cache = new Map<string, number>();
   return (text) => {

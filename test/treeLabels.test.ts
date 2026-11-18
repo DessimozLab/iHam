@@ -26,7 +26,7 @@ describe("internal node labels", () => {
     expect(50 + p.right).toBeLessThanOrEqual(152);
   });
 
-  it("fitText keeps text that fits and cuts at a word boundary without trailing spaces", () => {
+  it("fitText keeps text that fits and cuts it without trailing spaces", () => {
     expect(fitText("short", 100, measure)).toBe("short");
     expect(fitText("ab cdefgh", 40, measure)).toBe("ab…");
     expect(fitText("abcdef", 5, measure)).toBe("…");

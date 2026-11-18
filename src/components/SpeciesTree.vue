@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, shallowRef } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, shallowRef } from "vue";
 import type { LayoutNode, SpeciesNode, TreeLayout } from "../core/tree";
-import { placeInternalLabel, textMeasurer, type MeasureText } from "./treeLabels";
+import { estimateWidth, FALLBACK_FONT, placeInternalLabel, textMeasurer, type MeasureText } from "./treeLabels";
 
 const props = defineProps<{
   layout: TreeLayout;
@@ -43,13 +43,32 @@ function label(n: LayoutNode): string {
 
 // the selected internal node's label is measured in the tree's (bold) font
 const svg = ref<SVGSVGElement | null>(null);
-const measure = shallowRef<MeasureText>(textMeasurer("bold 12px sans-serif"));
+const measure = shallowRef<MeasureText>(estimateWidth);
+let measuredFont = "";
+
+// (re)creates the measurer when the computed font changed, e.g. after a web font loaded
+function updateMeasure() {
+  if (!svg.value) return;
+  const cs = getComputedStyle(svg.value);
+  const font = cs.fontFamily ? `bold ${cs.fontSize || "12px"} ${cs.fontFamily}` : FALLBACK_FONT;
+  if (font === measuredFont) return;
+  measuredFont = font;
+  measure.value = textMeasurer(font);
+}
+
+// a web font finishing to load changes the widths without changing the font string
+function onFontsLoaded() {
+  measuredFont = "";
+  updateMeasure();
+}
+
+const fonts = typeof document !== "undefined" ? document.fonts : undefined;
 onMounted(() => {
-  if (svg.value) {
-    const cs = getComputedStyle(svg.value);
-    measure.value = textMeasurer(`bold ${cs.fontSize || "12px"} ${cs.fontFamily || "sans-serif"}`);
-  }
+  updateMeasure();
+  fonts?.ready.then(onFontsLoaded);
+  fonts?.addEventListener?.("loadingdone", onFontsLoaded);
 });
+onBeforeUnmount(() => fonts?.removeEventListener?.("loadingdone", onFontsLoaded));
 
 /**
  * Label of the selected internal node: above-left of it, shifted right when
@@ -61,7 +80,7 @@ const internalLabel = computed(() => {
   if (!n || n.isRow) return null;
   const leafX = MARGIN + branchWidth.value;
   const { text, right } = placeInternalLabel(displayName(n), px(n), 2, leafX - 4, measure.value);
-  return { text, x: px(n) + right, y: py(n) - 7 };
+  return { node: n.node, text, x: px(n) + right, y: py(n) - 7 };
 });
 
 const links = computed(() =>
@@ -107,12 +126,16 @@ const links = computed(() =>
         {{ label(n) }}
       </text>
     </g>
-    <!-- after all nodes, so that no branch or marker is drawn over it -->
+    <!-- after all nodes, so that no branch or marker is drawn over it; it acts
+         for its node, so that pointing at it doesn't select what is underneath -->
     <text
       v-if="internalLabel"
       class="iham-tree-label iham-tree-internal-label"
       :x="internalLabel.x"
       :y="internalLabel.y"
+      text-anchor="end"
+      @mouseenter="emit('hover', internalLabel.node)"
+      @click="emit('click', internalLabel.node, $event)"
     >
       {{ internalLabel.text }}
     </text>
@@ -161,9 +184,11 @@ const links = computed(() =>
   stroke-linejoin: round;
 }
 .iham-tree-internal-label {
-  text-anchor: end;
   font-weight: bold;
-  pointer-events: none;
+  cursor: pointer;
+}
+.iham-tree-internal-label:hover {
+  text-decoration: underline;
 }
 .iham-tree-node.is-collapsed .iham-tree-label {
   fill: grey;

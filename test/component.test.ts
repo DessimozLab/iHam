@@ -115,6 +115,15 @@ describe("<IHam>", () => {
     const labels = w.findAll(".iham-tree-internal-label");
     expect(labels.map((l) => l.text())).toEqual(["Primates"]);
     expect(w.find(".iham-tree").element.lastElementChild).toBe(labels[0].element);
+    // right-aligned without relying on the stylesheet
+    expect(labels[0].attributes("text-anchor")).toBe("end");
+    w.unmount();
+  });
+
+  it("lets the internal label act for its node", async () => {
+    const w = await mountP53({ level: "Primates" });
+    await w.find(".iham-tree-internal-label").trigger("click");
+    expect(w.text()).toContain("Freeze at this node");
     w.unmount();
   });
 
