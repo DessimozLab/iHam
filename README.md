@@ -130,6 +130,8 @@ The parsing and layout functions (`parseOrthoXml`, `computeLevelView`, …) are 
 npm install
 npm run dev        # playground at http://localhost:5173 (proxies /oma, /api, /All to omabrowser.org; IHAM_OMA_URL to change, e.g. to OMA stage)
 npm test           # unit, component and v1-parity tests (vitest + jsdom)
+npm run test:e2e   # browser tests (Playwright: Chromium, Firefox, WebKit) against the built demo;
+                   # once: npx playwright install chromium firefox webkit
 npm run typecheck
 npm run build      # dist/iham.js + iham.css (Vue library), dist/element/* (web component), dist/types
 ```

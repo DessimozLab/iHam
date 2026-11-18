@@ -29,3 +29,15 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: npm run build:demo
+      - name: Install the browsers for Playwright
+        run: npx playwright install --with-deps chromium firefox webkit
+      # against the demo built above
+      - run: npx playwright test
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14

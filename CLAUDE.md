@@ -15,7 +15,8 @@ Two lines of development:
 ```
 npm run dev          # playground (dev/), proxies /oma /api /All to omabrowser.org (IHAM_OMA_URL overrides, e.g. for OMA stage)
 npm test             # vitest (jsdom); single file: npx vitest run test/parity.test.ts; filter: -t "pattern"
-npm run typecheck    # vue-tsc over src, test, dev
+npm run test:e2e     # build:demo, then Playwright (e2e/) in Chromium, Firefox, WebKit; `npx playwright test` alone reuses the last demo build
+npm run typecheck    # vue-tsc over src, test, dev, e2e
 npm run build        # build:lib (dist/iham.js + iham.css, vue external) + build:element (dist/element/*.js, Vue bundled) + build:types
 npm run build:demo   # the playground as a static site in dist-playground/; live data straight from omabrowser.org (CORS)
 ```
@@ -24,7 +25,9 @@ Releases: push a tag `v2.x.y[-pre]` equal to package.json's version; `.github/wo
 
 `vite.config.ts` switches on `--mode`: `lib`, `element`, or the dev playground (root `dev/`). The element build compiles SFCs with `features.customElement` so their `<style>` blocks are inlined into the shadow root; served from source the element would be unstyled. So `npm run dev` also runs the element build in watch mode as a child process (plugin `iham:element-watch-build`; in-process it corrupts plugin-vue's cache for the dev server), serves `dist/element/` as the public dir and reloads `element.html` after each rebuild: `element.html` always exercises the real bundle. HTML pages in `dev/` can't reference modules outside `dev/` directly; go through a `dev/*.ts` entry.
 
-Tests use jsdom, not happy-dom: happy-dom's XML parser rejects valid OrthoXML (single-quoted XML declarations, namespaces).
+Browser tests (`e2e/`, Playwright) run against the built demo served by `vite preview`, without network: `e2e/fixtures.ts` answers omabrowser.org requests from `test/fixtures` and fails a test on any page or console error. Use them for what jsdom can't do: canvas drawing, layout and text measurement, real pointer events, and the `<i-ham>` bundle (shadow root styles, events, methods).
+
+Vitest tests use jsdom, not happy-dom: happy-dom's XML parser rejects valid OrthoXML (single-quoted XML declarations, namespaces).
 
 ## Architecture
 

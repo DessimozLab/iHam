@@ -13,3 +13,5 @@ _site/
 .idea
 dist/
 dist-playground/
+test-results/
+playwright-report/

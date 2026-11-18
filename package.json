@@ -55,7 +55,8 @@
     "prepack": "npm run build",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:e2e": "npm run build:demo && playwright test"
   },
   "peerDependencies": {
     "vue": "^3.5.0"
@@ -64,6 +65,7 @@
     "d3-scale": "^4.0.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
     "@types/d3-scale": "^4.0.9",
     "@types/node": "^26.6.6",
     "@vitejs/plugin-vue": "^6.0.11",
