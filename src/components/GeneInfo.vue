@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { fillTemplate, type Endpoints } from "../core/links";
-import type { FamGene } from "../core/types";
+import type { GeneData } from "../core/types";
 import { fetchJsonCached } from "../composables/useHogData";
 
 const props = defineProps<{
   geneId: number;
-  gene?: FamGene;
+  gene?: GeneData;
   xref?: string;
   endpoints: Endpoints;
 }>();

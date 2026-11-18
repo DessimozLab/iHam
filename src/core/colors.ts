@@ -1,5 +1,5 @@
 import { scaleLinear } from "d3-scale";
-import type { FamGene } from "./types";
+import type { GeneData } from "./types";
 
 export const QUERY_COLOR = "#27ae60";
 export const DEFAULT_GENE_COLOR = "#95a5a6";
@@ -15,7 +15,7 @@ export const COLOR_SCHEMES = {
 } as const;
 
 export type ColorSchemeName = keyof typeof COLOR_SCHEMES;
-export type GeneColorFn = (gene: FamGene | undefined, geneId: number) => string;
+export type GeneColorFn = (gene: GeneData | undefined, geneId: number) => string;
 
 export interface ColorScale {
   color: GeneColorFn;
@@ -26,8 +26,8 @@ export interface ColorScale {
 const RANGE: [string, string] = ["red", "blue"];
 
 /** Numeric schemes for which at least one gene has a value. */
-export function availableSchemes(famData: Iterable<FamGene>): ColorSchemeName[] {
-  const genes = [...famData];
+export function availableSchemes(geneData: Iterable<GeneData>): ColorSchemeName[] {
+  const genes = [...geneData];
   return (Object.keys(COLOR_SCHEMES) as ColorSchemeName[]).filter((name) => {
     const field = (COLOR_SCHEMES[name] as { field?: string }).field;
     return !field || genes.some((g) => typeof g[field] === "number");
@@ -36,7 +36,7 @@ export function availableSchemes(famData: Iterable<FamGene>): ColorSchemeName[] 
 
 export function makeColorScale(
   scheme: ColorSchemeName,
-  famData: Iterable<FamGene>,
+  geneData: Iterable<GeneData>,
   isQuery: (geneId: number) => boolean,
 ): ColorScale {
   const def = COLOR_SCHEMES[scheme] as { label: string; field?: string };
@@ -44,7 +44,7 @@ export function makeColorScale(
     return { color: (_g, id) => (isQuery(id) ? QUERY_COLOR : DEFAULT_GENE_COLOR) };
   }
   const field = def.field;
-  const values = [...famData].map((g) => g[field]).filter((v): v is number => typeof v === "number");
+  const values = [...geneData].map((g) => g[field]).filter((v): v is number => typeof v === "number");
   const lo = Math.min(...values);
   const hi = Math.max(...values);
   const domain: [number, number] = values.length ? [lo, hi === lo ? lo + 1 : hi] : [0, 1];

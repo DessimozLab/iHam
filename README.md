@@ -37,11 +37,11 @@ const level = ref("Homininae");
   <IHam
     orthoxml-url="/oma/hog/HOG:F0782425.2c.7a/orthoxml/augmented/"
     species-tree-url="/All/speciestree.nwk"
-    fam-data-url="/oma/hogdata/HUMAN31534/json"
+    gene-data-url="/oma/hogdata/HUMAN31534/json"
     query-hog="HOG:F0782425.2c.7a_207598"
     preset="oma"
     v-model:level="level"
-    @hogs-removed="(removed) => console.log(removed)"
+    @hogs-hidden="({ level, hogs }) => console.log(level, hogs)"
   />
 </template>
 ```
@@ -65,7 +65,7 @@ const level = ref("Homininae");
   const viewer = document.querySelector("i-ham");
   viewer.addEventListener("node-selected", (e) => console.log(e.detail.name));
   // objects and functions are set as properties:
-  // viewer.famData = [...]; viewer.geneColors = (gene, id) => "#c00";
+  // viewer.geneData = [...]; viewer.geneColors = (gene, id) => "#c00";
 </script>
 ```
 
@@ -79,7 +79,7 @@ Attributes are the kebab-case form of the property names.
 |---|---|---|---|
 | `orthoxml` / `orthoxmlUrl` | string | | OrthoXML content, or a URL to load it from |
 | `speciesTree` / `speciesTreeUrl` | string | | species tree (newick or phyloXML), or a URL |
-| `famData` / `famDataUrl` | array / string | | gene family data (`[{id, protid, xrefid, sequence_length, gc_content, nr_exons, similarity}]`) |
+| `geneData` / `geneDataUrl` | array / string | | gene family data (`[{id, protid, xrefid, sequence_length, gc_content, nr_exons, similarity}]`) |
 | `augmented` | boolean | auto | parse as OMA augmented OrthoXML (detected automatically) |
 | `queryHog` | string | | HOG id whose members are highlighted (OMA: `<hog id>_<taxid>`) |
 | `queryGene` | number | | gene id to highlight |
@@ -94,7 +94,7 @@ Attributes are the kebab-case form of the property names.
 | `links`, `api` | object | | override individual link/API URL templates, e.g. `{ hogViewer: "/hog/{hogId}/{level}" }`; placeholders `{hogId}`, `{level}`, `{protId}`, `{xref}`, `{geneId}` |
 | `treeWidth` | number | `330` | width of the tree panel (px) |
 | `rowHeight` | number | `20` | height of a species row (px) |
-| `height` | string | `80vh` | maximum height of the scrollable viewer |
+| `maxHeight` | string | `80vh` | maximum height of the scrollable viewer (CSS length) |
 | `showInternalLabels` | boolean | `true` | label the selected internal node |
 
 ## Events
@@ -102,10 +102,10 @@ Attributes are the kebab-case form of the property names.
 | Event | Payload | |
 |---|---|---|
 | `loaded` | `{species, genes, augmented}` | data parsed |
-| `node-selected` | `{name, id, isLeaf, species}` | a tree node was selected (hover or programmatically) |
+| `node-selected` | `{name, isLeaf, species}` | a tree node was selected (hover or programmatically) |
 | `update:level` | level name | for `v-model:level` |
-| `hogs-removed` | HOG indices | columns hidden by the coverage threshold changed |
-| `update:coverageThreshold`, `update:colorScheme` | value | for `v-model` |
+| `hogs-hidden` | `{level, hogs: [{index, hogId?}]}` | the HOGs hidden by the coverage threshold changed (`hogId` with augmented OrthoXML) |
+| `update:coverageThreshold`, `update:colorScheme`, `update:tooltipTrigger` | value | for `v-model` |
 | `error` | `Error` | loading or parsing failed |
 
 On the custom element these are DOM `CustomEvent`s whose `detail` is the payload (`e.detail.name` for `node-selected`; in 2.0.0-alpha.6 and earlier it was `e.detail[0]`). The camelCase events are also dispatched in kebab-case (`update:coverage-threshold`). They don't bubble: listen on the element itself.
@@ -120,9 +120,28 @@ The component (through a template ref) and the element have:
 | `freeze(level?)` | freeze at a level, or at the selected one: hovering the tree no longer changes the level |
 | `unfreeze()` | |
 
-On the element, `level`, `coverageThreshold` and `colorScheme` (and their attributes) follow the viewer, like `v-model`: they always hold the current value, and setting them always takes effect. The types `IHamProps`, `IHamEvents` and `IHamMethods` are exported; `iham/element` also types `<i-ham>` (`document.querySelector("i-ham")`, `addEventListener`).
+On the element, `level`, `coverageThreshold`, `colorScheme` and `tooltipTrigger` (and their attributes) follow the viewer, like `v-model`: they always hold the current value, and setting them always takes effect. The types `IHamProps`, `IHamEvents` and `IHamMethods` are exported; `iham/element` also types `<i-ham>` (`document.querySelector("i-ham")`, `addEventListener`).
 
-The parsing and layout functions (`parseOrthoXml`, `computeLevelView`, …) are exported from `iham` for use without the UI.
+For use without the UI, `iham` also exports `parseSpeciesTree`, `parseOrthoXml` and `computeLevelView` (the HOG columns and gene positions at a level, after the coverage filter), and `omaEndpoints` / `fillTemplate` for the link templates.
+
+## Styling
+
+Colours and the font are CSS custom properties. Set them on the viewer (`<IHam>`'s root element `.iham`, or the `<i-ham>` element; custom properties also reach into its shadow root) or on any ancestor:
+
+| Property | Default | |
+|---|---|---|
+| `--iham-font` | `system-ui, …, sans-serif` | font of the whole viewer |
+| `--iham-fg`, `--iham-bg` | `#222`, `#fff` | text and background |
+| `--iham-muted` | `#7f8c8d` | secondary text, HOG markers, toolbar borders |
+| `--iham-border` | `#ddd` | grid lines and popover border |
+| `--iham-link` | `#2a6ebb` | links in popovers |
+| `--iham-selected` | `#e74c3c` | selected tree node |
+| `--iham-accent` | `#2c3e50` | the HOG marker under the pointer or whose details are open |
+| `--iham-tree-branch`, `--iham-tree-node`, `--iham-tree-leaf` | `#222`, `#34495e`, `#2c3e50` | species tree |
+| `--iham-popover-title-bg`, `--iham-popover-title-fg` | `#2c3e50`, `#fff` | popover title bar |
+| `--iham-notice-bg`, `--iham-notice-fg` | `#d6eaf8`, `#1b4f72` | "N HOGs hidden" notice |
+
+Gene colours come from `colorScheme` or `geneColors`.
 
 ## Development
 

@@ -2,7 +2,7 @@
 import { computed, onMounted, ref, watch } from "vue";
 import type { GeneColorFn } from "../core/colors";
 import type { LayoutNode } from "../core/tree";
-import type { FamGene, GeneCell, LevelView } from "../core/types";
+import type { GeneData, GeneCell, LevelView } from "../core/types";
 
 /**
  * Gene matrix drawn on a canvas that only covers the visible part of the
@@ -11,7 +11,7 @@ import type { FamGene, GeneCell, LevelView } from "../core/types";
 const props = defineProps<{
   view: LevelView;
   rows: LayoutNode[];
-  famMap: ReadonlyMap<number, FamGene>;
+  geneMap: ReadonlyMap<number, GeneData>;
   color: GeneColorFn;
   cellWidth: number;
   rowHeight: number;
@@ -98,7 +98,7 @@ function draw() {
     const cells = rowCells(props.rows[r]);
     for (let i = lowerBound(cells, firstSlot); i < cells.length && cells[i].slot <= lastSlot; i++) {
       const cell = cells[i];
-      ctx.fillStyle = props.color(props.famMap.get(cell.id), cell.id);
+      ctx.fillStyle = props.color(props.geneMap.get(cell.id), cell.id);
       ctx.fillRect(cell.slot * cw + pad, r * rh + pad, cw - 2 * pad, rh - 2 * pad);
     }
   }
@@ -166,7 +166,7 @@ function onClick(event: MouseEvent) {
   }
 }
 
-watch(() => [props.view, props.rows, props.color, props.famMap, box.value, props.cladeRows], scheduleDraw);
+watch(() => [props.view, props.rows, props.color, props.geneMap, box.value, props.cladeRows], scheduleDraw);
 onMounted(draw);
 defineExpose({ redraw: scheduleDraw });
 </script>

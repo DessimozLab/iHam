@@ -19,7 +19,7 @@ async function mountP53(props: Record<string, unknown> = {}) {
     props: {
       orthoxml: p53.orthoxml,
       speciesTree: p53.tree,
-      famData: p53.famData,
+      geneData: p53.geneData,
       queryHog: p53.queryHog,
       ...props,
     },
@@ -107,13 +107,40 @@ describe("<IHam>", () => {
     await w.find(".iham-toolbar select").setValue("sequence_length");
     expect(w.emitted("update:colorScheme")?.at(-1)).toEqual(["sequence_length"]);
     expect(w.find(".iham-legend").exists()).toBe(true);
+    await w.findAll(".iham-toolbar select").at(-1)!.setValue("hover");
+    expect(w.emitted("update:tooltipTrigger")?.at(-1)).toEqual(["hover"]);
+    w.unmount();
+  });
+
+  it("reports the HOGs hidden by the coverage threshold", async () => {
+    const simple = datasets[0];
+    const w = mount(IHam, {
+      props: { orthoxml: simple.orthoxml, speciesTree: simple.tree, level: "Poaceae" },
+      attachTo: document.body,
+    });
+    await settled(w);
+    expect(w.emitted("hogs-hidden")).toBeUndefined(); // nothing hidden at 0%
+    await w.setProps({ coverageThreshold: 50 });
+    const [info] = w.emitted<[{ level: string; hogs: { index: number; hogId?: string }[] }]>("hogs-hidden")!.at(-1)!;
+    expect(info.level).toBe("Poaceae");
+    expect(info.hogs.map((h) => h.index)).toEqual([0, 1, 5, 7, 8, 11, 12, 13, 14, 15, 16]);
+    expect(info.hogs.every((h) => h.hogId === undefined)).toBe(true); // plain OrthoXML
+    expect(w.find(".iham-notice").text()).toContain("11 HOGs hidden");
+    w.unmount();
+  });
+
+  it("reports the selected node by name, leaf flag and species", async () => {
+    const w = await mountP53({ level: "Homininae" });
+    const [node] = w.emitted<[Record<string, unknown>]>("node-selected")!.at(-1)!;
+    expect(Object.keys(node).sort()).toEqual(["isLeaf", "name", "species"]);
+    expect(node).toMatchObject({ name: "Homininae", isLeaf: false });
     w.unmount();
   });
 
   it("shows the HOGs when only the gene data fails to load", async () => {
     vi.stubGlobal("fetch", async () => new Response("blocked", { status: 403, statusText: "Forbidden" }));
     try {
-      const w = await mountP53({ famData: undefined, famDataUrl: "https://example.org/hogdata/x/json" });
+      const w = await mountP53({ geneData: undefined, geneDataUrl: "https://example.org/hogdata/x/json" });
       expect(w.find(".iham-scroller").exists()).toBe(true);
       expect(w.find(".iham-warning").text()).toContain("403 Forbidden");
       expect(w.emitted("error")).toBeUndefined();

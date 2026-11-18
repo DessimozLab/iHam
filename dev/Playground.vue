@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, shallowRef } from "vue";
-import { IHam, type ColorSchemeName, type FamGene } from "../src";
+import { IHam, type ColorSchemeName, type GeneData } from "../src";
 import simpleTree from "../test/fixtures/simple.nwk?raw";
 import simpleXml from "../test/fixtures/simple.orthoxml?raw";
 import simpleFam from "../test/fixtures/simple_famdata.json";
@@ -46,12 +46,12 @@ function log(msg: string) {
 const props = computed(() => {
   switch (source.value) {
     case "simple":
-      return { orthoxml: simpleXml, speciesTree: simpleTree, famData: simpleFam as FamGene[], queryGene: 12 };
+      return { orthoxml: simpleXml, speciesTree: simpleTree, geneData: simpleFam as GeneData[], queryGene: 12 };
     case "p53":
       return {
         orthoxml: p53Xml,
         speciesTree: p53Tree,
-        famData: p53Fam as FamGene[],
+        geneData: p53Fam as GeneData[],
         queryHog: "HOG:F0782425.2c.7a_207598",
         preset: "oma" as const,
         baseUrl: "https://omabrowser.org",
@@ -61,7 +61,7 @@ const props = computed(() => {
         ? {
             orthoxmlUrl: `${OMA}/oma/hog/${hogId.value}/orthoxml/augmented/`,
             speciesTreeUrl: `${OMA}/All/speciestree.nwk`,
-            famDataUrl: `${OMA}/oma/hogdata/${omaEntry.value}/json`,
+            geneDataUrl: `${OMA}/oma/hogdata/${omaEntry.value}/json`,
             preset: "oma" as const,
             baseUrl: OMA || undefined,
           }
@@ -98,10 +98,10 @@ function setSource(s: Source) {
     v-model:level="level"
     v-model:coverage-threshold="coverage"
     v-model:color-scheme="scheme"
-    height="70vh"
+    max-height="70vh"
     @loaded="(i) => log(`loaded ${i.species} species, ${i.genes} genes (augmented: ${i.augmented})`)"
     @node-selected="(n) => log(`node-selected ${n.name}`)"
-    @hogs-removed="(r) => log(`hogs-removed [${r.length}]`)"
+    @hogs-hidden="(h) => log(`hogs-hidden at ${h.level}: ${h.hogs.length}`)"
     @error="(e) => log(`error ${e.message}`)"
   />
 

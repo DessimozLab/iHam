@@ -42,10 +42,10 @@ const emit = defineEmits<{ select: [column: HogColumn, event: MouseEvent] }>();
 }
 .iham-header-col circle {
   fill: var(--iham-bg, #fff);
-  stroke: var(--iham-muted, #95a5a6);
+  stroke: var(--iham-muted, #7f8c8d);
 }
 .iham-header-col text {
-  fill: var(--iham-muted, #95a5a6);
+  fill: var(--iham-muted, #7f8c8d);
   font-size: 9px;
   text-anchor: middle;
   user-select: none;

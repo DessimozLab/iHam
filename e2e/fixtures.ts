@@ -8,15 +8,15 @@ const fixture = (name: string) => readFileSync(resolve(import.meta.dirname, "../
 export const P53 = {
   orthoxml: fixture("p53.orthoxml"),
   speciesTree: fixture("oma_speciestree.nwk"),
-  famData: fixture("p53_famdata.json"),
+  geneData: fixture("p53_famdata.json"),
 };
 
 /**
- * Answers the OMA browser requests from the fixtures (`famData` replaces the
+ * Answers the OMA browser requests from the fixtures (`geneData` replaces the
  * gene data response, e.g. with an error status), and fails on any other
  * external request, so that the tests don't depend on the network.
  */
-export async function mockOma(page: Page, { famStatus = 200 } = {}) {
+export async function mockOma(page: Page, { geneDataStatus = 200 } = {}) {
   await page.route(
     (url) => url.protocol.startsWith("http") && url.hostname !== "localhost",
     (route) => {
@@ -28,9 +28,9 @@ export async function mockOma(page: Page, { famStatus = 200 } = {}) {
           return route.fulfill({ json: [{ GO_term: "GO:0003700", name: "DNA-binding transcription factor activity" }] });
         }
         if (url.pathname.startsWith("/oma/hogdata/")) {
-          return famStatus === 200
-            ? route.fulfill({ body: P53.famData, contentType: "application/json" })
-            : route.fulfill({ status: famStatus, body: "" });
+          return geneDataStatus === 200
+            ? route.fulfill({ body: P53.geneData, contentType: "application/json" })
+            : route.fulfill({ status: geneDataStatus, body: "" });
         }
       }
       return route.abort();

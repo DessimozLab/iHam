@@ -27,7 +27,7 @@ const props = withDefaults(defineProps<IHamProps>(), {
   baseUrl: "",
   treeWidth: 330,
   rowHeight: 20,
-  height: "80vh",
+  maxHeight: "80vh",
   showInternalLabels: true,
 });
 
@@ -42,12 +42,12 @@ const source = computed(() => ({
   orthoxmlUrl: props.orthoxmlUrl,
   speciesTree: props.speciesTree,
   speciesTreeUrl: props.speciesTreeUrl,
-  famData: props.famData,
-  famDataUrl: props.famDataUrl,
+  geneData: props.geneData,
+  geneDataUrl: props.geneDataUrl,
   augmented: props.augmented,
   queryHog: props.queryHog,
 }));
-const { parsed, famData, famMap, loading, phase, error, famError } = useHogData(source);
+const { parsed, geneData, geneMap, loading, phase, error, geneDataError } = useHogData(source);
 
 const tree = computed(() => (parsed.value ? buildSpeciesTree(parsed.value.tree) : null));
 const nodeByName = computed(() => new Map(tree.value?.nodes.map((n) => [n.name, n]) ?? []));
@@ -81,7 +81,7 @@ function selectNode(node: SpeciesNode, { force = false } = {}) {
   if (selected.value?.id === node.id) return;
   selected.value = node;
   emit("update:level", node.name);
-  emit("node-selected", { name: node.name, id: node.id, isLeaf: !node.children.length, species: node.leafNames });
+  emit("node-selected", { name: node.name, isLeaf: !node.children.length, species: node.leafNames });
 }
 
 function nodeForLevel(level: string | undefined): SpeciesNode | undefined {
@@ -124,14 +124,16 @@ const view = computed(() => {
     species: t.root.leafNames,
     level: node.name,
     coverageThreshold: threshold.value,
-    famData: famMap.value,
+    geneData: geneMap.value,
     hogMetadata: p.augmented ? p.hogMetadata : null,
   });
 });
 watch(
-  () => view.value?.removed,
-  (removed, old) => {
-    if (removed && removed.join() !== old?.join()) emit("hogs-removed", removed);
+  () => view.value,
+  (v, old) => {
+    if (!v) return;
+    const changed = v.level !== old?.level || v.removed.join() !== old.removed.join();
+    if (changed && (v.removed.length || old?.removed.length)) emit("hogs-hidden", { level: v.level, hogs: v.hidden });
   },
 );
 
@@ -151,11 +153,11 @@ const markerOffset = computed(() => {
   return Math.max(0, Math.round(rowCentre - HEADER / 2));
 });
 
-const schemes = computed(() => availableSchemes(famData.value));
+const schemes = computed(() => availableSchemes(geneData.value));
 const colorScale = computed(() =>
   props.geneColors
     ? { color: props.geneColors }
-    : makeColorScale(scheme.value, famData.value, (id) => queryIds.value.has(id)),
+    : makeColorScale(scheme.value, geneData.value, (id) => queryIds.value.has(id)),
 );
 
 const endpoints = computed<Endpoints>(() => {
@@ -170,6 +172,10 @@ function setThreshold(v: number) {
 function setScheme(v: ColorSchemeName) {
   scheme.value = v;
   emit("update:colorScheme", v);
+}
+function setTrigger(v: "click" | "hover") {
+  trigger.value = v;
+  emit("update:tooltipTrigger", v);
 }
 
 // ---- scroll area / canvas viewport -----------------------------------------
@@ -281,7 +287,7 @@ watch(selected, () => {
   if (popover.value?.kind !== "node") popover.value = null;
 });
 
-const geneTitle = (cell: GeneCell) => famMap.value.get(cell.id)?.protid ?? parsed.value?.xrefs[cell.id] ?? String(cell.id);
+const geneTitle = (cell: GeneCell) => geneMap.value.get(cell.id)?.protid ?? parsed.value?.xrefs[cell.id] ?? String(cell.id);
 
 defineExpose({
   setLevel(level: string) {
@@ -320,14 +326,14 @@ defineExpose({
         :coverage-threshold="threshold"
         :removed-count="view.removed.length"
         @update:color-scheme="setScheme"
-        @update:tooltip-trigger="trigger = $event"
+        @update:tooltip-trigger="setTrigger"
         @update:coverage-threshold="setThreshold"
         @unfreeze="unfreeze"
       />
-      <div v-if="famError" class="iham-message iham-warning" role="status">
-        Gene data could not be loaded ({{ famError.message }}); genes are shown without their details.
+      <div v-if="geneDataError" class="iham-message iham-warning" role="status">
+        Gene data could not be loaded ({{ geneDataError.message }}); genes are shown without their details.
       </div>
-      <div ref="scroller" class="iham-scroller" :style="{ maxHeight: height }">
+      <div ref="scroller" class="iham-scroller" :style="{ maxHeight }">
         <div
           class="iham-grid"
           :style="{
@@ -364,7 +370,7 @@ defineExpose({
             <HogMatrix
               :view="view"
               :rows="layout.rows"
-              :fam-map="famMap"
+              :gene-map="geneMap"
               :color="colorScale.color"
               :cell-width="CELL"
               :row-height="rowHeight"
@@ -400,7 +406,7 @@ defineExpose({
         <GeneInfo
           v-else-if="popover.kind === 'gene'"
           :gene-id="popover.cell.id"
-          :gene="famMap.get(popover.cell.id)"
+          :gene="geneMap.get(popover.cell.id)"
           :xref="parsed?.xrefs[popover.cell.id]"
           :endpoints="endpoints"
         />
@@ -427,7 +433,7 @@ defineExpose({
 .iham-scroller {
   overflow: auto;
   position: relative;
-  border-top: 1px solid var(--iham-border, #e5e5e5);
+  border-top: 1px solid var(--iham-border, #ddd);
 }
 .iham-grid {
   display: grid;
@@ -446,12 +452,12 @@ defineExpose({
 .iham-header-cell {
   top: 0;
   z-index: 2;
-  border-bottom: 1px solid var(--iham-border, #e5e5e5);
+  border-bottom: 1px solid var(--iham-border, #ddd);
 }
 .iham-tree-cell {
   left: 0;
   z-index: 2;
-  border-right: 1px solid var(--iham-border, #e5e5e5);
+  border-right: 1px solid var(--iham-border, #ddd);
 }
 .iham-matrix-cell {
   position: relative;

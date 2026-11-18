@@ -7,7 +7,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { computeLevelView, computeMaxima } from "../src/core/levels";
 import { parseOrthoXml } from "../src/core/orthoxml";
 import { buildSpeciesTree } from "../src/core/tree";
-import type { FamGene, ParsedHogs } from "../src/core/types";
+import type { GeneData, ParsedHogs } from "../src/core/types";
 import { datasets } from "./helpers";
 
 const require = createRequire(import.meta.url);
@@ -54,8 +54,8 @@ describe.each(datasets)("$name", (ds) => {
   it("lays out every level identically to v1 (thresholds 0, 50, 90)", () => {
     const { nodes, root } = buildSpeciesTree(parsed.tree);
     const species = root.leafNames;
-    const famMap = new Map<number, FamGene>(ds.famData.map((g) => [g.id, g]));
-    const famObj: Record<number, FamGene> = Object.fromEntries(ds.famData.map((g) => [g.id, g]));
+    const geneMap = new Map<number, GeneData>(ds.geneData.map((g) => [g.id, g]));
+    const geneObj: Record<number, GeneData> = Object.fromEntries(ds.geneData.map((g) => [g.id, g]));
     const maxima = computeMaxima(parsed.perSpecies);
     const legacyMaxs = get_maxs(legacy.per_species);
     const fakeTree = { root: () => ({ get_all_leaves: () => species.map((name) => ({ property: () => name })) }) };
@@ -66,14 +66,14 @@ describe.each(datasets)("$name", (ds) => {
       const level = node.name;
       for (const threshold of [0, 50, 90]) {
         const state = new LegacyHogState();
-        state.reset_on(fakeTree, legacy.per_species, level, threshold, famObj, ds.augmented ? legacy.hog_metadata : false);
+        state.reset_on(fakeTree, legacy.per_species, level, threshold, geneObj, ds.augmented ? legacy.hog_metadata : false);
         const view = computeLevelView({
           perSpecies: parsed.perSpecies,
           maxima,
           species,
           level,
           coverageThreshold: threshold,
-          famData: famMap,
+          geneData: geneMap,
           hogMetadata: ds.augmented ? parsed.hogMetadata : null,
         });
 
@@ -102,7 +102,7 @@ describe.each(datasets)("$name", (ds) => {
         expect(view.numberSpecies).toBe(state.number_species);
 
         for (const sp of species) {
-          const lg = legacyXcoords(legacy.per_species[sp]?.[level], legacyMaxs[level], state, famObj, false);
+          const lg = legacyXcoords(legacy.per_species[sp]?.[level], legacyMaxs[level], state, geneObj, false);
           const expected = lg.genes.map((g: any) => ({ id: g.id, hog: g.hog, slot: g.pos, posInHog: g.pos_in_hog }));
           const cells = view.row(sp);
           expect(cells, `${sp} @ ${level}`).toEqual(expected);

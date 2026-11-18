@@ -1,18 +1,20 @@
-export * from "./types";
-export { parseNewick } from "./newick";
-export { parsePhyloXml } from "./phyloxml";
+/**
+ * The public, framework-free API: parse HOGs and compute what the viewer
+ * shows at a taxonomic level. Everything else in core/ is internal and may
+ * change in any release.
+ */
+export type {
+  RawTreeNode,
+  PerSpecies,
+  HogMetadata,
+  ParsedHogs,
+  GeneData,
+  HogColumn,
+  HiddenHog,
+  GeneCell,
+  LevelView,
+} from "./types";
 export { parseOrthoXml, parseSpeciesTree, type ParseOptions } from "./orthoxml";
-export { buildSpeciesTree, layoutTree, ladderize, type SpeciesNode, type TreeLayout, type LayoutNode } from "./tree";
-export { computeLevelView, computeMaxima, type LevelMaxima, type LevelViewInput } from "./levels";
-export {
-  COLOR_SCHEMES,
-  QUERY_COLOR,
-  DEFAULT_GENE_COLOR,
-  availableSchemes,
-  makeColorScale,
-  legendTicks,
-  type ColorSchemeName,
-  type GeneColorFn,
-  type ColorScale,
-} from "./colors";
-export { omaEndpoints, fillTemplate, NO_ENDPOINTS, type LinkTemplates, type ApiTemplates, type Endpoints } from "./links";
+export { computeLevelView, type LevelMaxima, type LevelViewInput } from "./levels";
+export type { ColorSchemeName, GeneColorFn } from "./colors";
+export { omaEndpoints, fillTemplate, type LinkTemplates, type ApiTemplates, type Endpoints } from "./links";

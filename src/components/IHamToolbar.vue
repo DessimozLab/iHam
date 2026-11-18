@@ -104,7 +104,7 @@ function onCoverage(e: Event) {
 .iham-settings-toggle {
   font: inherit;
   padding: 1px 8px;
-  border: 1px solid var(--iham-muted, #95a5a6);
+  border: 1px solid var(--iham-muted, #7f8c8d);
   border-radius: 3px;
   background: none;
   color: inherit;

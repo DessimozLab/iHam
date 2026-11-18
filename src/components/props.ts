@@ -1,6 +1,6 @@
 import type { ColorSchemeName, GeneColorFn } from "../core/colors";
 import type { ApiTemplates, LinkTemplates } from "../core/links";
-import type { FamGene } from "../core/types";
+import type { GeneData, HiddenHog } from "../core/types";
 
 export interface IHamProps {
   /** OrthoXML content (plain or OMA's augmented flavour) */
@@ -10,8 +10,8 @@ export interface IHamProps {
   speciesTree?: string;
   speciesTreeUrl?: string;
   /** gene family data (OMA `/oma/hogdata/<entry>/json`), used for colours and tooltips */
-  famData?: FamGene[];
-  famDataUrl?: string;
+  geneData?: GeneData[];
+  geneDataUrl?: string;
   /** force (or disable) augmented OrthoXML parsing; auto-detected by default */
   augmented?: boolean;
   /** HOG id whose members are highlighted (OMA: `<hogid>_<taxid>`) */
@@ -43,7 +43,7 @@ export interface IHamProps {
   treeWidth?: number;
   rowHeight?: number;
   /** maximum height of the scrollable viewer area (CSS length) */
-  height?: string;
+  maxHeight?: string;
   showInternalLabels?: boolean;
 }
 
@@ -65,8 +65,11 @@ export interface IHamEvents {
   "update:level": [level: string];
   "update:coverageThreshold": [value: number];
   "update:colorScheme": [value: ColorSchemeName];
-  "node-selected": [node: { name: string; id: number; isLeaf: boolean; species: string[] }];
-  "hogs-removed": [removed: number[]];
+  "update:tooltipTrigger": [value: "click" | "hover"];
+  /** a tree node was selected: its name, whether it is a leaf, and the species below it */
+  "node-selected": [node: { name: string; isLeaf: boolean; species: string[] }];
+  /** the HOGs hidden by the coverage threshold changed (also on a level change, unless none were or are hidden) */
+  "hogs-hidden": [info: { level: string; hogs: HiddenHog[] }];
   loaded: [info: { species: number; genes: number; augmented: boolean }];
   error: [error: Error];
 }

@@ -14,6 +14,7 @@ const SYNCED = {
   "update:level": "level",
   "update:coverageThreshold": "coverageThreshold",
   "update:colorScheme": "colorScheme",
+  "update:tooltipTrigger": "tooltipTrigger",
 } as const;
 
 /** `<i-ham>` events as DOM events: `detail` is the payload */
@@ -23,20 +24,20 @@ const hyphenate = (s: string) => s.replace(/\B([A-Z])/g, "-$1").toLowerCase();
 /** the component's event names, and the kebab-case aliases that Vue also dispatches */
 const EVENTS = new Set(
   (
-    ["update:level", "update:coverageThreshold", "update:colorScheme", "node-selected", "hogs-removed", "loaded", "error"] satisfies
+    ["update:level", "update:coverageThreshold", "update:colorScheme", "update:tooltipTrigger", "node-selected", "hogs-hidden", "loaded", "error"] satisfies
       (keyof IHamEvents)[]
   ).flatMap((e) => [e, hyphenate(e)]),
 );
 
 /**
  * `<i-ham>` custom element. Attributes map to the component props in
- * kebab-case (`orthoxml-url`, `species-tree-url`, `fam-data-url`, `level`,
- * `query-hog`, `preset`, …); objects and functions (`famData`, `links`,
+ * kebab-case (`orthoxml-url`, `species-tree-url`, `gene-data-url`, `level`,
+ * `query-hog`, `preset`, …); objects and functions (`geneData`, `links`,
  * `geneColors`) are set as element properties. Component events are
  * dispatched as CustomEvents whose `detail` is the payload (every event has
  * one argument; Vue itself would pass the argument array).
  *
- * `level`, `coverageThreshold` and `colorScheme` follow the viewer (like
+ * `level`, `coverageThreshold`, `colorScheme` and `tooltipTrigger` follow the viewer (like
  * v-model): they, and their attributes, always hold the current value, so
  * setting one of them always takes effect.
  */

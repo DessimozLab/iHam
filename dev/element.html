@@ -30,13 +30,13 @@
     </p>
 
     <!-- the data URLs are set below -->
-    <i-ham id="viewer" query-hog="HOG:F0782425.2c.7a_207598" level="Homininae" preset="oma" height="60vh"></i-ham>
+    <i-ham id="viewer" query-hog="HOG:F0782425.2c.7a_207598" level="Homininae" preset="oma" max-height="60vh"></i-ham>
 
     <pre id="log"></pre>
     <script type="module">
       const log = document.getElementById("log");
       const viewer = document.getElementById("viewer");
-      for (const name of ["loaded", "node-selected", "update:level", "hogs-removed", "error"]) {
+      for (const name of ["loaded", "node-selected", "update:level", "hogs-hidden", "error"]) {
         viewer.addEventListener(name, (e) => {
           const detail = e.detail;
           // abbreviate long arrays (e.g. the species list of node-selected)
@@ -53,7 +53,7 @@
       viewer.setAttribute("base-url", oma);
       viewer.setAttribute("orthoxml-url", `${oma}/oma/hog/HOG:F0782425.2c.7a/orthoxml/augmented/`);
       viewer.setAttribute("species-tree-url", `${oma}/All/speciestree.nwk`);
-      viewer.setAttribute("fam-data-url", `${oma}/oma/hogdata/PROCO25562/json`);
+      viewer.setAttribute("gene-data-url", `${oma}/oma/hogdata/PROCO25562/json`);
     </script>
   </body>
 </html>

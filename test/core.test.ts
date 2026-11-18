@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { computeLevelView } from "../src/core/levels";
 import { availableSchemes, makeColorScale, QUERY_COLOR, DEFAULT_GENE_COLOR } from "../src/core/colors";
 import { fillTemplate, omaEndpoints } from "../src/core/links";
 import { parseNewick } from "../src/core/newick";
@@ -139,5 +140,24 @@ describe("colour schemes", () => {
     expect(s.color(fam[0], 1)).toBe("rgb(255, 0, 0)");
     expect(s.color(fam[1], 2)).toBe("rgb(0, 0, 255)");
     expect(s.color(undefined, 3)).not.toMatch(/^rgb/);
+  });
+});
+
+describe("computeLevelView", () => {
+  // two species, two HOGs at level L; HOG 1 only in species A
+  const perSpecies = { A: { L: [[1], [2]] }, B: { L: [[3], []] } };
+  const hogMetadata = { 1: { L: "HOG:1_9" }, 2: { L: "HOG:2_9" }, 3: { L: "HOG:1_9" } };
+
+  it("reports hidden HOGs with their ids, and works without maxima and species", () => {
+    const v = computeLevelView({ perSpecies, level: "L", coverageThreshold: 100, hogMetadata });
+    expect(v.columns.map((c) => c.hogId)).toEqual(["HOG:1"]);
+    expect(v.removed).toEqual([1]);
+    expect(v.hidden).toEqual([{ index: 1, hogId: "HOG:2" }]);
+    expect(v.row("A").map((c) => c.id)).toEqual([1]);
+  });
+
+  it("leaves out hogId without HOG metadata", () => {
+    const v = computeLevelView({ perSpecies, level: "L", coverageThreshold: 100 });
+    expect(v.hidden).toEqual([{ index: 1 }]);
   });
 });

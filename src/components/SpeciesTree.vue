@@ -177,7 +177,7 @@ const links = computed(() =>
   fill: var(--iham-bg, #fff);
 }
 .iham-tree-label {
-  fill: var(--iham-fg, #000);
+  fill: var(--iham-fg, #222);
   paint-order: stroke;
   stroke: var(--iham-bg, #fff);
   stroke-width: 3px;

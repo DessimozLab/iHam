@@ -1,9 +1,13 @@
-import type { FamGene, GeneCell, HogColumn, HogMetadata, LevelView, PerSpecies } from "./types";
+import type { GeneData, GeneCell, HiddenHog, HogColumn, HogMetadata, LevelView, PerSpecies } from "./types";
 
 /** level -> HOG index -> max number of genes any species has in that HOG */
 export type LevelMaxima = Record<string, number[]>;
 
+const maximaCache = new WeakMap<PerSpecies, LevelMaxima>();
+
 export function computeMaxima(perSpecies: PerSpecies): LevelMaxima {
+  const cached = maximaCache.get(perSpecies);
+  if (cached) return cached;
   const maxs: LevelMaxima = {};
   for (const sp of Object.keys(perSpecies)) {
     const spData = perSpecies[sp];
@@ -16,18 +20,20 @@ export function computeMaxima(perSpecies: PerSpecies): LevelMaxima {
       });
     }
   }
+  maximaCache.set(perSpecies, maxs);
   return maxs;
 }
 
 export interface LevelViewInput {
   perSpecies: PerSpecies;
-  maxima: LevelMaxima;
-  /** all species of the tree, in display order (including those below collapsed nodes) */
-  species: string[];
+  /** from `computeMaxima(perSpecies)` (the default, computed once per `perSpecies`) */
+  maxima?: LevelMaxima;
+  /** all species of the tree, in display order (including those below collapsed nodes); default: those of `perSpecies` */
+  species?: string[];
   level: string;
   /** minimum species coverage in percent (0–100) */
   coverageThreshold?: number;
-  famData?: ReadonlyMap<number, FamGene>;
+  geneData?: ReadonlyMap<number, GeneData>;
   /** from augmented OrthoXML; used to name the HOG columns */
   hogMetadata?: HogMetadata | null;
 }
@@ -37,7 +43,9 @@ export interface LevelViewInput {
  * `hog_state.reset_on` + `xcoords`.
  */
 export function computeLevelView(input: LevelViewInput): LevelView {
-  const { perSpecies, maxima, species, level, famData, hogMetadata } = input;
+  const { perSpecies, level, geneData, hogMetadata } = input;
+  const maxima = input.maxima ?? computeMaxima(perSpecies);
+  const species = input.species ?? Object.keys(perSpecies);
   const threshold = Number(input.coverageThreshold ?? 0);
 
   let all: Omit<HogColumn, "coverage" | "start">[] | undefined;
@@ -61,22 +69,24 @@ export function computeLevelView(input: LevelViewInput): LevelView {
 
   const columns: HogColumn[] = [];
   const removed: number[] = [];
+  const hidden: HiddenHog[] = [];
   let slots = 0;
   for (const col of all ?? []) {
     const coverage = (col.numberSpecies * 100) / numberSpecies;
+    const hogId = hogMetadata?.[col.genes[0]]?.[level]?.split("_")[0];
     if (!(coverage >= threshold)) {
       removed.push(col.index);
+      hidden.push(hogId ? { index: col.index, hogId } : { index: col.index });
       continue;
     }
     const column: HogColumn = { ...col, coverage, start: slots };
-    const protId = col.genes.map((g) => famData?.get(g)?.protid).find((p) => p);
+    const protId = col.genes.map((g) => geneData?.get(g)?.protid).find((p) => p);
     if (protId) {
       column.protId = protId;
     }
-    const fullId = hogMetadata?.[col.genes[0]]?.[level];
-    if (fullId) {
-      column.hogId = fullId.split("_")[0];
-      column.name = column.hogId;
+    if (hogId) {
+      column.hogId = hogId;
+      column.name = hogId;
     }
     columns.push(column);
     slots += col.maxInHog;
@@ -107,5 +117,5 @@ export function computeLevelView(input: LevelViewInput): LevelView {
     return cells;
   };
 
-  return { level, columns, removed, numberSpecies, totalSlots: slots, row };
+  return { level, columns, removed, hidden, numberSpecies, totalSlots: slots, row };
 }

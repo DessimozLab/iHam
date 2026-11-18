@@ -17,7 +17,7 @@ async function openElement(page: Page, opts?: Parameters<typeof mockOma>[1]) {
   await page.addInitScript(() => {
     window.ihamEvents = [];
     // the events don't bubble; a capturing listener still sees them
-    for (const name of ["loaded", "node-selected", "update:level", "hogs-removed", "error"]) {
+    for (const name of ["loaded", "node-selected", "update:level", "hogs-hidden", "error"]) {
       document.addEventListener(name, (e) => window.ihamEvents.push([name, (e as CustomEvent).detail]), true);
     }
   });
@@ -60,7 +60,7 @@ test("setLevel, freeze and unfreeze", async ({ page }) => {
   await expect(matrix(page)).toHaveAttribute("aria-label", /HOGs at Hominidae$/);
 });
 
-test("the level attribute follows the viewer, so setting it always takes effect", async ({ page }) => {
+test("level and settings attributes follow the viewer, so setting them always takes effect", async ({ page }) => {
   await openElement(page);
   await expect(matrix(page)).toHaveAttribute("aria-label", /Homininae$/);
   await page.getByRole("treeitem", { name: "Primates", exact: true }).hover();
@@ -70,10 +70,14 @@ test("the level attribute follows the viewer, so setting it always takes effect"
   // back to the level it was opened at
   await call(page, (el) => el.setAttribute("level", "Homininae"));
   await expect(matrix(page)).toHaveAttribute("aria-label", /HOGs at Homininae$/);
+
+  // the toolbar's settings too
+  await page.locator(".iham-toolbar select").last().selectOption("hover");
+  await expect(viewer(page)).toHaveAttribute("tooltip-trigger", "hover");
 });
 
 test("still shows the HOGs when the gene data fails to load", async ({ page, pageErrors }) => {
-  await openElement(page, { famStatus: 403 });
+  await openElement(page, { geneDataStatus: 403 });
   await expect(matrix(page)).toHaveAttribute("aria-label", /HOGs at Homininae$/);
   await expect(page.locator(".iham-warning")).toContainText("403");
   expect(await events(page, "error")).toEqual([]);

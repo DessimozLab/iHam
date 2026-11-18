@@ -1,14 +1,14 @@
 import { computed, shallowRef, watch, type Ref } from "vue";
 import { parseOrthoXml } from "../core/orthoxml";
-import type { FamGene, ParsedHogs } from "../core/types";
+import type { GeneData, ParsedHogs } from "../core/types";
 
 export interface HogDataSource {
   orthoxml?: string;
   orthoxmlUrl?: string;
   speciesTree?: string;
   speciesTreeUrl?: string;
-  famData?: FamGene[];
-  famDataUrl?: string;
+  geneData?: GeneData[];
+  geneDataUrl?: string;
   augmented?: boolean;
   queryHog?: string;
 }
@@ -45,13 +45,13 @@ export type LoadPhase = "idle" | "loading" | "processing";
 /** Loads (if given as URLs) and parses the HOG data whenever a source changes. */
 export function useHogData(source: Ref<HogDataSource>) {
   const parsed = shallowRef<ParsedHogs | null>(null);
-  const famData = shallowRef<FamGene[]>([]);
+  const geneData = shallowRef<GeneData[]>([]);
   /** "loading": fetching data; "processing": parsing (blocks the page for large HOGs) */
   const phase = shallowRef<LoadPhase>("idle");
   const loading = computed(() => phase.value !== "idle");
   const error = shallowRef<Error | null>(null);
   /** the gene data failed to load; the HOGs are shown without it */
-  const famError = shallowRef<Error | null>(null);
+  const geneDataError = shallowRef<Error | null>(null);
   let generation = 0;
 
   watch(
@@ -66,24 +66,24 @@ export function useHogData(source: Ref<HogDataSource>) {
       const gen = ++generation;
       phase.value = "loading";
       error.value = null;
-      famError.value = null;
+      geneDataError.value = null;
       // gene data is optional: without it, the HOGs are still shown
-      let famFailure: Error | null = null;
-      const famPromise: Promise<FamGene[]> = src.famData
-        ? Promise.resolve(src.famData)
-        : src.famDataUrl
-          ? fetchText(src.famDataUrl)
-              .then((t) => JSON.parse(t) as FamGene[])
+      let geneDataFailure: Error | null = null;
+      const geneDataPromise: Promise<GeneData[]> = src.geneData
+        ? Promise.resolve(src.geneData)
+        : src.geneDataUrl
+          ? fetchText(src.geneDataUrl)
+              .then((t) => JSON.parse(t) as GeneData[])
               .catch((e: unknown) => {
-                famFailure = e instanceof Error ? e : new Error(String(e));
+                geneDataFailure = e instanceof Error ? e : new Error(String(e));
                 return [];
               })
           : Promise.resolve([]);
       try {
-        const [orthoxml, tree, fam] = await Promise.all([
+        const [orthoxml, tree, genes] = await Promise.all([
           src.orthoxml ?? fetchText(src.orthoxmlUrl!),
           src.speciesTree ?? fetchText(src.speciesTreeUrl!),
-          famPromise,
+          geneDataPromise,
         ]);
         if (gen !== generation) {
           return;
@@ -95,8 +95,8 @@ export function useHogData(source: Ref<HogDataSource>) {
           return;
         }
         const result = parseOrthoXml(tree, orthoxml, { augmented: src.augmented, queryHog: src.queryHog });
-        famData.value = Array.isArray(fam) ? fam : [];
-        famError.value = famFailure;
+        geneData.value = Array.isArray(genes) ? genes : [];
+        geneDataError.value = geneDataFailure;
         parsed.value = result;
       } catch (e) {
         if (gen === generation) {
@@ -112,8 +112,8 @@ export function useHogData(source: Ref<HogDataSource>) {
     { immediate: true, deep: true },
   );
 
-  const famMap = computed(() => new Map(famData.value.map((g) => [Number(g.id), g])));
-  return { parsed, famData, famMap, loading, phase, error, famError };
+  const geneMap = computed(() => new Map(geneData.value.map((g) => [Number(g.id), g])));
+  return { parsed, geneData, geneMap, loading, phase, error, geneDataError };
 }
 
 const jsonCache = new Map<string, Promise<unknown>>();

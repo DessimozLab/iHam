@@ -31,7 +31,7 @@ Vitest tests use jsdom, not happy-dom: happy-dom's XML parser rejects valid Orth
 
 ## Architecture
 
-- **`src/core/`**: framework-free TypeScript, also exported from the package.
+- **`src/core/`**: framework-free TypeScript. `core/index.ts` is its public part (re-exported from the package, so under semver); keep internals out of it.
   - `orthoxml.ts`: port of iham-parsers' SAX converter to a DOM walk with **identical semantics** (level indices, intermediate-level filling for plain OrthoXML, `(species)` renaming, lexicographic member sort). Produces `perSpecies[species][level][hogIndex] = geneIds`, `hogMetadata` (augmented only), `queryMembers`, and the pruned, ladderized species tree. Augmented mode is auto-detected: every `orthologGroup` has a `taxonId` or an OMA-style id `HOG:…_<taxid>` (older OMA releases have no `taxonId`).
   - `levels.ts`: `computeMaxima` (column widths) and `computeLevelView` (= v1 `hog_state.reset_on` + `xcoords`): the columns at a level after the coverage filter, plus per-species gene slots.
   - `tree.ts`: species tree model (ids, `leafNames`) and the cladogram layout, with collapsed nodes shown as rows.

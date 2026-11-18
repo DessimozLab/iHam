@@ -25,7 +25,7 @@ export interface ParsedHogs {
 }
 
 /** One entry of the gene family data (OMA `/oma/hogdata/<entry>/json`). */
-export interface FamGene {
+export interface GeneData {
   id: number;
   protid?: string;
   xrefid?: string;
@@ -67,11 +67,21 @@ export interface GeneCell {
   posInHog: number;
 }
 
+/** A HOG hidden by the coverage threshold. */
+export interface HiddenHog {
+  /** index of the HOG among all HOGs at its level (`HogColumn.index`) */
+  index: number;
+  /** HOG id without the `_<taxid>` suffix, when known (augmented OrthoXML) */
+  hogId?: string;
+}
+
 export interface LevelView {
   level: string;
   columns: HogColumn[];
   /** HOG indices hidden by the coverage threshold */
   removed: number[];
+  /** the same HOGs, with their ids when known */
+  hidden: HiddenHog[];
   /** number of species that have at least one gene at this level */
   numberSpecies: number;
   /** total width in gene slots */
