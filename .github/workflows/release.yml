@@ -83,8 +83,6 @@ jobs:
         with:
           node-version: 26
           registry-url: https://registry.npmjs.org
-      - name: npm with trusted publishing support (>= 11.5.1)
-        run: npm install -g npm@^11.5.1
       - uses: actions/download-artifact@v8
         with:
           name: package
