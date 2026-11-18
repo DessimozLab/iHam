@@ -31,11 +31,13 @@ jobs:
       dist-tag: ${{ steps.version.outputs.dist-tag }}
       prerelease: ${{ steps.version.outputs.prerelease }}
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      # no dependency cache here: a release must not build from a cache that another workflow wrote
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
-          cache: npm
       - name: Check that the tag matches package.json
         id: version
         run: |
@@ -55,7 +57,7 @@ jobs:
       # runs the build through prepack
       - run: npm pack
       - run: npm run build:demo
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: package
           path: |
@@ -63,7 +65,7 @@ jobs:
             dist/element/iham-element.js
             dist/element/iham-element.iife.js
           if-no-files-found: error
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: demo
           path: dist-playground/
@@ -77,13 +79,13 @@ jobs:
       contents: read
       id-token: write # trusted publishing and provenance
     steps:
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
       - name: npm with trusted publishing support (>= 11.5.1)
         run: npm install -g npm@^11.5.1
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: package
       - run: npm publish ./iham-${{ needs.build.outputs.version }}.tgz --tag ${{ needs.build.outputs.dist-tag }}
@@ -94,7 +96,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: package
       - name: Create the release
@@ -114,11 +116,11 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           ref: gh-pages
           path: site
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: demo
           path: demo
