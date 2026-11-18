@@ -1,6 +1,6 @@
 {
   "name": "iham",
-  "version": "2.0.0-alpha.3",
+  "version": "2.0.0-alpha.4",
   "description": "iHam: interactive viewer for hierarchical orthologous groups (HOGs) as a Vue 3 component and <i-ham> web component",
   "type": "module",
   "license": "Apache-2.0",

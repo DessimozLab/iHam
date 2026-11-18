@@ -111,18 +111,31 @@ describe("<IHam>", () => {
   });
 
   it("puts the HOG column markers right above the selected level's rows", async () => {
+    const offset = (w: ReturnType<typeof mount>) => {
+      const m = /translateY\((\d+)px\)/.exec((w.find(".iham-header-markers").element as SVGElement).style.transform);
+      return m ? Number(m[1]) : 0;
+    };
     const root = await mountP53({ level: "Euteleostomi" });
-    expect(root.find(".iham-header-cell .iham-header-col").exists()).toBe(true);
-    expect(root.find(".iham-header-inline").exists()).toBe(false);
+    expect(offset(root)).toBe(0);
     root.unmount();
 
     const w = await mountP53({ level: "Primates" });
-    expect(w.find(".iham-header-cell .iham-header-col").exists()).toBe(false);
-    const inline = w.find(".iham-header-inline");
-    const top = parseFloat((inline.element as HTMLElement).style.top);
-    expect(top).toBeGreaterThanOrEqual(0);
-    expect(top % 20).toBe(0);
-    expect(inline.findAll(".iham-header-col").length).toBeGreaterThan(0);
+    const sc = w.find(".iham-scroller").element as HTMLElement;
+    const scrollTo = async (top: number) => {
+      sc.scrollTop = top;
+      sc.dispatchEvent(new Event("scroll"));
+      await nextTick();
+    };
+    await scrollTo(0);
+    const off = offset(w);
+    // header is 30px, rows 20px: the markers are centred on a row above the clade
+    expect(off).toBeGreaterThan(0);
+    expect((off + 15 - 30 - 10) % 20).toBe(0);
+    // scrolled past that row: back in the sticky header
+    await scrollTo(10);
+    expect(offset(w)).toBe(off - 10);
+    await scrollTo(off + 100);
+    expect(offset(w)).toBe(0);
     w.unmount();
   });
 

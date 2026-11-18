@@ -147,8 +147,17 @@ const layout = computed(() => (tree.value ? layoutTree(tree.value.root, collapse
 const selectedRows = computed(() =>
   layout.value && selected.value ? cladeRows(layout.value, selected.value) : { start: 0, end: 0 },
 );
-/** HOG column markers go into the (empty) row above the selected clade, or the sticky header for the top clade */
-const markersInMatrix = computed(() => selectedRows.value.start > 0);
+/**
+ * The HOG column markers live in the sticky header but are pushed down into
+ * the (empty) row right above the selected clade, as in iHam 1. Scrolling
+ * that row out of view brings them back into the header.
+ */
+const markerOffset = computed(() => {
+  const start = selectedRows.value.start;
+  if (start === 0) return 0;
+  const rowCentre = HEADER + (start - 0.5) * props.rowHeight - scroll.value.top;
+  return Math.max(0, Math.round(rowCentre - HEADER / 2));
+});
 
 const schemes = computed(() => availableSchemes(famData.value));
 const colorScale = computed(() =>
@@ -335,7 +344,8 @@ defineExpose({
           <div class="iham-corner" />
           <div class="iham-header-cell">
             <HogHeader
-              v-if="!markersInMatrix"
+              class="iham-header-markers"
+              :style="markerOffset ? { transform: `translateY(${markerOffset}px)` } : undefined"
               :columns="view.columns"
               :cell-width="CELL"
               :height="HEADER"
@@ -368,18 +378,6 @@ defineExpose({
               :clade-rows="selectedRows"
               @gene-hover="onGeneHover"
               @gene-click="onGeneClick"
-            />
-            <!-- column markers right above the selected level's rows (as in iHam 1); those rows are empty -->
-            <HogHeader
-              v-if="markersInMatrix"
-              class="iham-header-inline"
-              :style="{ top: `${(selectedRows.start - 1) * rowHeight}px` }"
-              :columns="view.columns"
-              :cell-width="CELL"
-              :height="rowHeight"
-              :width="matrixWidth"
-              :active-index="popover?.kind === 'hog' ? popover.column.index : null"
-              @select="onHogSelect"
             />
           </div>
         </div>
@@ -465,12 +463,11 @@ defineExpose({
   position: relative;
   z-index: 1;
 }
-.iham-header-inline {
-  position: absolute;
-  left: 0;
+/* when pushed down over the matrix, only the markers take the pointer */
+.iham-header-markers {
   pointer-events: none;
 }
-.iham-header-inline .iham-header-col {
+.iham-header-markers .iham-header-col {
   pointer-events: all;
 }
 .iham-message {
