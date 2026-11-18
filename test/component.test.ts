@@ -110,6 +110,14 @@ describe("<IHam>", () => {
     w.unmount();
   });
 
+  it("labels the selected internal node once, after all tree nodes", async () => {
+    const w = await mountP53({ level: "Primates" });
+    const labels = w.findAll(".iham-tree-internal-label");
+    expect(labels.map((l) => l.text())).toEqual(["Primates"]);
+    expect(w.find(".iham-tree").element.lastElementChild).toBe(labels[0].element);
+    w.unmount();
+  });
+
   it("puts the HOG column markers right above the selected level's rows", async () => {
     const offset = (w: ReturnType<typeof mount>) => {
       const m = /translateY\((\d+)px\)/.exec((w.find(".iham-header-markers").element as SVGElement).style.transform);

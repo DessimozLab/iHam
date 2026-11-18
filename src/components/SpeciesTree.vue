@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted, ref, shallowRef } from "vue";
 import type { LayoutNode, SpeciesNode, TreeLayout } from "../core/tree";
+import { placeInternalLabel, textMeasurer, type MeasureText } from "./treeLabels";
 
 const props = defineProps<{
   layout: TreeLayout;
@@ -26,21 +27,42 @@ const height = computed(() => props.layout.rows.length * props.rowHeight);
 const px = (n: LayoutNode) => MARGIN + n.x * branchWidth.value;
 const py = (n: LayoutNode) => n.y * props.rowHeight + props.rowHeight / 2;
 
+const displayName = (n: LayoutNode) => n.node.name.replace(/_/g, " ");
+
 function label(n: LayoutNode): string {
-  const name = n.node.name.replace(/_/g, " ");
+  const name = displayName(n);
   if (n.collapsed) {
     const short = name.length > LABEL_LIMIT - 16 ? `${name.slice(0, LABEL_LIMIT - 19)}...` : name;
     return `[Collapsed taxa] ${short}`;
   }
-  const isSelected = n.node.id === props.selectedId;
-  if (!n.isRow && !(props.showInternalLabels && isSelected)) {
-    return "";
+  if (!n.isRow) {
+    return ""; // drawn separately, see internalLabel
   }
   return name.length > LABEL_LIMIT ? `${name.slice(0, LABEL_LIMIT - 3)}...` : name;
 }
 
-/** internal labels go above-left of the node unless they would be clipped at the left edge */
-const labelFitsLeft = (n: LayoutNode) => px(n) - label(n).length * 7.5 - 6 >= 0;
+// the selected internal node's label is measured in the tree's (bold) font
+const svg = ref<SVGSVGElement | null>(null);
+const measure = shallowRef<MeasureText>(textMeasurer("bold 12px sans-serif"));
+onMounted(() => {
+  if (svg.value) {
+    const cs = getComputedStyle(svg.value);
+    measure.value = textMeasurer(`bold ${cs.fontSize || "12px"} ${cs.fontFamily || "sans-serif"}`);
+  }
+});
+
+/**
+ * Label of the selected internal node: above-left of it, shifted right when
+ * there is no room, but never into the leaf names; shortened if needed.
+ */
+const internalLabel = computed(() => {
+  if (!props.showInternalLabels) return null;
+  const n = props.layout.nodes.find((x) => x.node.id === props.selectedId);
+  if (!n || n.isRow) return null;
+  const leafX = MARGIN + branchWidth.value;
+  const { text, right } = placeInternalLabel(displayName(n), px(n), 2, leafX - 4, measure.value);
+  return { text, x: px(n) + right, y: py(n) - 7 };
+});
 
 const links = computed(() =>
   props.layout.links.map(({ from, to }) => ({
@@ -51,7 +73,7 @@ const links = computed(() =>
 </script>
 
 <template>
-  <svg class="iham-tree" :width="width" :height="height" role="tree" aria-label="Species tree">
+  <svg ref="svg" class="iham-tree" :width="width" :height="height" role="tree" aria-label="Species tree">
     <g class="iham-tree-links">
       <path v-for="l in links" :key="l.key" :d="l.d" />
     </g>
@@ -79,14 +101,21 @@ const links = computed(() =>
       <text
         v-if="label(n)"
         class="iham-tree-label"
-        :class="{ 'is-internal': !n.isRow && labelFitsLeft(n) }"
-        :x="n.isRow ? 9 : labelFitsLeft(n) ? -6 : 6"
-        :y="n.isRow ? 0 : -7"
-        :dy="n.isRow ? '0.35em' : 0"
+        x="9"
+        dy="0.35em"
       >
         {{ label(n) }}
       </text>
     </g>
+    <!-- after all nodes, so that no branch or marker is drawn over it -->
+    <text
+      v-if="internalLabel"
+      class="iham-tree-label iham-tree-internal-label"
+      :x="internalLabel.x"
+      :y="internalLabel.y"
+    >
+      {{ internalLabel.text }}
+    </text>
   </svg>
 </template>
 
@@ -131,8 +160,10 @@ const links = computed(() =>
   stroke-width: 3px;
   stroke-linejoin: round;
 }
-.iham-tree-label.is-internal {
+.iham-tree-internal-label {
   text-anchor: end;
+  font-weight: bold;
+  pointer-events: none;
 }
 .iham-tree-node.is-collapsed .iham-tree-label {
   fill: grey;
