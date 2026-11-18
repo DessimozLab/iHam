@@ -65,7 +65,7 @@
   },
   "devDependencies": {
     "@types/d3-scale": "^4.0.9",
-    "@types/node": "^24.0.0",
+    "@types/node": "^26.6.6",
     "@vitejs/plugin-vue": "^6.0.11",
     "@vue/test-utils": "^2.6.0",
     "iham-parsers": "^0.2.1",
