@@ -55,7 +55,7 @@ const source = computed(() => ({
   augmented: props.augmented,
   queryHog: props.queryHog,
 }));
-const { parsed, famData, famMap, loading, phase, error } = useHogData(source);
+const { parsed, famData, famMap, loading, phase, error, famError } = useHogData(source);
 
 const tree = computed(() => (parsed.value ? buildSpeciesTree(parsed.value.tree) : null));
 const nodeByName = computed(() => new Map(tree.value?.nodes.map((n) => [n.name, n]) ?? []));
@@ -333,6 +333,9 @@ defineExpose({
         @update:coverage-threshold="setThreshold"
         @unfreeze="unfreeze"
       />
+      <div v-if="famError" class="iham-message iham-warning" role="status">
+        Gene data could not be loaded ({{ famError.message }}); genes are shown without their details.
+      </div>
       <div ref="scroller" class="iham-scroller" :style="{ maxHeight: height }">
         <div
           class="iham-grid"
@@ -476,6 +479,10 @@ defineExpose({
 }
 .iham-error {
   color: #c0392b;
+}
+.iham-warning {
+  padding: 4px 8px;
+  color: #a0522d;
 }
 .iham-spinner {
   display: inline-block;

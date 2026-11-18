@@ -110,6 +110,19 @@ describe("<IHam>", () => {
     w.unmount();
   });
 
+  it("shows the HOGs when only the gene data fails to load", async () => {
+    vi.stubGlobal("fetch", async () => new Response("blocked", { status: 403, statusText: "Forbidden" }));
+    try {
+      const w = await mountP53({ famData: undefined, famDataUrl: "https://example.org/hogdata/x/json" });
+      expect(w.find(".iham-scroller").exists()).toBe(true);
+      expect(w.find(".iham-warning").text()).toContain("403 Forbidden");
+      expect(w.emitted("error")).toBeUndefined();
+      w.unmount();
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
   it("labels the selected internal node once, after all tree nodes", async () => {
     const w = await mountP53({ level: "Primates" });
     const labels = w.findAll(".iham-tree-internal-label");

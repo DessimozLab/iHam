@@ -50,6 +50,8 @@ export function useHogData(source: Ref<HogDataSource>) {
   const phase = shallowRef<LoadPhase>("idle");
   const loading = computed(() => phase.value !== "idle");
   const error = shallowRef<Error | null>(null);
+  /** the gene data failed to load; the HOGs are shown without it */
+  const famError = shallowRef<Error | null>(null);
   let generation = 0;
 
   watch(
@@ -64,11 +66,24 @@ export function useHogData(source: Ref<HogDataSource>) {
       const gen = ++generation;
       phase.value = "loading";
       error.value = null;
+      famError.value = null;
+      // gene data is optional: without it, the HOGs are still shown
+      let famFailure: Error | null = null;
+      const famPromise: Promise<FamGene[]> = src.famData
+        ? Promise.resolve(src.famData)
+        : src.famDataUrl
+          ? fetchText(src.famDataUrl)
+              .then((t) => JSON.parse(t) as FamGene[])
+              .catch((e: unknown) => {
+                famFailure = e instanceof Error ? e : new Error(String(e));
+                return [];
+              })
+          : Promise.resolve([]);
       try {
         const [orthoxml, tree, fam] = await Promise.all([
           src.orthoxml ?? fetchText(src.orthoxmlUrl!),
           src.speciesTree ?? fetchText(src.speciesTreeUrl!),
-          src.famData ?? (src.famDataUrl ? fetchText(src.famDataUrl).then((t) => JSON.parse(t) as FamGene[]) : []),
+          famPromise,
         ]);
         if (gen !== generation) {
           return;
@@ -81,6 +96,7 @@ export function useHogData(source: Ref<HogDataSource>) {
         }
         const result = parseOrthoXml(tree, orthoxml, { augmented: src.augmented, queryHog: src.queryHog });
         famData.value = Array.isArray(fam) ? fam : [];
+        famError.value = famFailure;
         parsed.value = result;
       } catch (e) {
         if (gen === generation) {
@@ -97,7 +113,7 @@ export function useHogData(source: Ref<HogDataSource>) {
   );
 
   const famMap = computed(() => new Map(famData.value.map((g) => [Number(g.id), g])));
-  return { parsed, famData, famMap, loading, phase, error };
+  return { parsed, famData, famMap, loading, phase, error, famError };
 }
 
 const jsonCache = new Map<string, Promise<unknown>>();
